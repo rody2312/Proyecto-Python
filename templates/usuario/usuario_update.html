@@ -1,0 +1,8 @@
+<form method="POST">
+  {% csrf_token %} Nombre: {{form.nombre}}
+  <br />
+  Apellido Paterno: {{form.apellidoPaterno}}
+  <br />
+  Apellido Materno: {{form.apellidoMaterno}}
+  <button type="submit">Actualizar</button>
+</form>
