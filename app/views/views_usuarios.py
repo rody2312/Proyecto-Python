@@ -76,4 +76,12 @@ class UsuarioDeleteView(DeleteView):
         success_url = self.get_success_url()
         self.object.delete()
         messages.success(request, "Eliminado correctamente")
-        return HttpResponseRedirect(success_url)
+        return HttpResponseRedirect(success_url) 
+
+class UsuarioEditView(View):
+        def get(self, request, pk, *args, **kwargs):
+            usuario = get_object_or_404(Usuario, pk=pk)
+            context={
+                'usuario':usuario
+            }
+            return render(request, 'usuario/usuario_edit.html', context)
