@@ -20,7 +20,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = ("*")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get('DEBUG')
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
@@ -125,3 +125,29 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'Proyecto Python/static')
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+#SMTP Configuration Gmail
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'rody.ch2312@gmail.com'
+EMAIL_HOST_PASSWORD = 'phbqvmtcxqwgzutq'
+
+
+# Custom User Model
+AUTH_USER_MODEL = 'app.Usuario'
+
+#SMTP Configuration AWS
+#EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+#EMAIL_HOST = 'email-smtp.us-east-1.amazonaws.com'
+#EMAIL_PORT = 587
+#EMAIL_USE_TLS = True
+#EMAIL_HOST_USER = 'AKIARE6BSJDN2SI2Q7ND'
+#EMAIL_HOST_PASSWORD = 'BCS0sxAghLHPZOfUWzhr1Bq4OjRnXpSw5TtxgmRaHyq8'
+
+#SES Configuration
+#EMAIL_BACKEND = 'django_ses.SESBackend'
+#AWS_ACCESS_KEY_ID = 'AKIARE6BSJDNRE7UFZ3I'
+#AWS_SECRET_ACCESS_KEY = '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'
+
