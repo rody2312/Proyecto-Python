@@ -22,5 +22,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', HomeView.as_view(), name="home"),
     
-    path('scc/', include('app.urls', namespace='app'))
+    path('', include('app.urls', namespace='app'))
 ]
