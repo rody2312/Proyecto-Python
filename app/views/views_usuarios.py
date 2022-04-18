@@ -133,3 +133,11 @@ class UsuarioDeleteView(DeleteView):
 #    usuario = get_object_or_404(Usuario, id=id)
 #    usuario.delete()
 #    return redirect(to="app:usuarios")
+
+class UsuarioEditView(View):
+        def get(self, request, pk, *args, **kwargs):
+            usuario = get_object_or_404(Usuario, pk=pk)
+            context={
+                'usuario':usuario
+            }
+            return render(request, 'usuario/usuario_edit.html', context)
