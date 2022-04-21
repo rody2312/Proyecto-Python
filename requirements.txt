@@ -2,3 +2,4 @@ django==4.0.3
 django-environ==0.8.1
 mysqlclient==2.1.0
 django-ses==3.0.1
+six==1.16.0
