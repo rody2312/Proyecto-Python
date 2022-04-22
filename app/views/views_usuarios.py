@@ -17,11 +17,13 @@ from django.utils.encoding import force_bytes, force_str, DjangoUnicodeDecodeErr
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.contrib.sites.shortcuts import get_current_site
 from ..utils import token_generator
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 
 # Create your views here.
 
-class UsuariosListView(View):
+class UsuariosListView(LoginRequiredMixin ,View):
+    
     def get(self,request, *args, **kwargs):
         usuarios = Usuario.objects.all()
         context={
@@ -31,7 +33,7 @@ class UsuariosListView(View):
         return render(request, 'usuario/usuarios_list.html', context)
 
 
-class UsuarioCreateView(View):
+class UsuarioCreateView(LoginRequiredMixin, View):
     def get(self, request,*args, **kwargs):
         form=CustomUserCreationForm()
         context={
@@ -100,7 +102,7 @@ class VerificationView(View):
         return redirect('app:usuarios')
 
 
-class UsuarioDetailsView(View):
+class UsuarioDetailsView(LoginRequiredMixin, View):
     def get(self, request, pk, *args, **kwargs):
         usuario = get_object_or_404(Usuario, pk=pk)
         context={
@@ -108,7 +110,7 @@ class UsuarioDetailsView(View):
         }
         return render(request, 'usuario/usuario_details.html', context)
 
-class UsuarioUpdateView(UpdateView):
+class UsuarioUpdateView(LoginRequiredMixin, UpdateView):
     model= Usuario
     fields= ['nombre', 'apellido_paterno', 'apellido_materno']
     template_name= 'usuario/usuario_update.html'
@@ -118,7 +120,7 @@ class UsuarioUpdateView(UpdateView):
         return reverse_lazy('app:details', kwargs={'pk':pk})
 
 
-class UsuarioDeleteView(DeleteView):
+class UsuarioDeleteView(LoginRequiredMixin, DeleteView):
     model = Usuario
     success_url = reverse_lazy('app:usuarios')
 

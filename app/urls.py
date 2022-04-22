@@ -1,7 +1,7 @@
 from unicodedata import name
-from django.urls import path, re_path
+from django.urls import path, re_path, include
 
-from .views import UsuariosListView,UsuarioCreateView,UsuarioDetailsView, UsuarioUpdateView,UsuarioDeleteView,UsuarioEditView
+from .views import UsuariosListView,UsuarioCreateView,UsuarioDetailsView, UsuarioUpdateView,UsuarioDeleteView,UsuarioEditView, LoginView
 from django.contrib.auth import views as auth_views
 from django.urls import reverse_lazy
 
@@ -15,12 +15,12 @@ urlpatterns= [
     path('usuarios/update/<int:pk>/', UsuarioUpdateView.as_view(), name="update"),
     path('usuarios/delete/<int:pk>/', UsuarioDeleteView.as_view(), name="delete"),
 
+    # autenticación
+    path('login/', LoginView.as_view(), name="login"),
+    path('logout/', LoginView.logout_user, name="logout"),
 
-    # activar cuenta
 
-
-    ## reset password urls ##
-
+    ## crear password urls ##
     path('password_reset/', auth_views.PasswordResetView.as_view(
         template_name='registration/password_reset_form.html',
         subject_template_name='registration/password_reset_subject.txt',
