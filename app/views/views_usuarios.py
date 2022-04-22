@@ -113,7 +113,7 @@ class UsuarioDetailsView(LoginRequiredMixin, View):
 class UsuarioUpdateView(LoginRequiredMixin, UpdateView):
     model= Usuario
     fields= ['nombre', 'apellido_paterno', 'apellido_materno']
-    template_name= 'usuario/usuario_update.html'
+    template_name= 'usuario/usuario_edit.html'
 
     def get_success_url(self):
         pk = self.kwargs['pk']
