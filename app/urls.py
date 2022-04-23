@@ -50,6 +50,6 @@ urlpatterns= [
     #re_path('password_reset/done/',auth_views.PasswordResetDoneView.as_view(),name='password_reset_done'),
     #re_path('reset/<uidb64>/<token>/',auth_views.PasswordResetConfirmView.as_view(),name='password_reset_confirm'),
     #re_path('reset/done/',auth_views.PasswordResetCompleteView.as_view(),name='password_reset_complete'),
-    path('usuarios/edit/', UsuarioEditView.as_view(), name="edit")
+    path('usuarios/edit/<int:pk>/', UsuarioEditView.as_view(), name="edit")
 
 ]

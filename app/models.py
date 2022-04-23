@@ -63,6 +63,9 @@ class TipoUsuario(models.Model):
     class Meta:
         managed = True
         db_table = 'tipo_usuario'
+
+    def __str__(self):
+        return self.tipo
     
 
 
