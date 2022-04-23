@@ -1,7 +1,7 @@
 from re import template
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.generic import View, UpdateView, DeleteView
-from ..forms import CustomUserCreationForm, UsuarioCreateForm
+from ..forms import CustomUserCreationForm, UsuarioCreateForm, UsuarioEditForm
 from ..models import TipoUsuario, Usuario
 from django.urls import reverse_lazy
 from django.contrib import messages
@@ -17,11 +17,13 @@ from django.utils.encoding import force_bytes, force_str, DjangoUnicodeDecodeErr
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.contrib.sites.shortcuts import get_current_site
 from ..utils import token_generator
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 
 # Create your views here.
 
-class UsuariosListView(View):
+class UsuariosListView(LoginRequiredMixin ,View):
+    
     def get(self,request, *args, **kwargs):
         usuarios = Usuario.objects.all()
         context={
@@ -31,7 +33,7 @@ class UsuariosListView(View):
         return render(request, 'usuario/usuarios_list.html', context)
 
 
-class UsuarioCreateView(View):
+class UsuarioCreateView(LoginRequiredMixin, View):
     def get(self, request,*args, **kwargs):
         form=CustomUserCreationForm()
         context={
@@ -100,7 +102,7 @@ class VerificationView(View):
         return redirect('app:usuarios')
 
 
-class UsuarioDetailsView(View):
+class UsuarioDetailsView(LoginRequiredMixin, View):
     def get(self, request, pk, *args, **kwargs):
         usuario = get_object_or_404(Usuario, pk=pk)
         context={
@@ -108,7 +110,7 @@ class UsuarioDetailsView(View):
         }
         return render(request, 'usuario/usuario_details.html', context)
 
-class UsuarioUpdateView(UpdateView):
+class UsuarioUpdateView(LoginRequiredMixin, UpdateView):
     model= Usuario
     fields= ['nombre', 'apellido_paterno', 'apellido_materno']
     template_name= 'usuario/usuario_edit.html'
@@ -118,7 +120,7 @@ class UsuarioUpdateView(UpdateView):
         return reverse_lazy('app:details', kwargs={'pk':pk})
 
 
-class UsuarioDeleteView(DeleteView):
+class UsuarioDeleteView(LoginRequiredMixin, DeleteView):
     model = Usuario
     success_url = reverse_lazy('app:usuarios')
 
@@ -134,10 +136,38 @@ class UsuarioDeleteView(DeleteView):
 #    usuario.delete()
 #    return redirect(to="app:usuarios")
 
-class UsuarioEditView(View):
-        def get(self, request, pk, *args, **kwargs):
-            usuario = get_object_or_404(Usuario, pk=pk)
-            context={
-                'usuario':usuario
-            }
-            return render(request, 'usuario/usuario_edit.html', context)
+class UsuarioEditView(LoginRequiredMixin, UpdateView):
+    model = Usuario
+    form_class = UsuarioEditForm
+    template_name = "usuario/usuario_edit.html"
+    
+
+
+    def get_success_url(self):
+        messages.success(self.request, "El usuario ha sido actualizado correctamente")
+        return reverse_lazy('app:usuarios')
+        #def get(self, request, pk, *args, **kwargs):
+        #    usuario = get_object_or_404(Usuario, pk=pk)
+        #    form=UsuarioEditForm(request.POST or None, instance = usuario)
+        #    tipos = TipoUsuario.objects.all()
+        #    context={
+        #        'tipos':tipos,
+        #        'usuario':usuario,
+        #        'form':form
+        #    }
+        #    return render(request, 'usuario/usuario_edit.html', context)
+        #
+        #def post(self, request,*args, **kwargs):
+        #    if request.method=="POST":
+        #        form = UsuarioEditForm(request.POST)
+        #        if form.is_valid():
+        #            nombre = form.cleaned_data.get('nombre')
+        #            apellidoPaterno = form.cleaned_data.get('apellido_paterno')
+        #            apellidoMaterno = form.cleaned_data.get('apellido_materno')
+        #            fono = form.cleaned_data.get('fono')
+        #            email = form.cleaned_data.get('email')
+        #            tipo_usuario= TipoUsuario.objects.get(id=form.cleaned_data['tipo'])
+#
+        #            u, created = Usuario.objects.update(nombre=nombre, apellido_paterno=apellidoPaterno, apellido_materno=apellidoMaterno, fono=fono, email=email, id_tipo_usuario=tipo_usuario)
+        #            u.save()
+        #            return redirect('app:usuarios')

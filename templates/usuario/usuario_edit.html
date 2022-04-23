@@ -17,44 +17,30 @@
         <div class="card-body">
             <form method="POST">
                 {% csrf_token %}
+                {{ form.as_p }}
+              <!--  {% for campo in form %}
                 <div class="form-group">
-                  <h7><p aligh="center"></p><strong>Nombre</strong></h7></br>
-                    <input type="text" id="inputNombre" name="Nombre" placeholder="Escriba aquí"</br>
-                </div>
-                <div class="form-group">
-                  <h7><p aligh="center"></p><strong>Apellido Paterno</strong></h7></br>
-                    <input type="text" id="inputApellidoP" name="ApellidoP" placeholder="Escriba aquí"</br>
-                </div>
-                <div class="form-group">
-                  <h7><p aligh="center"></p><strong>Apellido Materno</strong></h7></br>
-                    <input type="text" id="inputApellidoM" name="ApellidoM" placeholder="Escriba aquí"</br>
-                </div>
-                <div class="form-group">
-                  <h7><p aligh="center"></p><strong>Teléfono</strong></h7></br>
-                    <input type="text" id="inputFono" name="Fono" placeholder="+56912345678"</br>
-                </div>
-                <div class="form-group">
-                  <h7><p aligh="center"></p><strong>Email</strong></h7></br>
-                    <input type="text" id="inputEmail" name="Email" placeholder="Escriba aquí"</br>
-                </div>
-
-                <div class="form-group">
-                  <h7><p aligh="center"></p><strong>Tipo de usuario</strong></h7></br>
-                    <input type="text" id="inputTipo" name="Tipo de usuario" placeholder="Arreglar Combobox"</br>
+                  <label for="inputNombre">{{campo.label}}</label>
+                  <input type="{{campo.field.widget.input_type}}" value="{{campo.value}}" class="form-control" required>
                 </div>
                 
+                {% endfor %}
+
                 <div class="form-group">
-                  <label for="inputTipo">Tipo de usuario</label>
-                  {{form.tipo}}
-              </div>
+                  <label for="inputNombre">{{campo.label}}</label>
+                  <select class="form-control" id="select" select>
+                    
+                    {% for tipo in tipos %}
+                      {% if tipo == usuario.id_tipo_usuario %}
+                        <option selected value="{{usuario.id_tipo_usuario}}">{{usuario.id_tipo_usuario.tipo}}</option>
+                      {% else %}
+                        <option value="{{tipo}}">{{tipo.tipo}}</option>
+                      {% endif %}
+                    {% endfor %}
 
-                <div> 
-                  <h7><p aligh="center"></p><strong>Revisar los cambios antes de guardar</strong></h7></br></br>
+                  </select>
                 </div>
-
-
-
-
+                -->
                 <div class="col">
                     <a href="{% url 'app:usuarios' %}" class="btn btn-secondary">Cancelar</a>
                     <input type="submit" value="Guardar" class="btn btn-success float-right">

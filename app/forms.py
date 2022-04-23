@@ -55,3 +55,29 @@ class CustomUserCreationForm(UserCreationForm):
         self.fields['fono'].required = True
         self.fields['email'].required = True
         self.fields['tipo'].required = True  
+        
+
+class UsuarioEditForm(forms.ModelForm):
+    class Meta:
+        model=Usuario
+        fields=('nombre','apellido_paterno','apellido_materno', 'fono', 'email','id_tipo_usuario')
+        labels = {
+            'id_tipo_usuario':'Tipo de usuario'
+        }
+        widgets = {
+            'nombre': forms.TextInput(attrs={'class': 'form-control'}),
+            'apellido_paterno': forms.TextInput(attrs={'class': 'form-control'}),
+            'apellido_materno': forms.TextInput(attrs={'class': 'form-control'}),
+            'fono': forms.NumberInput(attrs={'class': 'form-control'}),
+            'email': forms.EmailInput(attrs={'class': 'form-control'}),
+            'id_tipo_usuario': forms.Select(attrs={'class': 'form-control'}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super(UsuarioEditForm, self).__init__(*args, **kwargs)
+        self.fields['nombre'].required = True
+        self.fields['apellido_paterno'].required = True
+        self.fields['apellido_materno'].required = True
+        self.fields['fono'].required = True
+        self.fields['email'].required = True
+        self.fields['id_tipo_usuario'].required = True

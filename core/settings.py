@@ -139,6 +139,12 @@ EMAIL_HOST_PASSWORD = 'phbqvmtcxqwgzutq'
 # Custom User Model
 AUTH_USER_MODEL = 'app.Usuario'
 
+#Authentication urls
+
+LOGIN_REDIRECT_URL="/"
+LOGIN_URL="/login/"
+LOGOUT_REDIRECT_URL="/login/"
+
 #SMTP Configuration AWS
 #EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 #EMAIL_HOST = 'email-smtp.us-east-1.amazonaws.com'

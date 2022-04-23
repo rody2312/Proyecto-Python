@@ -54,6 +54,8 @@ class CustomUserManager(BaseUserManager):
         return user
 
 
+# Aca se definen los modelos
+
 class TipoUsuario(models.Model):
     id = models.BigAutoField(primary_key=True)
     tipo = models.CharField(max_length=20, blank=True, null=True)
@@ -61,6 +63,9 @@ class TipoUsuario(models.Model):
     class Meta:
         managed = True
         db_table = 'tipo_usuario'
+
+    def __str__(self):
+        return self.tipo
     
 
 
