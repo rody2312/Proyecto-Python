@@ -1,2 +1,11 @@
+<<<<<<< HEAD
 static/lib/* linguist-language=Javascript
 static/lib/* linguist-language=css
+=======
+*.js linguist-detectable=false
+*.css linguist-detectable=false
+<<<<<<< HEAD
+=======
+*.py linguist-detectable=true
+>>>>>>> a7e1538 (gitattributes actualizado)
+>>>>>>> c886d20 (gitattributes actualizado)
