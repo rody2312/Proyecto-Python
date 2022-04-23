@@ -91,5 +91,14 @@ class Usuario(AbstractUser):
         managed = True
         db_table = 'usuarios'
 
+class Notificacion(models.Model):
+    id_usuario = models.ForeignKey(Usuario, models.DO_NOTHING, db_column='id_usuario')
+    texto = models.TextField(null=False)
+
+    class Meta():
+        managed = True
+        db_table = 'notificacion'
+
+
 
 
