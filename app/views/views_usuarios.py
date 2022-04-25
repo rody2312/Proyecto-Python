@@ -1,7 +1,7 @@
 from re import template
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.generic import View, UpdateView, DeleteView
-from ..forms import CustomUserCreationForm, UsuarioCreateForm, UsuarioEditForm
+from ..forms import CustomUserCreationForm, UsuarioCreateForm, UsuarioEditForm #NotificacionView
 from ..models import TipoUsuario, Usuario
 from django.urls import reverse_lazy
 from django.contrib import messages
@@ -140,7 +140,6 @@ class UsuarioEditView(LoginRequiredMixin, UpdateView):
     model = Usuario
     form_class = UsuarioEditForm
     template_name = "usuario/usuario_edit.html"
-    
 
 
     def get_success_url(self):
