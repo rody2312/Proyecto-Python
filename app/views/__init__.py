@@ -1,3 +1,3 @@
 from .views_usuarios import *
 from .views_login import *
-#from .view_notificacion import *
+from .views_notificacion import *

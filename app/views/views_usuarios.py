@@ -1,7 +1,7 @@
 from re import template
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.generic import View, UpdateView, DeleteView
-from ..forms import CustomUserCreationForm, UsuarioCreateForm, UsuarioEditForm #NotificacionView
+from ..forms import CustomUserCreationForm, UsuarioCreateForm, UsuarioEditForm 
 from ..models import TipoUsuario, Usuario
 from django.urls import reverse_lazy
 from django.contrib import messages

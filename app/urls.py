@@ -1,6 +1,8 @@
 from unicodedata import name
 from django.urls import path, re_path, include
 
+from app.views.views_notificacion import NotificacionListView
+
 from .views import UsuariosListView,UsuarioCreateView,UsuarioDetailsView, UsuarioUpdateView,UsuarioDeleteView,UsuarioEditView, LoginView #NotificacionView
 from django.contrib.auth import views as auth_views
 from django.urls import reverse_lazy
@@ -14,7 +16,7 @@ urlpatterns= [
     path('usuarios/details/<int:pk>/', UsuarioDetailsView.as_view(), name="details"),
     path('usuarios/update/<int:pk>/', UsuarioUpdateView.as_view(), name="update"),
     path('usuarios/delete/<int:pk>/', UsuarioDeleteView.as_view(), name="delete"),
-    #path('usuarios/notificacion/<int:pk>/', NotificacionView.as_view(), name="notificacion")
+    path('notificacion/', NotificacionListView.as_view(), name="notificacion"),
 
     # autenticación
     path('login/', LoginView.as_view(), name="login"),
