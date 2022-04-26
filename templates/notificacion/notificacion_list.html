@@ -18,11 +18,11 @@
 
         <div class="card">
           <div class="card-header">
-            <h3 class="card-title">Notificaciones</h3>
+            <h3 class="card-title">Lista de notificaciones</h3>
           </div>
           <!-- /.card-header -->
           <div class="card-body">
-            <a class="btn btn-primary mb-2" href="{% url 'app:create' %}">Crear nueva notificacion</a>
+            <a class="btn btn-primary mb-2" href="{% url 'app:notificacion' %}">Crear nueva notificacion</a>
             <br>
 
             <table id="example1" class="table table-bordered table-striped">
@@ -31,56 +31,7 @@
                 <th>Descripcion</th>
                 <th>Alumno</th>
                 <th>Fecha</th>
-                <th></th>
-              </tr>
-              </thead>
-              <tbody>
-                {% for usuario in usuarios %}
-                {% comment %} <a href="{% url 'app:details' usuario.id %}">{{usuario.nombre}}</a> {% endcomment %}
-                {% comment %} <a href="{% url 'app:update' usuario.id %}">Editar</a> {% endcomment %}
-                {% comment %} <a href="{% url 'app:delete' usuario.id %}">Eliminar</a> {% endcomment %}
-                
-                <tr>
-                    <td>{{usuario.nombre}}</td>
-                    <td>{{usuario.apellido_paterno}}</td>
-                    <td>{{usuario.apellido_materno}}</td>
-                    <td>{{usuario.fono}}</td>
-                    <td>{{usuario.email}}</td>
-                    <td>{{usuario.id_tipo_usuario.tipo}}</td>
-                    <td class="text-center">
-                        <a class="btn btn-primary btn-sm" href="{% url 'app:details' usuario.id %}">
-                            <i class="fas fa-folder">
-                            </i>
-                            Detalles
-                        </a>
-                        <a class="btn btn-info btn-sm" href="{% url 'app:edit' usuario.id %}">
-                            <i class="fas fa-pencil-alt">
-                            </i>
-                            Editar
-                        </a>
-                        <form action="{% url 'app:delete' usuario.id %}" method="POST" id="deleteForm">
-                          {% csrf_token %}
-                          <a class="btn btn-danger btn-sm" href="#" onclick="eliminarUsuario({{usuario.id}})">
-                              <i class="fas fa-trash">
-                              </i>
-                              Eliminar
-                            </a>
-                        </form>
-                    </td>
-                </tr>
-                {% endfor %}
-              </tbody>
-              <tfoot>
-              <tr>
-                <th>Nombre</th>
-                <th>Apellido Paterno</th>
-                <th>Apellido Materno</th>
-                <th>Fono</th>
-                <th>Email</th>
-                <th>Tipo de usuario</th>
-                <th></th>
-              </tr>
-              </tfoot>
+
             </table>
           </div>
           <!-- /.card-body -->
@@ -144,44 +95,7 @@
       "responsive": true,
     });
   });
-
-
-  
 </script>
 
-<script>
-  function eliminarUsuario(id){
-    event.preventDefault();
-    var url = "{% url 'app:delete' 123 %}";
-    console.log(id)
-    Swal.fire({
-      title: '¿Estas seguro de eliminar al usuario?',
-      text: "No se podra deshacer!",
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Si, eliminar!',
-      cancelButtonText: 'Cancelar'
-    }).then((result) => {
-      if (result.isConfirmed) {
-        document.getElementById('deleteForm').setAttribute('action',url.replace('123',id));
-        document.querySelector('#deleteForm').submit();
-        //window.location.href = url.replace('123', id);
-      }
-    })
-}
-
-</script>
-
-<script>
-  {% for message in messages %}
-    Swal.fire(
-      'Actualizado!',
-      'El usuario ha sido actualizado correctamente',
-      'success'
-    )
-  {% endfor %}
-</script>
 
 {% endblock js %}
