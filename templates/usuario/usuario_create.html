@@ -17,7 +17,8 @@
         <div class="card-body">
             <form method="POST">
                 {% csrf_token %}
-                <div class="form-group">
+                {{ form.as_p }}
+                <!--<div class="form-group">
                     <label for="inputNombre">Nombre</label>
                     {{form.nombre}}
                 </div>
@@ -36,15 +37,22 @@
                 <div class="form-group">
                     <label for="inputEmail">Email</label>
                     {{form.email}}
+                    <ul>
+                    {% for error in form.email.errors %}
+                      <div class="text-danger">
+                        <li>{{error}}</li>
+                      </div>
+                    {% endfor %}
+                    </ul>
                 </div>
                 <div class="form-group">
                     <label for="inputTipo">Tipo de usuario</label>
                     {{form.tipo}}
-                </div>
-                <div class="col">
-                    <a href="{% url 'app:usuarios' %}" class="btn btn-secondary">Cancelar</a>
-                    <input type="submit" value="Crear nuevo usuario" class="btn btn-success float-right">
-                  </div>
+                </div>-->
+              <div class="col">
+                  <a href="{% url 'app:usuarios' %}" class="btn btn-secondary">Cancelar</a>
+                  <input type="submit" value="Crear nuevo usuario" class="btn btn-success float-right">
+              </div>
             </form>
         </div>
         <!-- /.card-body -->
@@ -55,7 +63,41 @@
     </div>
     
 
+
 {% endblock content %}
+
+{% block js %}
+
+
+<script>
+  function loadingButton() {
+    let timerInterval
+    Swal.fire({
+      title: 'Cargando',
+      html: 'Enviando correo al usuario para creación de contraseña',
+      timer: 2000,
+      timerProgressBar: true,
+      didOpen: () => {
+        Swal.showLoading()
+        const b = Swal.getHtmlContainer().querySelector('b')
+        timerInterval = setInterval(() => {
+          b.textContent = Swal.getTimerLeft()
+        }, 100)
+      },
+      willClose: () => {
+        clearInterval(timerInterval)
+      }
+    }).then((result) => {
+      /* Read more about handling dismissals below */
+      if (result.dismiss === Swal.DismissReason.timer) {
+        console.log('I was closed by the timer')
+      }
+    })
+  }
+</script>
+
+
+{% endblock js %}
 
 {% comment %} <form method="POST">
 {% csrf_token %}

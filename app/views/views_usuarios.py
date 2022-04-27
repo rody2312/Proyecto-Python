@@ -18,6 +18,8 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.contrib.sites.shortcuts import get_current_site
 from ..utils import token_generator
 from django.contrib.auth.mixins import LoginRequiredMixin
+import logging
+
 
 
 # Create your views here.
@@ -35,7 +37,7 @@ class UsuariosListView(LoginRequiredMixin ,View):
 
 class UsuarioCreateView(LoginRequiredMixin, View):
     def get(self, request,*args, **kwargs):
-        form=CustomUserCreationForm()
+        form=UsuarioCreateForm()
         context={
             'form':form,
             'titulo': 'Crear Usuario'
@@ -47,12 +49,13 @@ class UsuarioCreateView(LoginRequiredMixin, View):
         if request.method=="POST":
             form = UsuarioCreateForm(request.POST)
             if form.is_valid():
+                logging.warning('Watch out!')
                 nombre = form.cleaned_data.get('nombre')
                 apellidoPaterno = form.cleaned_data.get('apellido_paterno')
                 apellidoMaterno = form.cleaned_data.get('apellido_materno')
                 fono = form.cleaned_data.get('fono')
                 email = form.cleaned_data.get('email')
-                tipo_usuario= TipoUsuario.objects.get(id=form.cleaned_data['tipo'])
+                tipo_usuario= form.cleaned_data.get('id_tipo_usuario')
                 
                 #password = self.randomPassword()
                 password = 'admin'
@@ -64,10 +67,10 @@ class UsuarioCreateView(LoginRequiredMixin, View):
                 domain = get_current_site(request).domain
                 uidb64 = urlsafe_base64_encode(force_bytes(u.pk))
 
-                link = reverse('app:password_reset_confirm', kwargs={'uidb64':uidb64, 'token': token_generator.make_token(u)})
+                link = reverse('app:custom_password_create_confirm', kwargs={'uidb64':uidb64, 'token': token_generator.make_token(u)})
                 activate_url = 'http://'+domain+link
-                email_body = 'Hola' + u.nombre + \
-                    'Por favor entra al siguiente link para verificar y crear tu contraseña\n' + activate_url
+                email_body = 'Hola ' + u.nombre + \
+                    ' Por favor entra al siguiente link para verificar y crear tu contraseña\n' + activate_url
                 # Envio de correo de creación de contraseña
                 #template = render_to_string('registration/password_reset_email.html', {
                 #    'uid': uidb64,
@@ -78,11 +81,13 @@ class UsuarioCreateView(LoginRequiredMixin, View):
 
                 mail = EmailMessage('Crear contraseña', email_body , to=[email])
                 mail.send(fail_silently=False)
+                messages.success(request, "Usuario agregado correctamente")
                 return redirect('app:usuarios')
 
-
+        
         context={
-
+            'titulo': 'Crear Usuario',
+            'form': form
         }
         return render(request, 'usuario/usuario_create.html', context)
 
@@ -110,6 +115,7 @@ class UsuarioDetailsView(LoginRequiredMixin, View):
         }
         return render(request, 'usuario/usuario_details.html', context)
 
+#Clase no usada
 class UsuarioUpdateView(LoginRequiredMixin, UpdateView):
     model= Usuario
     fields= ['nombre', 'apellido_paterno', 'apellido_materno']
@@ -124,11 +130,14 @@ class UsuarioDeleteView(LoginRequiredMixin, DeleteView):
     model = Usuario
     success_url = reverse_lazy('app:usuarios')
 
+    def get_success_url(self):
+        messages.success(self.request, "Eliminado correctamente")
+        return reverse('app:usuarios')
+
     def delete(self, request, *args, **kwargs):
         self.object = self.get_object()
         success_url = self.get_success_url()
         self.object.delete()
-        messages.success(request, "Eliminado correctamente")
         return HttpResponseRedirect(success_url)
 
 #def eliminar_usuario(request,id):

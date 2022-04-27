@@ -119,6 +119,22 @@
   $(function () {
     $("#example1").DataTable({
       "responsive": true, "lengthChange": false, "autoWidth": false,
+      "language": {
+        "processing":     "Procesando...",
+        "infoEmpty":      "Mostrando 0 a 0 de 0 registro",
+        "infoFiltered":   "(filtrado de un total de _MAX_ registros)",
+        "search": "Buscar:",
+        "zeroRecords":    "No se encuentran registros",
+        "paginate": {
+            "first":      "Primero",
+            "last":       "Ultimo",
+            "next":       "Siguiente",
+            "previous":   "Anterior"
+        },
+        "emptyTable":     "No hay registros para mostrar",
+        "info":           "Mostrando _START_ a _END_ de _TOTAL_ registros",
+        "infoEmpty":      "Mostrando 0 a 0 de 0 registros",
+      },
       "buttons": [
       {
         extend: "copy", text: "Copiar"
@@ -180,7 +196,7 @@
   {% for message in messages %}
     Swal.fire(
       'Actualizado!',
-      'El usuario ha sido actualizado correctamente',
+      '{{message}}',
       'success'
     )
   {% endfor %}
