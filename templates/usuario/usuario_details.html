@@ -1,3 +1,53 @@
-{{usuario.nombre}}
-{{usuario.apellidoPaterno}}
-{{usuario.apellidoMaterno}}
+{% extends 'home.html' %}
+
+
+
+{% block content %}
+
+<div class="col-md-6 mx-auto">
+    <div class="card card-primary">
+      <div class="card-header">
+        <h3 class="card-title">Detalles del usuario {{usuario.nombre}}</h3>
+
+        <div class="card-tools">
+          <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
+            <i class="fas fa-minus"></i>
+          </button>
+        </div>
+      </div>
+      <div class="card-body">
+              <div class="form-group">
+                  <label for="inputNombre">Nombre</label>
+                  <input class="form-control" type="text" value="{{usuario.nombre}}" readonly>
+              </div>
+              <div class="form-group">
+                  <label for="inputApellidoP">Apellido Paterno</label>
+                  <input class="form-control" type="text" value="{{usuario.apellido_paterno}}" readonly>
+              </div>
+              <div class="form-group">
+                  <label for="inputApellidoM">Apellido Materno</label>
+                  <input class="form-control" type="text" value="{{usuario.apellido_materno}}" readonly>
+              </div>
+              <div class="form-group">
+                  <label for="inputFono">Fono</label>
+                  <input class="form-control" type="text" value="{{usuario.fono}}" readonly>
+              </div>
+              <div class="form-group">
+                  <label for="inputEmail">Email</label>
+                  <input class="form-control" type="text" value="{{usuario.email}}" readonly>
+              </div>
+              <div class="form-group">
+                  <label for="inputTipo">Tipo de usuario</label>
+                  <input class="form-control" type="text" value="{{usuario.id_tipo_usuario}}" readonly>
+              </div>
+            <div class="col">
+                <a href="{% url 'app:usuarios' %}" class="btn btn-secondary">Cancelar</a>
+            </div>
+      </div>
+      <!-- /.card-body -->
+    </div>
+    <!-- /.card -->
+      
+  </div>
+
+{% endblock content %}

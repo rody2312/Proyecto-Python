@@ -4,6 +4,7 @@ from app.views.views_archivo import ArchivoCreateView, ArchivoListView
 from app.views.views_notificacion import NotificacionListView, NotificacionCreateView
 
 from .views import UsuariosListView,UsuarioCreateView,UsuarioDetailsView, UsuarioUpdateView,UsuarioDeleteView,UsuarioEditView, LoginView #NotificacionView
+from .forms import CambiarPassForm
 from django.contrib.auth import views as auth_views
 from django.urls import reverse_lazy
 
@@ -28,24 +29,32 @@ urlpatterns= [
     path('logout/', LoginView.logout_user, name="logout"),
 
 
-    ## crear password urls ##
-    path('password_reset/', auth_views.PasswordResetView.as_view(
+    # resetear password
+    path('cambiar_clave/', auth_views.PasswordResetView.as_view(
         template_name='registration/password_reset_form.html',
         subject_template_name='registration/password_reset_subject.txt',
-        email_template_name='registration/password_reset_email.html',
-        success_url='done',), name="password_reset"),
+        email_template_name='registration/password_reset_email.html',), name="custom_password_reset"),
 
-    path('password_reset/done/', 
-        auth_views.PasswordResetDoneView.as_view(
-        template_name='registration/password_reset_done.html'),name="password_reset_done"),
+    path('enviado/', auth_views.PasswordResetDoneView.as_view(
+        template_name='registration/password_reset_done.html'
+    ),name="custom_password_create_done"),
 
-    path('reset/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(
-        template_name='registration/password_reset_confirm.html',
-        success_url='/reset/done/'),name="password_reset_confirm"),
+    path('cambiar_clave/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(
+        form_class=CambiarPassForm
+    ), name="custom_password_reset_confirm"),
 
-    path('reset/done/',
-        auth_views.PasswordResetCompleteView.as_view(template_name='registration/password_reset_complete.html'),
-        name="password_reset_complete"),
+    path('cambiar_clave_hecho/', auth_views.PasswordResetCompleteView.as_view(), name="custom_password_reset_complete"),
+
+    ## crear password urls ##
+
+    path('crear/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(
+        template_name='registration/password_create_confirm.html',
+        success_url='/crear/done/',
+        form_class=CambiarPassForm),name="custom_password_create_confirm"),
+
+    path('crear/done/',
+        auth_views.PasswordResetCompleteView.as_view(template_name='registration/password_create_complete.html'),
+        name="custom_password_create_complete"),
 
 
 

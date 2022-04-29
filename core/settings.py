@@ -40,6 +40,7 @@ INSTALLED_APPS = [
 
     'core',
     'app',
+    'tareas',
 ]
 
 MIDDLEWARE = [
@@ -101,7 +102,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'es-ES'
 
 TIME_ZONE = 'UTC'
 
@@ -136,6 +137,7 @@ EMAIL_HOST_USER = 'rody.ch2312@gmail.com'
 EMAIL_HOST_PASSWORD = 'phbqvmtcxqwgzutq'
 
 
+
 # Custom User Model
 AUTH_USER_MODEL = 'app.Usuario'
 
@@ -145,16 +147,6 @@ LOGIN_REDIRECT_URL="/"
 LOGIN_URL="/login/"
 LOGOUT_REDIRECT_URL="/login/"
 
-#SMTP Configuration AWS
-#EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-#EMAIL_HOST = 'email-smtp.us-east-1.amazonaws.com'
-#EMAIL_PORT = 587
-#EMAIL_USE_TLS = True
-#EMAIL_HOST_USER = 'AKIARE6BSJDN2SI2Q7ND'
-#EMAIL_HOST_PASSWORD = 'BCS0sxAghLHPZOfUWzhr1Bq4OjRnXpSw5TtxgmRaHyq8'
 
-#SES Configuration
-#EMAIL_BACKEND = 'django_ses.SESBackend'
-#AWS_ACCESS_KEY_ID = 'AKIARE6BSJDNRE7UFZ3I'
-#AWS_SECRET_ACCESS_KEY = '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'
+
 
