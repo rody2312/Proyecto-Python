@@ -3,7 +3,6 @@ from django.shortcuts import render
 from django.views.generic import View
 from app import forms
 
-from app.models import Archivos
 
 
 

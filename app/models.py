@@ -100,14 +100,5 @@ class Notificacion(models.Model):
         managed = True
         db_table = 'notificacion'
 
-class Archivos(models.Model):
-    id_usuario = models.ForeignKey(Usuario, models.DO_NOTHING, db_column='id_usuario')
-    texto = models.TextField(null=False)
-    fecha = models.DateField(auto_now=True, null=False)
-
-    class Meta():
-        managed = True
-        db_table = 'archivo'
-
 
 
