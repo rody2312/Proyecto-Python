@@ -49,26 +49,26 @@
                     <td>{{usuario.fono}}</td>
                     <td>{{usuario.email}}</td>
                     <td>{{usuario.id_tipo_usuario.tipo}}</td>
-                    <td class="text-center">
-                        <a class="btn btn-primary btn-sm" href="{% url 'app:details' usuario.id %}">
-                            <i class="fas fa-folder">
-                            </i>
-                            Detalles
-                        </a>
-                        <a class="btn btn-info btn-sm" href="{% url 'app:edit' usuario.id %}">
-                            <i class="fas fa-pencil-alt">
-                            </i>
-                            Editar
-                        </a>
-                        <form action="{% url 'app:delete' usuario.id %}" method="POST" id="deleteForm">
-                          {% csrf_token %}
-                          <a class="btn btn-danger btn-sm" href="#" onclick="eliminarUsuario({{usuario.id}})">
-                              <i class="fas fa-trash">
+                      <td class="text-center">
+
+                        <div class="row justify-content-center">
+                          <a class="btn btn-primary btn-sm" href="{% url 'app:details' usuario.id %}">
+                              <i class="fas fa-folder">
                               </i>
-                              Eliminar
-                            </a>
-                        </form>
-                    </td>
+                          </a>
+                          <a class="btn btn-info btn-sm" href="{% url 'app:edit' usuario.id %}">
+                              <i class="fas fa-pencil-alt">
+                              </i>
+                          </a>
+                          <form action="{% url 'app:delete' usuario.id %}" method="POST" id="deleteForm">
+                            {% csrf_token %}
+                            <a class="btn btn-danger btn-sm" href="#" onclick="eliminarUsuario({{usuario.id}})">
+                                <i class="fas fa-trash">
+                                </i>
+                              </a>
+                          </form>
+                          <div>
+                      </td>
                 </tr>
                 {% endfor %}
               </tbody>
