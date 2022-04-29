@@ -2,6 +2,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render
 from django.views.generic import View
 from app import forms
+from tareas.forms import ArchivoCreateForm
+from tareas.models import Archivo
 
 
 
@@ -9,7 +11,7 @@ from app import forms
 class ArchivoListView(LoginRequiredMixin ,View):
     
     def get(self,request, *args, **kwargs):
-        archivos = Archivos.objects.all()
+        archivos = Archivo.objects.all()
         context={
             'archivos': archivos,
             'titulo': 'Archivos'
@@ -19,9 +21,10 @@ class ArchivoListView(LoginRequiredMixin ,View):
 class ArchivoCreateView(LoginRequiredMixin ,View):
     
     def get(self,request, *args, **kwargs):
-        notificaciones = Archivos.objects.all()
+        form = ArchivoCreateForm()
+        notificaciones = Archivo.objects.all()
         context={
-            'form':forms,
+            'form': form,
             'titulo': 'Crear Archivo'
         }
         return render(request, 'archivos/archivo_create.html', context)

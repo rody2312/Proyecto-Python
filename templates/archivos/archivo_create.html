@@ -18,20 +18,12 @@
             <form method="POST">
                 {% csrf_token %}
                 <div class="form-group">
-                    <label for="inputNombre">N de archivo</label>
+                    <label for="inputNombre">Nombre</label>
                     {{form.nombre}}
                 </div>
                 <div class="form-group">
-                    <label for="inputApellidoP">Nombre de archivo</label>
-                    {{form.apellido_paterno}}
-                </div>
-                <div class="form-group">
-                    <label for="inputApellidoM">Fecha de subida</label>
-                    {{form.apellido_materno}}
-                </div>
-                <div class="form-group">
-                    <label for="inputFono">Descargar</label>
-                    {{form.fono}}
+                    <label for="inputFono">Subir</label>
+                    {{form.directorio}}
                 </div>
                 <div class="col">
                     <a href="{% url 'app:archivos' %}" class="btn btn-secondary">Cancelar</a>
