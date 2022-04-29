@@ -25,4 +25,5 @@ class NotificacionCreateView(LoginRequiredMixin ,View):
             'form':forms,
             'titulo': 'Crear Notificacion'
         }
-        return render(request, '/notificacion/notificacion_create.html', context)
+        return render(request, 'notificacion/notificacion_create.html', context)
+

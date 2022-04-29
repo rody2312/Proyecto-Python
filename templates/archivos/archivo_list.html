@@ -1,5 +1,4 @@
 {% extends 'home.html' %}
-
 {% load static %}
 
 {% block libs %}
@@ -18,19 +17,20 @@
 
         <div class="card">
           <div class="card-header">
-            <h3 class="card-title">Lista de notificaciones</h3>
+            <h3 class="card-title">Lista de archivos</h3>
           </div>
           <!-- /.card-header -->
           <div class="card-body">
-            <a class="btn btn-primary mb-2" href="{% url 'app:crear_notificacion' %}">Crear nueva notificacion</a>
+            <a class="btn btn-primary mb-2" href="{% url 'app:crear_archivo' %}">Crear nuevo archivo</a>
             <br>
 
             <table id="example1" class="table table-bordered table-striped">
               <thead>
-              <tr>
-                <th>Descripcion</th>
-                <th>Alumno</th>
-                <th>Fecha</th>
+                <tr>
+                    <th>N de Archivo</th>
+                    <th>Nombre de archivo</th>
+                    <th>Fecha de subida</th>
+                    <th>Descargar</th>
 
             </table>
           </div>
@@ -95,7 +95,12 @@
       "responsive": true,
     });
   });
+
+
+  
 </script>
 
 
-{% endblock js %}
+
+{% endblock  %}
+

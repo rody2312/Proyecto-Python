@@ -1,6 +1,6 @@
 from django import forms
+from .models import Notificacion, Usuario,TipoUsuario
 
-from .models import Usuario,TipoUsuario
 
 from django.contrib.auth.forms import UserCreationForm
 
