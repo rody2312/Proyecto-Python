@@ -21,7 +21,7 @@
           </div>
           <!-- /.card-header -->
           <div class="card-body">
-            <a class="btn btn-primary mb-2" href="{% url 'app:create' %}">Crear tarea</a>
+            <a class="btn btn-primary mb-2" href="{% url 'tareas:crear_tarea' %}">Crear tarea</a>
             <br>
 
             <table id="example1" class="table table-bordered table-striped">
@@ -66,14 +66,6 @@
                 </tr>
                 {% endfor %}
               </tbody>
-              <tfoot>
-              <tr>
-                <th>Titulo</th>
-                <th>Fecha</th>
-                <th>Descripción</th>
-                <th></th>
-              </tr>
-              </tfoot>
             </table>
           </div>
           <!-- /.card-body -->

@@ -29,7 +29,7 @@ class PuntajeArchivo(models.Model):
 
 
 class Tarea(models.Model):
-    id_usuario=models.ForeignKey(Usuario, on_delete=models.CASCADE, db_column='id_usuario')
+    id_usuario=models.ForeignKey(Usuario, on_delete=models.DO_NOTHING, db_column='id_usuario')
     titulo=models.CharField(max_length=50)
     fecha=models.DateField()
     descripcion=models.TextField(blank=True, null=True)

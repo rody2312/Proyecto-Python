@@ -67,23 +67,23 @@
 
   $(function () {
     $("#example1").DataTable({
+      "language": {
+        "processing":     "Procesando...",
+        "infoEmpty":      "Mostrando 0 a 0 de 0 registro",
+        "infoFiltered":   "(filtrado de un total de _MAX_ registros)",
+        "search": "Buscar:",
+        "zeroRecords":    "No se encuentran registros",
+        "paginate": {
+            "first":      "Primero",
+            "last":       "Ultimo",
+            "next":       "Siguiente",
+            "previous":   "Anterior"
+        },
+        "emptyTable":     "No hay registros para mostrar",
+        "info":           "Mostrando _START_ a _END_ de _TOTAL_ registros",
+        "infoEmpty":      "Mostrando 0 a 0 de 0 registros",
+      },
       "responsive": true, "lengthChange": false, "autoWidth": false,
-      "buttons": [
-      {
-        extend: "copy", text: "Copiar"
-      },
-      {
-        extend: "csv"
-      },
-      {
-        extend: "pdf"
-      },
-      {
-        extend: "print", text: "Imprimir"
-      },
-      {
-        extend: "colvis", text: "Columnas visibles"
-      }]
     }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
     $('#example2').DataTable({
       "paging": true,
