@@ -1,7 +1,9 @@
 from unicodedata import name
 from django.urls import path, re_path, include
+from app.views.views_archivo import ArchivoCreateView, ArchivoListView
+from app.views.views_notificacion import NotificacionListView, NotificacionCreateView
 
-from .views import UsuariosListView,UsuarioCreateView,UsuarioDetailsView, UsuarioUpdateView,UsuarioDeleteView,UsuarioEditView, LoginView
+from .views import UsuariosListView,UsuarioCreateView,UsuarioDetailsView, UsuarioUpdateView,UsuarioDeleteView,UsuarioEditView, LoginView #NotificacionView
 from .forms import CambiarPassForm
 from django.contrib.auth import views as auth_views
 from django.urls import reverse_lazy
@@ -15,6 +17,12 @@ urlpatterns= [
     path('usuarios/details/<int:pk>/', UsuarioDetailsView.as_view(), name="details"),
     path('usuarios/update/<int:pk>/', UsuarioUpdateView.as_view(), name="update"),
     path('usuarios/delete/<int:pk>/', UsuarioDeleteView.as_view(), name="delete"),
+    path('notificacion/', NotificacionListView.as_view(), name="notificacion"),
+    path('notificacion_create/', NotificacionCreateView.as_view(), name="crear_notificacion"),
+    path('archivos/', ArchivoListView.as_view(), name="archivos"),
+    path('archivo/archivo_create', ArchivoCreateView.as_view(), name="crear_archivo"),
+
+
 
     # autenticación
     path('login/', LoginView.as_view(), name="login"),

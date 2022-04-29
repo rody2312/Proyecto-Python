@@ -82,6 +82,7 @@
   <!-- /.navbar -->
 
   <!-- Main Sidebar Container -->
+
   
   <aside class="main-sidebar sidebar-dark-primary navbar-navy elevation-4">
     <div class="sidebarPrincipal">
@@ -136,6 +137,14 @@
                </p>
              </a>
            </li>
+           <li class="nav-item">
+            <a href="{% url 'app:notificacion' %}" class="nav-link">
+              <i class="nav-icon fas fa-th"></i>
+              <p>
+                Notificaciones
+              </p>
+            </a>
+          </li>
          </ul>
        </nav>
        <!-- /.sidebar-menu -->
@@ -221,6 +230,7 @@
 <script src="{% static 'lib/adminlte-3.2.0/js/adminlte.js'%}"></script>
 <!-- sweet alert2 -->
 <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 
 {% block js %}
   
