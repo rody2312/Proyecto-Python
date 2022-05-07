@@ -1,0 +1,62 @@
+<!--{% extends 'home.html' %}
+
+{% block content %}
+
+<div class="container">
+    <div class="col-md-6 mx-auto">
+      <div class="card card-primary">
+        <div class="card-header">
+          <h3 class="card-title">Crear nueva tarea</h3>
+
+          <div class="card-tools">
+            <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
+              <i class="fas fa-minus"></i>
+            </button>
+          </div>
+        </div>
+        <div class="card-body">
+            <form method="POST">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <div class="form-group">
+                    <label for=>Titulo</label>
+                    {{form.titulo}}
+                </div>
+                <div class="form-group">
+                    <label for=>Fecha</label>
+                    {{form.fecha}}
+                 </div>
+                <div class="form-group">
+                    <label for=>Descripcion</label>
+                    {{form.descripcion}}
+                </div>
+              <div class="col">
+                  <a href="{% url 'app:tareas_create/' %}" class="btn btn-secondary">Cancelar</a>
+                  <input type="submit" value="Crear nueva tarea" class="btn btn-success float-right">
+              </div>
+            </form>
+        </div>
+        <!-- /.card-body
+      </div>
+      <!-- /.card
+        
+    </div>
+</div>
+    
+
+
+{% endblock content %}
+
+{% block js %}
+
+{% endblock js %} !-->
+
+{% comment %} <form method="POST">
+{% csrf_token %}
+Nombre: {{form.nombre}}
+<br>
+Apellido Paterno: {{form.apellidoPaterno}}
+<br>
+Apellido Materno: {{form.apellidoMaterno}}
+<button type="submit">Agregar</button>
+</form> {% endcomment %}
