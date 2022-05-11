@@ -30,38 +30,40 @@
                 <th>Titulo</th>
                 <th>Fecha</th>
                 <th>Descripción</th>
+                <th>Creado por</th>
                 <th></th>
               </tr>
               </thead>
               <tbody>
-                {% for usuario in usuarios %}
+                {% for tarea in tareas %}
                 {% comment %} <a href="{% url 'app:details' usuario.id %}">{{usuario.nombre}}</a> {% endcomment %}
                 {% comment %} <a href="{% url 'app:update' usuario.id %}">Editar</a> {% endcomment %}
                 {% comment %} <a href="{% url 'app:delete' usuario.id %}">Eliminar</a> {% endcomment %}
                 
                 <tr>
-                    <td>{{usuario.nombre}}</td>
-                    <td>{{usuario.apellido_paterno}}</td>
-                    <td>{{usuario.apellido_materno}}</td>
+                    <td>{{tarea.titulo}}</td>
+                    <td>{{tarea.fecha}}</td>
+                    <td>{{tarea.descripcion}}</td>
+                    <td>{{tarea.id_usuario}}</td>
                     <td class="text-center">
-                        <a class="btn btn-primary btn-sm" href="{% url 'app:details' usuario.id %}">
+
+                      <div class="row justify-content-center">
+                        <a class="btn btn-primary btn-sm" href="{% url 'tareas:details' tarea.id %}">
                             <i class="fas fa-folder">
                             </i>
-                            Detalles
                         </a>
-                        <a class="btn btn-info btn-sm" href="{% url 'app:edit' usuario.id %}">
+                        <a class="btn btn-info btn-sm" href="{% url 'tareas:edit' tarea.id %}">
                             <i class="fas fa-pencil-alt">
                             </i>
-                            Editar
                         </a>
-                        <form action="{% url 'app:delete' usuario.id %}" method="POST" id="deleteForm">
+                        <form action="{% url 'tareas:delete' tarea.id %}" method="POST" id="deleteForm">
                           {% csrf_token %}
-                          <a class="btn btn-danger btn-sm" href="#" onclick="eliminarUsuario({{usuario.id}})">
+                          <a class="btn btn-danger btn-sm" href="#" onclick="eliminarUsuario({{tarea.id}})">
                               <i class="fas fa-trash">
                               </i>
-                              Eliminar
                             </a>
                         </form>
+                      </div>
                     </td>
                 </tr>
                 {% endfor %}
@@ -136,6 +138,41 @@
       responsive: true,
     });
   });
+</script>
+
+<script>
+  function eliminarUsuario(id){
+    event.preventDefault();
+    var url = "{% url 'tareas:delete' 123 %}";
+    console.log(id)
+    Swal.fire({
+      title: '¿Estas seguro de eliminar la tarea?',
+      text: "No se podra deshacer!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Si, eliminar!',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        document.getElementById('deleteForm').setAttribute('action',url.replace('123',id));
+        document.querySelector('#deleteForm').submit();
+        //window.location.href = url.replace('123', id);
+      }
+    })
+}
+
+</script>
+
+<script>
+  {% for message in messages %}
+    Swal.fire(
+      'Actualizado!',
+      '{{message}}',
+      'success'
+    )
+  {% endfor %}
 </script>
 
 {% endblock js %}

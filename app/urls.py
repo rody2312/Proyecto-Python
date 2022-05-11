@@ -15,7 +15,7 @@ urlpatterns= [
     path('usuarios/', UsuariosListView.as_view(), name="usuarios"),
     path('usuarios/create/', UsuarioCreateView.as_view(), name="create"),
     path('usuarios/details/<int:pk>/', UsuarioDetailsView.as_view(), name="details"),
-    path('usuarios/update/<int:pk>/', UsuarioUpdateView.as_view(), name="update"),
+    path('usuarios/edit/<int:pk>/', UsuarioEditView.as_view(), name="edit"),
     path('usuarios/delete/<int:pk>/', UsuarioDeleteView.as_view(), name="delete"),
     path('notificacion/', NotificacionListView.as_view(), name="notificacion"),
     path('notificacion_create/', NotificacionCreateView.as_view(), name="crear_notificacion"),
@@ -67,6 +67,5 @@ urlpatterns= [
     #re_path('password_reset/done/',auth_views.PasswordResetDoneView.as_view(),name='password_reset_done'),
     #re_path('reset/<uidb64>/<token>/',auth_views.PasswordResetConfirmView.as_view(),name='password_reset_confirm'),
     #re_path('reset/done/',auth_views.PasswordResetCompleteView.as_view(),name='password_reset_complete'),
-    path('usuarios/edit/<int:pk>/', UsuarioEditView.as_view(), name="edit")
 
 ]

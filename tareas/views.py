@@ -1,7 +1,10 @@
-from django.shortcuts import render
-from django.views.generic import View
+from django.http import HttpResponseRedirect
+from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse, reverse_lazy
+from django.views.generic import View, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from tareas.forms import ArchivoCreateForm, TareaCreateForm
+from django.contrib import messages
 
 from tareas.models import Tarea
 
@@ -36,40 +39,52 @@ class TareasCreateView(LoginRequiredMixin ,View):
                 titulo = form.cleaned_data.get('titulo')
                 fecha = form.cleaned_data.get('fecha')
                 descripcion = form.cleaned_data.get('descripcion')
-                fono = form.cleaned_data.get('fono')
-                email = form.cleaned_data.get('email')
-                tipo_usuario= form.cleaned_data.get('id_tipo_usuario')
-                
-                #password = self.randomPassword()
-                password = 'admin'
-                hashPass = make_password(password)
+                usuarioActual= request.user
+                print(usuarioActual)
 
-                u, created = Usuario.objects.get_or_create(nombre=nombre, apellido_paterno=apellidoPaterno, apellido_materno=apellidoMaterno, fono=fono, email=email, id_tipo_usuario=tipo_usuario, password=hashPass)
+                u, created = Tarea.objects.get_or_create(id_usuario=usuarioActual, titulo=titulo, fecha=fecha, descripcion=descripcion)
                 u.save()
 
-                domain = get_current_site(request).domain
-                uidb64 = urlsafe_base64_encode(force_bytes(u.pk))
-
-                link = reverse('app:custom_password_create_confirm', kwargs={'uidb64':uidb64, 'token': token_generator.make_token(u)})
-                activate_url = 'http://'+domain+link
-                email_body = 'Hola ' + u.nombre + \
-                    ' Por favor entra al siguiente link para verificar y crear tu contraseña\n' + activate_url
-                # Envio de correo de creación de contraseña
-                #template = render_to_string('registration/password_reset_email.html', {
-                #    'uid': uidb64,
-                #    'token': token_generator.make_token(u),
-                #    'domain': domain,
-                #    'procotol': 'https'
-                #})
-
-                mail = EmailMessage('Crear contraseña', email_body , to=[email])
-                mail.send(fail_silently=False)
-                messages.success(request, "Usuario agregado correctamente")
-                return redirect('app:usuarios')
+                messages.success(request, "Tarea agregada correctamente")
+                return redirect('tareas:tareas')
 
         
         context={
             'titulo': 'Crear Usuario',
             'form': form
         }
-        return render(request, 'usuario/usuario_create.html', context)
+        return render(request, 'tareas/tarea_create.html', context)
+
+
+class TareaDetailsView(LoginRequiredMixin, View):
+    def get(self, request, pk, *args, **kwargs):
+        usuario = get_object_or_404(Tarea, pk=pk)
+        context={
+            'usuario':usuario
+        }
+        return render(request, 'tareas/tarea_details.html', context)
+
+
+class TareaDeleteView(LoginRequiredMixin, DeleteView):
+    model = Tarea
+    success_url = reverse_lazy('tareas:tareas')
+
+    def get_success_url(self):
+        messages.success(self.request, "Eliminado correctamente")
+        return reverse('tareas:tareas')
+
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        success_url = self.get_success_url()
+        self.object.delete()
+        return HttpResponseRedirect(success_url)
+
+
+class TareaEditView(LoginRequiredMixin, UpdateView):
+    model = Tarea
+    form_class = TareaCreateForm
+    template_name = "tareas/tarea_edit.html"
+
+    def get_success_url(self):
+        messages.success(self.request, "La tarea ha sido actualizado correctamente")
+        return reverse_lazy('tareas:tareas')

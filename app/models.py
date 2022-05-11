@@ -90,6 +90,9 @@ class Usuario(AbstractUser):
     class Meta:
         managed = True
         db_table = 'usuarios'
+    
+    def __str__(self):
+        return self.nombre + " " + self.apellido_paterno + " " + self.apellido_materno
 
 class Notificacion(models.Model):
     id_usuario = models.ForeignKey(Usuario, models.DO_NOTHING, db_column='id_usuario')
