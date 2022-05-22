@@ -4,50 +4,59 @@
 
 {% block content %}
 
-<div class="col-md-6 mx-auto">
-    <div class="card card-primary">
-      <div class="card-header">
-        <h3 class="card-title">Detalles del usuario {{usuario.nombre}}</h3>
+<div class="container-fluid">
 
-        <div class="card-tools">
-          <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
-            <i class="fas fa-minus"></i>
-          </button>
+  <div class="row">
+    <div class="col-12">
+
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">Puntajes de las tareas</h3>
+          <a class="btn btn-primary float-right" href="{% url 'tareas:tareas' %}">Volver</a>
         </div>
+        <!-- /.card-header -->
+        <div class="card-body">
+          <table id="example1" class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th>Usuario</th>
+                <th>Puntaje</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for usuario in usuarios %}
+              {% comment %} <a href="{% url 'app:details' usuario.id %}">{{usuario.nombre}}</a> {% endcomment %}
+              {% comment %} <a href="{% url 'app:update' usuario.id %}">Editar</a> {% endcomment %}
+              {% comment %} <a href="{% url 'app:delete' usuario.id %}">Eliminar</a> {% endcomment %}
+              
+              <tr>
+                  <td>{{usuario.nombre}} {{usuario.apellido_paterno}} {{usuario.apellido_materno}}</td>
+                  <td class="text-center">
+
+                    <div class="row justify-content-center">
+                      <a class="btn btn-primary btn-sm" href="">
+                          <i class="fas fa-folder">
+                          </i>
+                      </a>
+                      <a class="btn btn-info btn-sm" href="">
+                          <i class="fas fa-pencil-alt">
+                          </i>
+                      </a>
+                    </div>
+                  </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        <!-- /.card-body -->
       </div>
-      <div class="card-body">
-              <div class="form-group">
-                  <label for="inputNombre">Nombre</label>
-                  <input class="form-control" type="text" value="{{usuario.nombre}}" readonly>
-              </div>
-              <div class="form-group">
-                  <label for="inputApellidoP">Apellido Paterno</label>
-                  <input class="form-control" type="text" value="{{usuario.apellido_paterno}}" readonly>
-              </div>
-              <div class="form-group">
-                  <label for="inputApellidoM">Apellido Materno</label>
-                  <input class="form-control" type="text" value="{{usuario.apellido_materno}}" readonly>
-              </div>
-              <div class="form-group">
-                  <label for="inputFono">Fono</label>
-                  <input class="form-control" type="text" value="{{usuario.fono}}" readonly>
-              </div>
-              <div class="form-group">
-                  <label for="inputEmail">Email</label>
-                  <input class="form-control" type="text" value="{{usuario.email}}" readonly>
-              </div>
-              <div class="form-group">
-                  <label for="inputTipo">Tipo de usuario</label>
-                  <input class="form-control" type="text" value="{{usuario.id_tipo_usuario}}" readonly>
-              </div>
-            <div class="col">
-                <a href="{% url 'app:usuarios' %}" class="btn btn-secondary">Cancelar</a>
-            </div>
-      </div>
-      <!-- /.card-body -->
+      <!-- /.card -->
     </div>
-    <!-- /.card -->
-      
+    <!-- /.col -->
   </div>
+  <!-- /.row -->
+</div>
+<!-- /.container-fluid -->
 
 {% endblock content %}

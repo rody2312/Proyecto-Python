@@ -27,11 +27,10 @@
             <table id="example1" class="table table-bordered table-striped">
               <thead>
               <tr>
-                <th>Titulo</th>
                 <th>Fecha</th>
-                <th>Descripción</th>
                 <th>Creado por</th>
-                <th></th>
+                <th>Opciones</th>
+                <th>Foro</th>
               </tr>
               </thead>
               <tbody>
@@ -41,9 +40,7 @@
                 {% comment %} <a href="{% url 'app:delete' usuario.id %}">Eliminar</a> {% endcomment %}
                 
                 <tr>
-                    <td>{{tarea.titulo}}</td>
                     <td>{{tarea.fecha}}</td>
-                    <td>{{tarea.descripcion}}</td>
                     <td>{{tarea.id_usuario}}</td>
                     <td class="text-center">
 
@@ -61,10 +58,23 @@
                           <a class="btn btn-danger btn-sm" href="#" onclick="eliminarUsuario({{tarea.id}})">
                               <i class="fas fa-trash">
                               </i>
-                            </a>
+                          </a>
                         </form>
                       </div>
                     </td>
+                    
+                      {% if tarea.id not in list_foros %}
+                        <td class="text-center">
+                          <a name="" id="" class="btn btn-success" href="{% url 'tareas:crear_foro' tarea.id %}" role="button">Crear foro</a>
+                        </td>
+
+                      {% else %}
+                        <td class="text-center">
+                          <a name="" id="" class="btn btn-success" href="#" role="button">Ver foro</a>
+                        </td>
+                      
+                      {% endif %}
+                      
                 </tr>
                 {% endfor %}
               </tbody>
