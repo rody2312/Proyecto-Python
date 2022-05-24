@@ -10,7 +10,6 @@
 
 {% block content %}
 
-
 <div class="container-fluid">
 
     <div class="row">
@@ -22,7 +21,7 @@
           </div>
           <!-- /.card-header -->
           <div class="card-body">
-            <a class="btn btn-primary mb-2" href="{% url 'app:evaluacion' %}">Crear nueva evaluacion</a>
+            <a class="btn btn-primary mb-2" href="{% url 'app:evaluacion/evaluacion_create' %}">Crear nueva evaluacion</a>
             <br>
 
             <table id="example1" class="table table-bordered table-striped">
@@ -30,7 +29,7 @@
               <tr>
                 <th>Numero de evaluacion</th>
                 <th>Titulo de evaluacion</th>
-                <th>Fecha</th>
+                <th>Fecha de evaluacion</th>
                 <th>Detalles</th>
               </tr>
               </thead>
@@ -39,41 +38,8 @@
                 {% comment %} <a href="{% url 'app:details' usuario.id %}">{{usuario.nombre}}</a> {% endcomment %}
                 {% comment %} <a href="{% url 'app:update' usuario.id %}">Editar</a> {% endcomment %}
                 {% comment %} <a href="{% url 'app:delete' usuario.id %}">Eliminar</a> {% endcomment %}
-                
-                <tr>
-                    <td>{{usuario.nombre}}</td>
-                    <td>{{usuario.apellido_paterno}}</td>
-                    <td>{{usuario.apellido_materno}}</td>
-                    <td>{{usuario.fono}}</td>
-                    <td>{{usuario.email}}</td>
-                    <td>{{usuario.id_tipo_usuario.tipo}}</td>
-                      <td class="text-center">
-
-                        <div class="row justify-content-center">
-                          <a class="btn btn-primary btn-sm" href="{% url 'app:details' usuario.id %}">
-                              <i class="fas fa-folder">
-                              </i>
-                          </a>
-                          <a class="btn btn-info btn-sm" href="{% url 'app:edit' usuario.id %}">
-                              <i class="fas fa-pencil-alt">
-                              </i>
-                          </a>
-                          <form action="{% url 'app:delete' usuario.id %}" method="POST" id="deleteForm">
-                            {% csrf_token %}
-                            <a class="btn btn-danger btn-sm" href="#" onclick="eliminarUsuario({{usuario.id}})">
-                                <i class="fas fa-trash">
-                                </i>
-                              </a>
-                          </form>
-                          <div>
-                      </td>
-                </tr>
                 {% endfor %}
               </tbody>
-              <tfoot>
-              <tr>
-              </tr>
-              </tfoot>
             </table>
           </div>
           <!-- /.card-body -->
@@ -193,4 +159,4 @@
   {% endfor %}
 </script>
 
-{% endblock js %}
+{% endblock  %}
