@@ -1,9 +1,10 @@
 from unicodedata import name
 from django.urls import path, re_path, include
 from app.views.views_archivo import ArchivoCreateView, ArchivoListView
+from app.views.views_evaluacion import EvaluacionListView #EvaluacionCreateView
 from app.views.views_notificacion import NotificacionListView, NotificacionCreateView
 
-from .views import UsuariosListView,UsuarioCreateView,UsuarioDetailsView, UsuarioUpdateView,UsuarioDeleteView,UsuarioEditView, LoginView #NotificacionView
+from .views import UsuariosListView,UsuarioCreateView,UsuarioDetailsView, UsuarioUpdateView,UsuarioDeleteView,UsuarioEditView, LoginView
 from .forms import CambiarPassForm
 from django.contrib.auth import views as auth_views
 from django.urls import reverse_lazy
@@ -20,9 +21,13 @@ urlpatterns= [
     path('notificacion/', NotificacionListView.as_view(), name="notificacion"),
     path('notificacion_create/', NotificacionCreateView.as_view(), name="crear_notificacion"),
     path('archivos/', ArchivoListView.as_view(), name="archivos"),
-    path('archivo/archivo_create', ArchivoCreateView.as_view(), name="crear_archivo"),
+    path('archivo_create/', ArchivoCreateView.as_view(), name="crear_archivo"),
+    path('evaluacion/', EvaluacionListView.as_view(), name="evaluacion"),
+    #path('evaluacion_create/', EvaluacionCreateView.as_view(), name="crear_evaluacion"),
+    #path('evaluacion/', EvaluacionListView.as_view(), name="evaluacion"),
+    #path('evaluacion/', EvaluacionListView.as_view(), name="evaluacion"),
 
-
+#Evaluacion
 
     # autenticación
     path('login/', LoginView.as_view(), name="login"),

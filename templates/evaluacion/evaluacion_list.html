@@ -10,6 +10,7 @@
 
 {% block content %}
 
+
 <div class="container-fluid">
 
     <div class="row">
@@ -17,19 +18,20 @@
 
         <div class="card">
           <div class="card-header">
-            <h3 class="card-title">Lista de notificaciones</h3>
+            <h3 class="card-title">Lista de evaluaciones</h3>
           </div>
           <!-- /.card-header -->
           <div class="card-body">
-            <a class="btn btn-primary mb-2" href="{% url 'app:crear_notificacion' %}">Crear nueva notificacion</a>
+            <a class="btn btn-primary mb-2" href="{% url 'app:evaluacion' %}">Crear nueva evaluacion</a>
             <br>
 
             <table id="example1" class="table table-bordered table-striped">
               <thead>
               <tr>
-                <th>Descripcion</th>
-                <th>Alumno</th>
+                <th>Numero de evaluacion</th>
+                <th>Titulo de evaluacion</th>
                 <th>Fecha</th>
+                <th>Detalles</th>
               </tr>
               </thead>
               <tbody>
@@ -68,6 +70,9 @@
                 </tr>
                 {% endfor %}
               </tbody>
+              <tfoot>
+              <tr>
+              </tr>
               </tfoot>
             </table>
           </div>
@@ -188,4 +193,4 @@
   {% endfor %}
 </script>
 
-{% endblock  %}
+{% endblock js %}

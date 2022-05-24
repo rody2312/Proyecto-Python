@@ -130,14 +130,6 @@
              </a>
            </li>
            <li class="nav-item">
-             <a href="{% url 'tareas:tareas' %}" class="nav-link">
-               <i class="nav-icon fas fa-book"></i>
-               <p>
-                 Tareas
-               </p>
-             </a>
-           </li>
-           <li class="nav-item">
             <a href="{% url 'app:notificacion' %}" class="nav-link">
               <i class="nav-icon fas fa-th"></i>
               <p>
@@ -145,11 +137,27 @@
               </p>
             </a>
           </li>
+           <li class="nav-item">
+             <a href="{% url 'tareas:tareas' %}" class="nav-link">
+               <i class="nav-icon fas fa-book"></i>
+               <p>
+                 Tareas
+               </p>
+             </a>
+           </li>
           <li class="nav-item">
             <a href="{% url 'app:archivos' %}" class="nav-link">
               <i class="nav-icon fas fa-book"></i>
               <p>
                 Archivos
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="{% url 'app:evaluacion' %}" class="nav-link">
+              <i class="nav-icon fas fa-book"></i>
+              <p>
+                Evaluaciones
               </p>
             </a>
           </li>

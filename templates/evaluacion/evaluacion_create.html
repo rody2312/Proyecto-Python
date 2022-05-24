@@ -18,15 +18,18 @@
             <form method="POST">
                 {% csrf_token %}
                 <div class="form-group">
-                    <label for="inputTexto">Descripción</label>
+                    <label for="inputTexto">Numero</label>
                     {{form.texto}}
                 </div>
                 <div class="form-group">
-                    <label for="inputAlumno">Alumno</label>
-                    {{form.id_usuario}}
+                    <label for="inputAlumno">Titulo</label>
+                    {{form.texto}}
                 </div>
+                <div class="form-group">
+                  <label for="inputTexto">Detalles</label>
+                  {{form.texto}}
                 <div class="col">
-                    <a href="{% url 'app:crear_notificacion' %}" class="btn btn-secondary">Cancelar</a>
+                    <a href="{% url 'app:crear_evaluacion' %}" class="btn btn-secondary">Cancelar</a>
                     <input type="submit" value="Crear nueva notificacion" class="btn btn-success float-right">
                   </div>
             </form>
