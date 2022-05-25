@@ -101,11 +101,9 @@ class Notificacion(models.Model):
         db_table = 'notificacion'
 
 class Evaluacion(models.Model):
-    id_usuario = models.ForeignKey(Usuario, models.DO_NOTHING, db_column='id_usuario')
-    numero = models.TextField(null=False)
     titulo = models.TextField(null=False)
-    detalles = models.TextField(null=False)
-    fecha = models.DateField(auto_now=True, null=False)
+    descripcion = models.TextField(null=False)
+    fecha = models.DateField(null=False)
 
     class Meta():
         managed = True
