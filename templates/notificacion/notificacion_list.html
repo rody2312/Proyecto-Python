@@ -30,42 +30,36 @@
                 <th>Descripcion</th>
                 <th>Alumno</th>
                 <th>Fecha</th>
+                <th>Acciones</th>
               </tr>
               </thead>
               <tbody>
-                {% for usuario in usuarios %}
-                {% comment %} <a href="{% url 'app:details' usuario.id %}">{{usuario.nombre}}</a> {% endcomment %}
-                {% comment %} <a href="{% url 'app:update' usuario.id %}">Editar</a> {% endcomment %}
-                {% comment %} <a href="{% url 'app:delete' usuario.id %}">Eliminar</a> {% endcomment %}
-                
+                {% for notificacion in notificaciones %}
                 <tr>
-                    <td>{{usuario.nombre}}</td>
-                    <td>{{usuario.apellido_paterno}}</td>
-                    <td>{{usuario.apellido_materno}}</td>
-                    <td>{{usuario.fono}}</td>
-                    <td>{{usuario.email}}</td>
-                    <td>{{usuario.id_tipo_usuario.tipo}}</td>
-                      <td class="text-center">
+                  <td>{{notificacion.descripcion}}</td>
+                  <td>{{notificacion.alumno}}</td>
+                  <td>{{notificacion.fecha}}</td>
+                    <td class="text-center">
 
-                        <div class="row justify-content-center">
-                          <a class="btn btn-primary btn-sm" href="{% url 'app:details' usuario.id %}">
-                              <i class="fas fa-folder">
+                      <div class="row justify-content-center">
+                        <a class="btn btn-primary btn-sm" href="{% url 'app:details' notificacion.id %}">
+                            <i class="fas fa-folder">
+                            </i>
+                        </a>
+                        <a class="btn btn-info btn-sm" href="{% url 'app:edit' notificacion.id %}">
+                            <i class="fas fa-pencil-alt">
+                            </i>
+                        </a>
+                        <form action="{% url 'app:delete' notificacion.id %}" method="POST" id="deleteForm">
+                          {% csrf_token %}
+                          <a class="btn btn-danger btn-sm" href="#" onclick="eliminarNotificacion({{notificacion.id}})">
+                              <i class="fas fa-trash">
                               </i>
-                          </a>
-                          <a class="btn btn-info btn-sm" href="{% url 'app:edit' usuario.id %}">
-                              <i class="fas fa-pencil-alt">
-                              </i>
-                          </a>
-                          <form action="{% url 'app:delete' usuario.id %}" method="POST" id="deleteForm">
-                            {% csrf_token %}
-                            <a class="btn btn-danger btn-sm" href="#" onclick="eliminarUsuario({{usuario.id}})">
-                                <i class="fas fa-trash">
-                                </i>
-                              </a>
-                          </form>
-                          <div>
-                      </td>
-                </tr>
+                            </a>
+                        </form>
+                        <div>
+                    </td>
+              </tr> 
                 {% endfor %}
               </tbody>
               </tfoot>
@@ -154,12 +148,12 @@
 </script>
 
 <script>
-  function eliminarUsuario(id){
+  function eliminarNotificacion(id){
     event.preventDefault();
     var url = "{% url 'app:delete' 123 %}";
     console.log(id)
     Swal.fire({
-      title: '¿Estas seguro de eliminar al usuario?',
+      title: '¿Estas seguro de eliminar la notificacion?',
       text: "No se podra deshacer!",
       icon: 'warning',
       showCancelButton: true,

@@ -13,20 +13,33 @@ from django.urls import reverse_lazy
 app_name="app"
 
 urlpatterns= [
+    #USUARIOS
     path('usuarios/', UsuariosListView.as_view(), name="usuarios"),
     path('usuarios/create/', UsuarioCreateView.as_view(), name="create"),
     path('usuarios/details/<int:pk>/', UsuarioDetailsView.as_view(), name="details"),
     path('usuarios/update/<int:pk>/', UsuarioUpdateView.as_view(), name="update"),
     path('usuarios/delete/<int:pk>/', UsuarioDeleteView.as_view(), name="delete"),
+
+    #NOTIFICACION
     path('notificacion/', NotificacionListView.as_view(), name="notificacion"),
     path('notificacion_create/', NotificacionCreateView.as_view(), name="crear_notificacion"),
+    #path('notificacion/details/<int:pk>/', NotificacionDetailsView.as_view(), name="notificacion_details"),
+    #path('notificacion/update/<int:pk>/', NotificacionUpdateView.as_view(), name="notificacion_update"),
+    # path('notificacion/delete/<int:pk>/', NotificacionDeleteView.as_view(), name="notificacion_delete"),
+
+    #ARCHIVOS
     path('archivos/', ArchivoListView.as_view(), name="archivos"),
     path('archivo_create/', ArchivoCreateView.as_view(), name="crear_archivo"),
+
+    #EVALUACION
     path('evaluacion/', EvaluacionListView.as_view(), name="evaluacion"),
     path('evaluacion_create/', EvaluacionCreateView.as_view(), name="crear_evaluacion"),
     #path('evaluacion/details/<int:pk>/', EvaluacionDetailsView.as_view(), name="evaluacion_details"),
     #path('evaluacion/update/<int:pk>/', EvaluacionUpdateView.as_view(), name="evaluacion_update"),
-    path('evaluacion/delete/<int:pk>/', EvaluacionDeleteView.as_view(), name="evaluacion_delete"),
+    #path('evaluacion/delete/<int:pk>/', EvaluacionDeleteView.as_view(), name="evaluacion_delete"),
+
+
+
 
     #path('evaluacion/evaluacion_details/', EvaluacionDetailsView.as_view(), name="detalles evaluacion"),
     #path('evaluacion/evaluacion_form/', EvaluacionFormView.as_view(), name="formulario evaluacion"),
