@@ -109,5 +109,14 @@ class Evaluacion(models.Model):
         managed = True
         db_table = 'evaluacion'
 
+class Puntaje(models.Model):
+    clase = models.TextField(null=False)
+    fecha = models.DateField(null=False)
+    detalles = models.TextField(null=False)
+
+    class Meta():
+        managed = True
+        db_table = 'puntaje'
+
 
 

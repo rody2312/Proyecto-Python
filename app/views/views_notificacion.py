@@ -9,6 +9,7 @@ from django.contrib import messages
 
 from app.models import Notificacion
 
+#LISTAR NOTIFICACION
 
 class NotificacionListView(LoginRequiredMixin ,View):
      
@@ -20,6 +21,8 @@ class NotificacionListView(LoginRequiredMixin ,View):
             'titulo': 'Notificaciones'
         }
         return render(request, 'notificacion/notificacion_list.html', context)
+
+#CREAR NOTIFICACION
 
 class NotificacionCreateView(LoginRequiredMixin ,View):
     
@@ -49,6 +52,7 @@ class NotificacionCreateView(LoginRequiredMixin ,View):
         }
         return render(request, 'notificacion/notificacion_create.html', context)
 
+#ELIMINAR NOTIFICACION
 
 class NotificacionDeleteView(LoginRequiredMixin, DeleteView):
     model = Notificacion

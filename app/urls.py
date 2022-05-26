@@ -3,6 +3,7 @@ from django.urls import path, re_path, include
 from app.views.views_archivo import ArchivoCreateView, ArchivoListView
 from app.views.views_evaluacion import EvaluacionDeleteView, EvaluacionDetailsView, EvaluacionListView, EvaluacionCreateView
 from app.views.views_notificacion import NotificacionDeleteView, NotificacionListView, NotificacionCreateView
+from app.views.views_puntaje import PuntajeCreateView, PuntajeListView
 
 from .views import UsuariosListView,UsuarioCreateView,UsuarioDetailsView, UsuarioUpdateView,UsuarioDeleteView,UsuarioEditView, LoginView
 from .forms import CambiarPassForm
@@ -35,7 +36,9 @@ urlpatterns= [
     path('evaluacion/details/<int:pk>/', EvaluacionDetailsView.as_view(), name="evaluacion_details"),
     path('evaluacion/delete/<int:pk>/', EvaluacionDeleteView.as_view(), name="evaluacion_delete"),
 
-
+    #PUNTAJES
+    path('puntaje/', PuntajeListView.as_view(), name="puntaje"),
+    path('puntaje_create/', PuntajeCreateView.as_view(), name="crear_puntaje"),
 
 #Evaluacion
 

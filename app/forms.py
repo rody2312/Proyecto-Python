@@ -1,5 +1,5 @@
 from django import forms
-from .models import Evaluacion, Notificacion, Usuario,TipoUsuario
+from .models import Evaluacion, Notificacion, Puntaje, Usuario,TipoUsuario
 
 
 from django.contrib.auth.forms import UserCreationForm
@@ -216,3 +216,19 @@ class EvaluacionCreateForm(forms.ModelForm):
         self.fields['titulo'].required = True
         self.fields['descripcion'].required = True
         self.fields['fecha'].required = True
+
+
+class PuntajeCreateForm(forms.ModelForm):
+    class Meta:
+        model=Puntaje
+        fields=('texto',)
+
+        widgets = {
+            'clase': forms.TextInput(attrs={'class': 'form-control'}),
+            'detalles': forms.TextInput(attrs={'class': 'form-control'}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super(NotificacionCreateForm, self).__init__(*args, **kwargs)
+        self.fields['texto'].required = True
+        self.fields['detalles'].required = True
