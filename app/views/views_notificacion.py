@@ -1,6 +1,8 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, render
-from django.views.generic import View
+from django.urls import reverse, reverse_lazy
+from django.views.generic import View, DeleteView
 from ..forms import NotificacionCreateForm
 from app import forms
 from django.contrib import messages
@@ -33,12 +35,31 @@ class NotificacionCreateView(LoginRequiredMixin ,View):
         if request.method=="POST":
             form = NotificacionCreateForm(request.POST)
             if form.is_valid():
-                descripcion = form.cleaned_data.get('descripcion')
-                alumno = form.cleaned_data.get('alumno')
-                fecha = form.cleaned_data.get('fecha')
+                descripcion = form.cleaned_data.get('texto')
+                usuarioActual= request.user
 
-                u, created = Notificacion.objects.get_or_create(descripcion=descripcion,alumno=alumno,fecha=fecha,)
+                u, created = Notificacion.objects.get_or_create(texto=descripcion, id_usuario=usuarioActual)
                 u.save()
 
                 messages.success(request, "Notificacion agregada correctamente")
                 return redirect('app:notificacion')
+        context={
+            'titulo': 'Crear Notificacion',
+            'form': form
+        }
+        return render(request, 'notificacion/notificacion_create.html', context)
+
+
+class NotificacionDeleteView(LoginRequiredMixin, DeleteView):
+    model = Notificacion
+    success_url = reverse_lazy('app:notificacion')
+
+    def get_success_url(self):
+        messages.success(self.request, "Eliminado correctamente")
+        return reverse('app:notificacion')
+
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        success_url = self.get_success_url()
+        self.object.delete()
+        return HttpResponseRedirect(success_url)

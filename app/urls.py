@@ -2,7 +2,7 @@ from unicodedata import name
 from django.urls import path, re_path, include
 from app.views.views_archivo import ArchivoCreateView, ArchivoListView
 from app.views.views_evaluacion import EvaluacionDeleteView, EvaluacionListView, EvaluacionCreateView
-from app.views.views_notificacion import NotificacionListView, NotificacionCreateView
+from app.views.views_notificacion import NotificacionDeleteView, NotificacionListView, NotificacionCreateView
 
 from .views import UsuariosListView,UsuarioCreateView,UsuarioDetailsView, UsuarioUpdateView,UsuarioDeleteView,UsuarioEditView, LoginView
 from .forms import CambiarPassForm
@@ -23,9 +23,7 @@ urlpatterns= [
     #NOTIFICACION
     path('notificacion/', NotificacionListView.as_view(), name="notificacion"),
     path('notificacion_create/', NotificacionCreateView.as_view(), name="crear_notificacion"),
-    #path('notificacion/details/<int:pk>/', NotificacionDetailsView.as_view(), name="notificacion_details"),
-    #path('notificacion/update/<int:pk>/', NotificacionUpdateView.as_view(), name="notificacion_update"),
-    # path('notificacion/delete/<int:pk>/', NotificacionDeleteView.as_view(), name="notificacion_delete"),
+    path('notificacion/delete/<int:pk>/', NotificacionDeleteView.as_view(), name="notificacion_delete"),
 
     #ARCHIVOS
     path('archivos/', ArchivoListView.as_view(), name="archivos"),

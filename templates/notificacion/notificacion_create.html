@@ -21,10 +21,6 @@
                     <label for="inputTexto">Descripción</label>
                     {{form.texto}}
                 </div>
-                <div class="form-group">
-                    <label for="inputAlumno">Alumno</label>
-                    {{form.id_usuario}}
-                </div>
                 <div class="col">
                     <a href="{% url 'app:notificacion' %}" class="btn btn-secondary">Cancelar</a>
                     <input type="submit" value="Crear nueva notificacion" class="btn btn-success float-right">

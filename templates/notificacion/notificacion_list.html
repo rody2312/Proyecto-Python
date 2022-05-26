@@ -36,21 +36,13 @@
               <tbody>
                 {% for notificacion in notificaciones %}
                 <tr>
-                  <td>{{notificacion.descripcion}}</td>
-                  <td>{{notificacion.alumno}}</td>
+                  <td>{{notificacion.texto}}</td>
+                  <td>{{notificacion.id_usuario}}</td>
                   <td>{{notificacion.fecha}}</td>
                     <td class="text-center">
 
                       <div class="row justify-content-center">
-                        <a class="btn btn-primary btn-sm" href="{% url 'app:details' notificacion.id %}">
-                            <i class="fas fa-folder">
-                            </i>
-                        </a>
-                        <a class="btn btn-info btn-sm" href="{% url 'app:edit' notificacion.id %}">
-                            <i class="fas fa-pencil-alt">
-                            </i>
-                        </a>
-                        <form action="{% url 'app:delete' notificacion.id %}" method="POST" id="deleteForm">
+                        <form action="{% url 'app:notificacion_delete' notificacion.id %}" method="POST" id="deleteForm">
                           {% csrf_token %}
                           <a class="btn btn-danger btn-sm" href="#" onclick="eliminarNotificacion({{notificacion.id}})">
                               <i class="fas fa-trash">
@@ -59,7 +51,7 @@
                         </form>
                         <div>
                     </td>
-              </tr> 
+                </tr> 
                 {% endfor %}
               </tbody>
               </tfoot>
@@ -150,7 +142,7 @@
 <script>
   function eliminarNotificacion(id){
     event.preventDefault();
-    var url = "{% url 'app:delete' 123 %}";
+    var url = "{% url 'app:notificacion_delete' 123 %}";
     console.log(id)
     Swal.fire({
       title: '¿Estas seguro de eliminar la notificacion?',
