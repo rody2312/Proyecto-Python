@@ -103,6 +103,7 @@ class UsuarioEditForm(forms.ModelForm):
         self.fields['id_tipo_usuario'].required = True
 
 
+
 class NotificacionCreateForm(forms.ModelForm):
     class Meta:
         model=Notificacion
