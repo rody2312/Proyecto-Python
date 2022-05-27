@@ -20,8 +20,6 @@ from ..utils import token_generator
 from django.contrib.auth.mixins import LoginRequiredMixin
 import logging
 
-
-
 # Create your views here.
 
 class UsuariosListView(LoginRequiredMixin ,View):

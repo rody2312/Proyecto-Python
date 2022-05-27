@@ -157,14 +157,33 @@
             </a>
           </li>
           <li class="nav-item">
+
+           <li class="nav-item">
+            <a href="{% url 'app:evaluacion' %}" class="nav-link">
+              <i class="nav-icon fas fa-book"></i>
+              <p>
+                Evaluaciones
+              </p>
+            </a>
+           </li>
+
+           <li class="nav-item">
             <a href="{% url 'app:archivos' %}" class="nav-link {% if titulo == "Archivos" %} active {% endif %}">
               <i class="nav-icon fas fa-file"></i>
               <p>
                 Archivos
               </p>
             </a>
-          </li>
-         </ul>
+           </li>
+
+         <li class="nav-item">
+          <a href="{% url 'app:puntaje' %}" class="nav-link">
+            <i class="nav-icon fas fa-book"></i>
+            <p>
+              Puntajes
+            </p>
+          </a>
+        </li>
        </nav>
        <!-- /.sidebar-menu -->
      </div>

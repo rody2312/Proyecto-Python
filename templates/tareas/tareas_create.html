@@ -1,4 +1,4 @@
-{% extends 'home.html' %}
+<!--{% extends 'home.html' %}
 
 {% block content %}
 
@@ -6,7 +6,7 @@
     <div class="col-md-6 mx-auto">
       <div class="card card-primary">
         <div class="card-header">
-          <h3 class="card-title">Crear nueva notificacion</h3>
+          <h3 class="card-title">Crear nueva tarea</h3>
 
           <div class="card-tools">
             <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
@@ -17,25 +17,39 @@
         <div class="card-body">
             <form method="POST">
                 {% csrf_token %}
+                {{ form.as_p }}
                 <div class="form-group">
-                    <label for="inputTexto">Descripción</label>
-                    {{form.texto}}
+                    <label for=>Titulo</label>
+                    {{form.titulo}}
                 </div>
-                <div class="col">
-                    <a href="{% url 'app:notificacion' %}" class="btn btn-secondary">Cancelar</a>
-                    <input type="submit" value="Crear nueva notificacion" class="btn btn-success float-right">
-                  </div>
+                <div class="form-group">
+                    <label for=>Fecha</label>
+                    {{form.fecha}}
+                 </div>
+                <div class="form-group">
+                    <label for=>Descripcion</label>
+                    {{form.descripcion}}
+                </div>
+              <div class="col">
+                  <a href="{% url 'app:tareas_create/' %}" class="btn btn-secondary">Cancelar</a>
+                  <input type="submit" value="Crear nueva tarea" class="btn btn-success float-right">
+              </div>
             </form>
         </div>
-        <!-- /.card-body -->
+        <!-- /.card-body
       </div>
-      <!-- /.card -->
+      <!-- /.card
         
     </div>
-    </div>
+</div>
     
 
+
 {% endblock content %}
+
+{% block js %}
+
+{% endblock js %} !-->
 
 {% comment %} <form method="POST">
 {% csrf_token %}

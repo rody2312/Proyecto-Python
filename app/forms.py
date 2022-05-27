@@ -1,5 +1,5 @@
 from django import forms
-from .models import Notificacion, Usuario,TipoUsuario
+from .models import Evaluacion, Notificacion, Puntaje, Usuario,TipoUsuario
 
 
 from django.contrib.auth.forms import UserCreationForm
@@ -103,22 +103,20 @@ class UsuarioEditForm(forms.ModelForm):
         self.fields['id_tipo_usuario'].required = True
 
 
+
 class NotificacionCreateForm(forms.ModelForm):
     class Meta:
         model=Notificacion
-        fields=('texto','id_usuario')
-        labels = {
-            'id_usuario':'Usuario'
-        }
+        fields=('texto',)
+
         widgets = {
             'texto': forms.TextInput(attrs={'class': 'form-control'}),
-            'id_usuario': forms.Select(attrs={'class': 'form-control'}),
         }
 
     def __init__(self, *args, **kwargs):
         super(NotificacionCreateForm, self).__init__(*args, **kwargs)
         self.fields['texto'].required = True
-        self.fields['id_usuario'].required = True
+
 
 
 
@@ -196,3 +194,41 @@ class ResetPassForm(forms.Form):
         max_length=254,
         widget=forms.EmailInput(attrs={"autocomplete": "email", "class": "form-control"}),
     )
+
+
+#Evaluacion
+
+class EvaluacionCreateForm(forms.ModelForm):
+    class Meta:
+        model=Evaluacion
+        fields=('titulo','descripcion','fecha')
+        widgets = {
+            'titulo': forms.TextInput(attrs={'class': 'form-control'}),
+            'descripcion': forms.TextInput(attrs={'class': 'form-control'}),
+            'fecha': forms.DateInput(attrs={'class':'form-control', 
+                                            'placeholder':'Selecciona una fecha',
+                                            'type':'date'},
+                                                format = '%d/%m/%Y')
+        }
+
+    def __init__(self, *args, **kwargs):
+        super(EvaluacionCreateForm, self).__init__(*args, **kwargs)
+        self.fields['titulo'].required = True
+        self.fields['descripcion'].required = True
+        self.fields['fecha'].required = True
+
+
+class PuntajeCreateForm(forms.ModelForm):
+    class Meta:
+        model=Puntaje
+        fields=('texto',)
+
+        widgets = {
+            'clase': forms.TextInput(attrs={'class': 'form-control'}),
+            'detalles': forms.TextInput(attrs={'class': 'form-control'}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super(NotificacionCreateForm, self).__init__(*args, **kwargs)
+        self.fields['texto'].required = True
+        self.fields['detalles'].required = True

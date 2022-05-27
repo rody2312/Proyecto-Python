@@ -17,44 +17,47 @@
 
         <div class="card">
           <div class="card-header">
-            <h3 class="card-title">Lista de notificaciones</h3>
+            <h3 class="card-title">Lista de evaluaciones</h3>
           </div>
           <!-- /.card-header -->
           <div class="card-body">
-            <a class="btn btn-primary mb-2" href="{% url 'app:crear_notificacion' %}">Crear nueva notificacion</a>
+            <a class="btn btn-primary mb-2" href="{% url 'app:crear_evaluacion' %}">Crear nueva evaluacion</a>
             <br>
 
             <table id="example1" class="table table-bordered table-striped">
               <thead>
               <tr>
+                <th>Titulo</th>
                 <th>Descripcion</th>
-                <th>Alumno</th>
                 <th>Fecha</th>
                 <th>Acciones</th>
               </tr>
               </thead>
               <tbody>
-                {% for notificacion in notificaciones %}
+                {% for evaluacion in evaluaciones %}
                 <tr>
-                  <td>{{notificacion.texto}}</td>
-                  <td>{{notificacion.id_usuario}}</td>
-                  <td>{{notificacion.fecha}}</td>
+                  <td>{{evaluacion.titulo}}</td>
+                  <td>{{evaluacion.descripcion}}</td>
+                  <td>{{evaluacion.fecha}}</td>
                     <td class="text-center">
 
                       <div class="row justify-content-center">
-                        <form action="{% url 'app:notificacion_delete' notificacion.id %}" method="POST" id="deleteForm">
+                        <a class="btn btn-primary btn-sm" href="{% url 'app:evaluacion_details' evaluacion.id %}">
+                          <i class="fas fa-folder">
+                          </i>
+                        </a>
+                        <form action="{% url 'app:evaluacion_delete' evaluacion.id %}" method="POST" id="deleteForm">
                           {% csrf_token %}
-                          <a class="btn btn-danger btn-sm" href="#" onclick="eliminarNotificacion({{notificacion.id}})">
+                          <a class="btn btn-danger btn-sm" href="#" onclick="eliminarEvaluacion({{evaluacion.id}})">
                               <i class="fas fa-trash">
                               </i>
                             </a>
                         </form>
                         <div>
                     </td>
-                </tr> 
+              </tr>
                 {% endfor %}
               </tbody>
-              </tfoot>
             </table>
           </div>
           <!-- /.card-body -->
@@ -90,6 +93,7 @@
 
   $(function () {
     $("#example1").DataTable({
+      "responsive": true, "lengthChange": false, "autoWidth": false,
       "language": {
         "processing":     "Procesando...",
         "infoEmpty":      "Mostrando 0 a 0 de 0 registro",
@@ -106,7 +110,22 @@
         "info":           "Mostrando _START_ a _END_ de _TOTAL_ registros",
         "infoEmpty":      "Mostrando 0 a 0 de 0 registros",
       },
-      "responsive": true, "lengthChange": false, "autoWidth": false,
+      "buttons": [
+      {
+        extend: "copy", text: "Copiar"
+      },
+      {
+        extend: "csv"
+      },
+      {
+        extend: "pdf"
+      },
+      {
+        extend: "print", text: "Imprimir"
+      },
+      {
+        extend: "colvis", text: "Columnas visibles"
+      }]
     }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
     $('#example2').DataTable({
       "paging": true,
@@ -124,12 +143,12 @@
 </script>
 
 <script>
-  function eliminarNotificacion(id){
+  function eliminarEvaluacion(id){
     event.preventDefault();
-    var url = "{% url 'app:notificacion_delete' 123 %}";
+    var url = "{% url 'app:evaluacion_delete' 123 %}";
     console.log(id)
     Swal.fire({
-      title: '¿Estas seguro de eliminar la notificacion?',
+      title: '¿Estas seguro de eliminar la evaluacion?',
       text: "No se podra deshacer!",
       icon: 'warning',
       showCancelButton: true,
@@ -159,3 +178,7 @@
 </script>
 
 {% endblock  %}
+
+
+
+<!--REGISTRO DE LOS PUNTAJES EN EVALUACION 

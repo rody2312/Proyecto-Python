@@ -17,31 +17,31 @@
 
         <div class="card">
           <div class="card-header">
-            <h3 class="card-title">Lista de notificaciones</h3>
+            <h3 class="card-title">Lista de puntajes</h3>
           </div>
           <!-- /.card-header -->
           <div class="card-body">
-            <a class="btn btn-primary mb-2" href="{% url 'app:crear_notificacion' %}">Crear nueva notificacion</a>
+            <a class="btn btn-primary mb-2" href="{% url 'app:crear_puntaje' %}">Crear nuevo puntaje</a>
             <br>
 
             <table id="example1" class="table table-bordered table-striped">
               <thead>
               <tr>
-                <th>Descripcion</th>
-                <th>Alumno</th>
+                <th>Clase</th>
                 <th>Fecha</th>
+                <th>Detalles</th>
                 <th>Acciones</th>
               </tr>
               </thead>
               <tbody>
-                {% for notificacion in notificaciones %}
+                {% for puntaje in puntajes %}
                 <tr>
-                  <td>{{notificacion.texto}}</td>
-                  <td>{{notificacion.id_usuario}}</td>
-                  <td>{{notificacion.fecha}}</td>
+                  <td>{{puntaje.clase}}</td>
+                  <td>{{puntaje.fecha}}</td>
+                  <td>{{puntaje.detalles}}</td>
                     <td class="text-center">
 
-                      <div class="row justify-content-center">
+                      <!--<div class="row justify-content-center">
                         <form action="{% url 'app:notificacion_delete' notificacion.id %}" method="POST" id="deleteForm">
                           {% csrf_token %}
                           <a class="btn btn-danger btn-sm" href="#" onclick="eliminarNotificacion({{notificacion.id}})">
@@ -49,7 +49,7 @@
                               </i>
                             </a>
                         </form>
-                        <div>
+                        <div>!-->
                     </td>
                 </tr> 
                 {% endfor %}
@@ -90,6 +90,7 @@
 
   $(function () {
     $("#example1").DataTable({
+      "responsive": true, "lengthChange": false, "autoWidth": false,
       "language": {
         "processing":     "Procesando...",
         "infoEmpty":      "Mostrando 0 a 0 de 0 registro",
@@ -106,7 +107,22 @@
         "info":           "Mostrando _START_ a _END_ de _TOTAL_ registros",
         "infoEmpty":      "Mostrando 0 a 0 de 0 registros",
       },
-      "responsive": true, "lengthChange": false, "autoWidth": false,
+      "buttons": [
+      {
+        extend: "copy", text: "Copiar"
+      },
+      {
+        extend: "csv"
+      },
+      {
+        extend: "pdf"
+      },
+      {
+        extend: "print", text: "Imprimir"
+      },
+      {
+        extend: "colvis", text: "Columnas visibles"
+      }]
     }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
     $('#example2').DataTable({
       "paging": true,
