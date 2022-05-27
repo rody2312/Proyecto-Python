@@ -159,7 +159,7 @@
           <li class="nav-item">
 
            <li class="nav-item">
-            <a href="{% url 'app:evaluacion' %}" class="nav-link">
+            <a href="{% url 'app:evaluacion' %}" class="nav-link {% if titulo == "Evaluaciones" %} active {% endif %}">
               <i class="nav-icon fas fa-book"></i>
               <p>
                 Evaluaciones
@@ -177,7 +177,7 @@
            </li>
 
          <li class="nav-item">
-          <a href="{% url 'app:puntaje' %}" class="nav-link">
+          <a href="{% url 'app:puntaje' %}" class="nav-link {% if titulo == "Puntajes" %} active {% endif %}">
             <i class="nav-icon fas fa-book"></i>
             <p>
               Puntajes

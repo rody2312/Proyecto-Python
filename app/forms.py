@@ -221,7 +221,7 @@ class EvaluacionCreateForm(forms.ModelForm):
 class PuntajeCreateForm(forms.ModelForm):
     class Meta:
         model=Puntaje
-        fields=('texto',)
+        fields=('__all__')
 
         widgets = {
             'clase': forms.TextInput(attrs={'class': 'form-control'}),
