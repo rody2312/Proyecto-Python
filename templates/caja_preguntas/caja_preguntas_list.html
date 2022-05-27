@@ -21,7 +21,7 @@
           </div>
           <!-- /.card-header -->
           <div class="card-body">
-            <a class="btn btn-primary mb-2" href="{% url 'tareas:crear_tarea' %}">Crear tarea</a>
+            <a class="btn btn-primary mb-2" href="{% url 'tareas:crear_caja_preguntas' %}">Crear nuevo registro</a>
             <br>
 
             <table id="example1" class="table table-bordered table-striped">
@@ -30,12 +30,10 @@
                 <th>Fecha</th>
                 <th>Creado por</th>
                 <th>Opciones</th>
-                <th>Foro</th>
               </tr>
               </thead>
               <tbody>
-                {% for tarea in tareas %}
-                
+                {% for tarea in tareas_caja %}
                 <tr>
                     <td>{{tarea.fecha}}</td>
                     <td>{{tarea.id_usuario}}</td>
@@ -46,7 +44,7 @@
                             <i class="fas fa-folder">
                             </i>
                         </a>
-                        <form action="{% url 'tareas:delete' tarea.id %}" method="POST" id="deleteForm">
+                        <form action="{% url 'tareas:caja_preguntas_delete' tarea.id %}" method="POST" id="deleteForm">
                           {% csrf_token %}
                           <a class="btn btn-danger btn-sm" href="#" onclick="eliminarTarea({{tarea.id}})">
                               <i class="fas fa-trash">
@@ -55,18 +53,6 @@
                         </form>
                       </div>
                     </td>
-                    
-                      {% if tarea in list_foros %}
-                        <td class="text-center">
-                          <a name="" id="" class="btn btn-success" href="{% url 'tareas:foro_details' tarea.id %}" role="button">Ver foro</a>
-                        </td>
-
-                      {% else %}
-                        <td class="text-center">
-                          <a name="" id="" class="btn btn-success" href="{% url 'tareas:crear_foro' tarea.id %}" role="button">Crear foro</a>
-                        </td>
-                      
-                      {% endif %}
                       
                 </tr>
                 {% endfor %}
@@ -146,7 +132,7 @@
 <script>
   function eliminarTarea(id){
     event.preventDefault();
-    var url = "{% url 'tareas:delete' 123 %}";
+    var url = "{% url 'tareas:caja_preguntas_delete' 123 %}";
     console.log(id)
     Swal.fire({
       title: '¿Estas seguro de eliminar la tarea?',

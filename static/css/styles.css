@@ -6,6 +6,10 @@ ul .nav-blanco{
     color: white;
 }
 
+#buscador {
+    background-color: rgb(0, 0, 0);
+}
+
 /* .contentPrincipal{
     background-color: #FFF9EE;
 } */
