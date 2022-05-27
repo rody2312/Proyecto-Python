@@ -24,10 +24,7 @@
   <link rel="stylesheet" href="{% static 'lib/adminlte-3.2.0/css/adminlte.min.css' %}">
   <!-- overlayScrollbars -->
   <link rel="stylesheet" href="{% static 'lib/adminlte-3.2.0/plugins/overlayScrollbars/css/OverlayScrollbars.min.css' %}">
-  <!-- Daterange picker -->
-  <link rel="stylesheet" href="{% static 'lib/adminlte-3.2.0/plugins/daterangepicker/daterangepicker.css' %}">
-  <!-- summernote -->
-  <link rel="stylesheet" href="{% static 'lib/adminlte-3.2.0/plugins/summernote/summernote-bs4.min.css' %}">
+
 
   <link href='https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css' rel='stylesheet'>
 
@@ -107,7 +104,7 @@
        <!-- SidebarSearch Form -->
        <div class="form-inline">
          <div class="input-group" data-widget="sidebar-search">
-           <input class="form-control form-control-sidebar" type="search" placeholder="Buscar" aria-label="Search">
+           <input class="form-control form-control-sidebar" id="buscador" type="search" placeholder="Buscar" aria-label="Search">
            <div class="input-group-append">
              <button class="btn btn-sidebar">
                <i class="fas fa-search fa-fw"></i>
@@ -119,48 +116,66 @@
        <!-- Sidebar Menu -->
        <nav class="mt-2">
          <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-           <!-- Add icons to the links using the .nav-icon class
-                with font-awesome or any other icon font library -->
            <li class="nav-item">
-             <a href="{% url 'app:usuarios' %}" class="nav-link">
+             <a href="{% url 'app:usuarios' %}" class="nav-link {% if titulo == "Usuarios" %} active {% endif %}">
                <i class="nav-icon fas fa-users"></i>
                <p>
                  Usuarios
                </p>
              </a>
            </li>
+           <li class="nav-item {% if titulo == "Tareas" or titulo == "Caja de preguntas" %} menu-open {% endif %}">
+            <a href="#" class="nav-link {% if titulo == "Tareas" or titulo == "Caja de preguntas" %} active {% endif %}">
+              <i class="nav-icon fas fa-book"></i>
+              <p>
+                Tareas
+                <i class="right fas fa-angle-left"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a  href="{% url 'tareas:tareas' %}"  class="nav-link {% if titulo == "Tareas" %} active {% endif %}">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Tarea semanal</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{% url 'tareas:caja_preguntas_list' %}" class="nav-link {% if titulo == "Caja de preguntas" %} active {% endif %}">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Caja de preguntas</p>
+                </a>
+              </li>
+            </ul>
+           </li>
+
            <li class="nav-item">
-            <a href="{% url 'app:notificacion' %}" class="nav-link">
+            <a href="{% url 'app:notificacion' %}" class="nav-link {% if titulo == "Notificaciones" %} active {% endif %}">
               <i class="nav-icon fas fa-th"></i>
               <p>
                 Notificaciones
               </p>
             </a>
           </li>
+          <li class="nav-item">
+
            <li class="nav-item">
-             <a href="{% url 'tareas:tareas' %}" class="nav-link">
-               <i class="nav-icon fas fa-book"></i>
-               <p>
-                 Tareas
-               </p>
-             </a>
-           </li>
-          <li class="nav-item">
-            <a href="{% url 'app:archivos' %}" class="nav-link">
-              <i class="nav-icon fas fa-book"></i>
-              <p>
-                Archivos
-              </p>
-            </a>
-          </li>
-          <li class="nav-item">
             <a href="{% url 'app:evaluacion' %}" class="nav-link">
               <i class="nav-icon fas fa-book"></i>
               <p>
                 Evaluaciones
               </p>
             </a>
-          </li>
+           </li>
+
+           <li class="nav-item">
+            <a href="{% url 'app:archivos' %}" class="nav-link {% if titulo == "Archivos" %} active {% endif %}">
+              <i class="nav-icon fas fa-file"></i>
+              <p>
+                Archivos
+              </p>
+            </a>
+           </li>
+
          <li class="nav-item">
           <a href="{% url 'app:puntaje' %}" class="nav-link">
             <i class="nav-icon fas fa-book"></i>
@@ -189,7 +204,7 @@
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item"><a href="/">Inicio</a></li>
-              <li class="breadcrumb-item active">{{titulo}}</li>
+              <li id="tituloInterfaz" class="breadcrumb-item active">{{titulo}}</li>
             </ol>
           </div><!-- /.col -->
         </div><!-- /.row -->
@@ -231,8 +246,6 @@
 </script>
 <!-- Bootstrap 4 -->
 <script src="{% static 'lib/adminlte-3.2.0/plugins/bootstrap/js/bootstrap.bundle.min.js'%}"></script>
-<!-- ChartJS -->
-<script src="{% static 'lib/adminlte-3.2.0/plugins/chart.js/Chart.min.js'%}"></script>
 <!-- Sparkline -->
 <script src="{% static 'lib/adminlte-3.2.0/plugins/sparklines/sparkline.js'%}"></script>
 <!-- JQVMap -->
@@ -245,14 +258,13 @@
 <script src="{% static 'lib/adminlte-3.2.0/plugins/daterangepicker/daterangepicker.js'%}"></script>
 <!-- Tempusdominus Bootstrap 4 -->
 <script src="{% static 'lib/adminlte-3.2.0/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js'%}"></script>
-<!-- Summernote -->
-<script src="{% static 'lib/adminlte-3.2.0/plugins/summernote/summernote-bs4.min.js'%}"></script>
 <!-- overlayScrollbars -->
 <script src="{% static 'lib/adminlte-3.2.0/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js'%}"></script>
 <!-- AdminLTE App -->
 <script src="{% static 'lib/adminlte-3.2.0/js/adminlte.js'%}"></script>
 <!-- sweet alert2 -->
 <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 
 
 {% block js %}

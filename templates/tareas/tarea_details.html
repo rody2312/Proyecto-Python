@@ -1,0 +1,62 @@
+{% extends 'home.html' %}
+
+
+
+{% block content %}
+
+<div class="container-fluid">
+
+  <div class="row">
+    <div class="col-12">
+
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">Puntajes de las tareas</h3>
+          <a class="btn btn-primary float-right" href="{% url 'tareas:tareas' %}">Volver</a>
+        </div>
+        <!-- /.card-header -->
+        <div class="card-body">
+          <table id="example1" class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th>Usuario</th>
+                <th>Puntaje</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for usuario in usuarios %}
+              {% comment %} <a href="{% url 'app:details' usuario.id %}">{{usuario.nombre}}</a> {% endcomment %}
+              {% comment %} <a href="{% url 'app:update' usuario.id %}">Editar</a> {% endcomment %}
+              {% comment %} <a href="{% url 'app:delete' usuario.id %}">Eliminar</a> {% endcomment %}
+              
+              <tr>
+                  <td>{{usuario.nombre}} {{usuario.apellido_paterno}} {{usuario.apellido_materno}}</td>
+                  <td class="text-center">
+
+                    <div class="row justify-content-center">
+                      <a class="btn btn-primary btn-sm" href="">
+                          <i class="fas fa-folder">
+                          </i>
+                      </a>
+                      <a class="btn btn-info btn-sm" href="">
+                          <i class="fas fa-pencil-alt">
+                          </i>
+                      </a>
+                    </div>
+                  </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        <!-- /.card-body -->
+      </div>
+      <!-- /.card -->
+    </div>
+    <!-- /.col -->
+  </div>
+  <!-- /.row -->
+</div>
+<!-- /.container-fluid -->
+
+{% endblock content %}

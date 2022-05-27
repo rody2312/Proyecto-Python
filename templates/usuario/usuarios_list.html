@@ -60,6 +60,7 @@
                               <i class="fas fa-pencil-alt">
                               </i>
                           </a>
+                          {% if request.user != usuario %}
                           <form action="{% url 'app:delete' usuario.id %}" method="POST" id="deleteForm">
                             {% csrf_token %}
                             <a class="btn btn-danger btn-sm" href="#" onclick="eliminarUsuario({{usuario.id}})">
@@ -67,11 +68,12 @@
                                 </i>
                               </a>
                           </form>
-                          <div>
+                          {% endif %}
+                        <div>
                       </td>
                 </tr>
                 {% endfor %}
-              </tbody>
+              </tbody>{% comment %} 
               <tfoot>
               <tr>
                 <th>Nombre</th>
@@ -82,7 +84,7 @@
                 <th>Tipo de usuario</th>
                 <th></th>
               </tr>
-              </tfoot>
+              </tfoot> {% endcomment %}
             </table>
           </div>
           <!-- /.card-body -->

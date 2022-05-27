@@ -1,0 +1,29 @@
+{% extends 'home.html' %}
+
+{% block content %}
+
+<div class="container">
+    <div class="col-md-6 mx-auto">
+      <div class="card card-primary">
+        <div class="card-header">
+          <h3 class="card-title">{{titulo}}</h3>
+        </div>
+        <div class="card-body">
+            <form method="POST">
+                {% csrf_token %}
+                {{form.as_p}}
+                <div class="col">
+                    <a href="{% url 'tareas:caja_preguntas_list' %}" class="btn btn-secondary">Cancelar</a>
+                    <input type="submit" value="Crear nueva tarea" class="btn btn-success float-right">
+                  </div>
+            </form>
+        </div>
+        <!-- /.card-body -->
+      </div>
+      <!-- /.card -->
+        
+    </div>
+</div>
+    
+
+{% endblock content %}

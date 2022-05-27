@@ -1,0 +1,26 @@
+// Bootstrap
+// ---------------------------------------------------
+@import '~bootstrap/scss/functions';
+@import '~admin-lte/build/scss/bootstrap-variables';
+
+// Custom Theme Color START
+$custom-color: #00FF00;
+$theme-colors: map-merge((
+    'form-control-sidebar': $custom-color,
+), $theme-colors);
+// Custom Theme Color END
+
+// Variables and Mixins
+// ---------------------------------------------------
+@import '~admin-lte/build/scss/variables';
+@import '~admin-lte/build/scss/mixins';
+
+@import '~bootstrap/scss/bootstrap';
+
+
+@import '~admin-lte/build/scss/parts/core';
+@import '~admin-lte/build/scss/parts/components';
+@import '~admin-lte/build/scss/parts/extra-components';
+@import '~admin-lte/build/scss/parts/pages';
+@import '~admin-lte/build/scss/parts/plugins';
+@import '~admin-lte/build/scss/parts/miscellaneous';
