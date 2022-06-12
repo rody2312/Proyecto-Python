@@ -98,6 +98,18 @@ class TareaEditView(LoginRequiredMixin, UpdateView):
         return reverse_lazy('tareas:tareas')
 
 
+class ForosListView(LoginRequiredMixin, View):
+
+    def get(self,request, *args, **kwargs):
+        foros = Foro.objects.all()
+
+        context={
+            'foros': foros,
+            'titulo': 'Foros'
+        }
+        return render(request, 'foro/foros_list.html', context)
+
+
 class ForoCreateView(LoginRequiredMixin, View):
     
     def get(self,request, *args, **kwargs):
@@ -115,14 +127,13 @@ class ForoCreateView(LoginRequiredMixin, View):
                 titulo = form.cleaned_data.get('titulo')
                 descripcion = form.cleaned_data.get('descripcion')
                 tipoForo = form.cleaned_data.get('id_tipo_foro')
-                tarea = Tarea.objects.get(pk=self.kwargs['pk'])
-                
+                tarea = form.cleaned_data.get('id_tarea')
 
                 u, created = Foro.objects.get_or_create(titulo=titulo, descripcion=descripcion , id_tipo_foro=tipoForo, id_tarea=tarea)
                 u.save()
 
-                messages.success(request, "Tarea agregada correctamente")
-                return redirect('tareas:tareas')
+                messages.success(request, "Foro agregado correctamente")
+                return redirect('tareas:foros')
 
         
         context={
@@ -132,18 +143,42 @@ class ForoCreateView(LoginRequiredMixin, View):
         return render(request, 'tareas/tarea_create.html', context)
 
 
+class ForoEditView(LoginRequiredMixin, UpdateView):
+    model = Foro
+    form_class = ForoCreateForm
+    template_name = "foro/foro_edit.html"
+
+
+    def get_success_url(self):
+        messages.success(self.request, "El foro ha sido actualizado correctamente")
+        return reverse_lazy('tareas:foros')
+
+
 #Se muestra el foro seleccionado, las preguntas y respuestas
 class ForoDetailsView(LoginRequiredMixin, View):
     
-    def get(self,request, *args, **kwargs):
-        foro = Foro.objects.get(id_tarea=self.kwargs['pk'])
-        tarea = Tarea.objects.get(pk=self.kwargs['pk'])
+    def get(self,request, pk, *args, **kwargs):
+        foro = get_object_or_404(Foro, pk=pk)
         context={
             'foro': foro,
             'descripcion': foro.descripcion,
-            'titulo': 'Foro ' + str(tarea.fecha)
+            'titulo': 'Foro '
         }
         return render(request, 'foro/foro_details.html', context)
+
+class ForoDeleteView(LoginRequiredMixin, DeleteView):
+    model = Foro
+    success_url = reverse_lazy('tareas:foros')
+
+    def get_success_url(self):
+        messages.success(self.request, "Eliminado correctamente")
+        return reverse('tareas:foros')
+
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        success_url = self.get_success_url()
+        self.object.delete()
+        return HttpResponseRedirect(success_url)
 
 
 class CajaDePreguntasListView(LoginRequiredMixin, View):

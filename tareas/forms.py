@@ -72,13 +72,19 @@ class ForoCreateForm(forms.ModelForm):
 
     class Meta:
         model=Foro
-        fields=('titulo', 'descripcion', 'id_tipo_foro')
+        fields=('titulo', 'descripcion', 'id_tipo_foro', 'id_tarea')
         labels={
             'id_tipo_foro': 'Tipo de privacidad',
+            'id_tarea': 'Tarea'
         }
         
         widgets = {
             'titulo': forms.TextInput(attrs={'class': 'form-control'}),
             'descripcion': forms.Textarea(attrs={'class': 'form-control', 'id': 'summernote'}),
-            'id_tipo_foro': forms.Select(attrs={'class': 'form-control'})
+            'id_tipo_foro': forms.Select(attrs={'class': 'form-control'}),
+            'id_tarea': forms.Select(attrs={'class': 'form-control'})
         }
+    
+    def __init__(self, *args, **kwargs):
+        super(ForoCreateForm, self).__init__(*args, **kwargs)
+        self.fields['id_tarea'].required = False

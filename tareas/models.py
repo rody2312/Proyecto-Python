@@ -23,6 +23,9 @@ class Tarea(models.Model):
         managed = True
         db_table = 'tarea'
 
+    def __str__(self):
+        return str(self.fecha)
+
 class TipoForo(models.Model):
     tipo=tipo = models.CharField(max_length=20)
 
@@ -34,8 +37,8 @@ class TipoForo(models.Model):
         return self.tipo
 
 class Foro(models.Model):
-    id_tipo_foro=models.ForeignKey(TipoForo, db_column='id_tipo_foro', on_delete=models.CASCADE)
-    id_tarea=models.ForeignKey(Tarea, db_column='id_tarea', on_delete=models.CASCADE)
+    id_tipo_foro=models.ForeignKey(TipoForo, db_column='id_tipo_foro', on_delete=models.PROTECT)
+    id_tarea=models.ForeignKey(Tarea, db_column='id_tarea', on_delete=models.SET_NULL, null=True)
     titulo=models.CharField(max_length=50)
     descripcion=models.TextField(blank=True, null=True)
 
