@@ -4,10 +4,10 @@ from django.urls import reverse, reverse_lazy
 from django.views.generic import View, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from app.models import Usuario
-from tareas.forms import ArchivoCreateForm, CajaDePreguntasCreateForm, TareaCreateForm, ForoCreateForm
+from tareas.forms import ArchivoCreateForm, TareaCreateForm, ForoCreateForm
 from django.contrib import messages
 
-from tareas.models import Foro, Tarea, TipoForo, TipoTarea
+from tareas.models import Foro, Actividad, TipoForo, TipoActividad
 
 # Create your views here.
 
@@ -15,7 +15,7 @@ class TareasListView(LoginRequiredMixin, View):
 
     def get(self,request, *args, **kwargs):
         #Obtiene la lista de tareas que sean de tipo "Tarea semanal"
-        tareas = Tarea.objects.filter(id_tipo_tarea=1)
+        tareas = Actividad.objects.filter(id_tipo_actividad=1)
         foros = Foro.objects.all()
 
         #Obtiene la lista de foros para que en la plantilla html se pueda ver si existe una id de tarea
@@ -45,10 +45,10 @@ class TareasCreateView(LoginRequiredMixin ,View):
             form = TareaCreateForm(request.POST)
             if form.is_valid():
                 fecha = form.cleaned_data.get('fecha')
-                tipoTarea = TipoTarea.objects.get(pk=1)
+                tipoTarea = TipoActividad.objects.get(pk=1)
                 usuarioActual= request.user
 
-                u, created = Tarea.objects.get_or_create(id_usuario=usuarioActual, id_tipo_tarea=tipoTarea , fecha=fecha)
+                u, created = Actividad.objects.get_or_create(id_usuario=usuarioActual, id_tipo_actividad=tipoTarea , fecha=fecha)
                 u.save()
 
                 messages.success(request, "Tarea agregada correctamente")
@@ -65,7 +65,7 @@ class TareasCreateView(LoginRequiredMixin ,View):
 class TareaDetailsView(LoginRequiredMixin, View):
     def get(self, request, pk, *args, **kwargs):
         usuarios = Usuario.objects.all()
-        tarea = get_object_or_404(Tarea, pk=pk)
+        tarea = get_object_or_404(Actividad, pk=pk)
         context={
             'usuarios':usuarios,
             'titulo': 'Detalles ' + tarea.titulo +" / Fecha: "+ str(tarea.fecha)
@@ -74,7 +74,7 @@ class TareaDetailsView(LoginRequiredMixin, View):
 
 
 class TareaDeleteView(LoginRequiredMixin, DeleteView):
-    model = Tarea
+    model = Actividad
     success_url = reverse_lazy('tareas:tareas')
 
     def get_success_url(self):
@@ -89,7 +89,7 @@ class TareaDeleteView(LoginRequiredMixin, DeleteView):
 
 
 class TareaEditView(LoginRequiredMixin, UpdateView):
-    model = Tarea
+    model = Actividad
     form_class = TareaCreateForm
     template_name = "tareas/tarea_edit.html"
 
@@ -127,9 +127,9 @@ class ForoCreateView(LoginRequiredMixin, View):
                 titulo = form.cleaned_data.get('titulo')
                 descripcion = form.cleaned_data.get('descripcion')
                 tipoForo = form.cleaned_data.get('id_tipo_foro')
-                tarea = form.cleaned_data.get('id_tarea')
+                tarea = form.cleaned_data.get('id_actividad')
 
-                u, created = Foro.objects.get_or_create(titulo=titulo, descripcion=descripcion , id_tipo_foro=tipoForo, id_tarea=tarea)
+                u, created = Foro.objects.get_or_create(titulo=titulo, descripcion=descripcion , id_tipo_foro=tipoForo, id_actividad=tarea)
                 u.save()
 
                 messages.success(request, "Foro agregado correctamente")
@@ -184,7 +184,7 @@ class ForoDeleteView(LoginRequiredMixin, DeleteView):
 class CajaDePreguntasListView(LoginRequiredMixin, View):
 
     def get(self,request, *args, **kwargs):
-        tareas_caja = Tarea.objects.filter(id_tipo_tarea=2)
+        tareas_caja = Actividad.objects.filter(id_tipo_actividad=2)
 
         context={
             'tareas_caja': tareas_caja,
@@ -207,10 +207,10 @@ class CajaDePreguntasCreateView(LoginRequiredMixin ,View):
             form = CajaDePreguntasCreateForm(request.POST)
             if form.is_valid():
                 fecha = form.cleaned_data.get('fecha')
-                tipoTarea = TipoTarea.objects.get(pk=2)
+                tipoTarea = TipoActividad.objects.get(pk=2)
                 usuarioActual= request.user
 
-                u, created = Tarea.objects.get_or_create(id_usuario=usuarioActual, id_tipo_tarea=tipoTarea , fecha=fecha)
+                u, created = Actividad.objects.get_or_create(id_usuario=usuarioActual, id_tipo_actividad=tipoTarea , fecha=fecha)
                 u.save()
 
                 messages.success(request, "Tarea agregada correctamente")
@@ -224,7 +224,7 @@ class CajaDePreguntasCreateView(LoginRequiredMixin ,View):
         return render(request, 'caja_preguntas/caja_preguntas_create.html', context)
 
 class CajaDePreguntasDeleteView(LoginRequiredMixin, DeleteView):
-    model = Tarea
+    model = Actividad
     success_url = reverse_lazy('tareas:caja_preguntas_list')
 
     def get_success_url(self):

@@ -4,24 +4,25 @@ from app.models import Usuario
 
 # Create your models here.
 
-class TipoTarea(models.Model):
+class TipoActividad(models.Model):
     tipo=tipo = models.CharField(max_length=20)
 
     class Meta:
         managed = True
-        db_table = 'tipo_tarea'
+        db_table = 'tipo_actividad'
 
     def __str__(self):
         return self.tipo
 
-class Tarea(models.Model):
-    id_tipo_tarea=models.ForeignKey(TipoTarea, on_delete=models.CASCADE, db_column='id_tipo_tarea')
-    id_usuario=models.ForeignKey(Usuario, on_delete=models.CASCADE, db_column='id_usuario')
+class Actividad(models.Model):
+    id_tipo_actividad=models.ForeignKey(TipoActividad, on_delete=models.SET_NULL, db_column='id_tipo_actividad', null=True)
+    id_usuario=models.ForeignKey(Usuario, on_delete=models.SET_NULL, db_column='id_usuario', null=True)
+    titulo = models.CharField(max_length=50)
     fecha=models.DateField()
 
     class Meta:
         managed = True
-        db_table = 'tarea'
+        db_table = 'actividad'
 
     def __str__(self):
         return str(self.fecha)
@@ -38,7 +39,7 @@ class TipoForo(models.Model):
 
 class Foro(models.Model):
     id_tipo_foro=models.ForeignKey(TipoForo, db_column='id_tipo_foro', on_delete=models.PROTECT)
-    id_tarea=models.ForeignKey(Tarea, db_column='id_tarea', on_delete=models.SET_NULL, null=True)
+    id_actividad=models.ForeignKey(Actividad, db_column='id_actividad', on_delete=models.SET_NULL, null=True)
     titulo=models.CharField(max_length=50)
     descripcion=models.TextField(blank=True, null=True)
 
