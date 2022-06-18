@@ -14,16 +14,16 @@ from tareas.models import Foro, Actividad, TipoForo, TipoActividad
 class TareasListView(LoginRequiredMixin, View):
 
     def get(self,request, *args, **kwargs):
-        #Obtiene la lista de tareas que sean de tipo "Tarea semanal"
-        tareas = Actividad.objects.filter(id_tipo_actividad=1)
+        #CAMBIAR EL FILTRO POR EL QUE SE MANDE POR EL URL, PORQUE SERAN MUCHOS TIPOS QUE SE CREARAN DINAMICAMENTE
+        actividades = Actividad.objects.filter(id_tipo_actividad=1)
         foros = Foro.objects.all()
 
         #Obtiene la lista de foros para que en la plantilla html se pueda ver si existe una id de tarea
-        list_foros = [foro.id_tarea for foro in foros]
+        list_foros = [foro.id_actividad for foro in foros]
         context={
             'list_foros': list_foros,
             'foros': foros,
-            'tareas': tareas,
+            'actividades': actividades,
             'titulo': 'Tareas'
         }
         return render(request, 'tareas/tareas_list.html', context)

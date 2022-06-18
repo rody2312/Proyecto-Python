@@ -15,10 +15,11 @@ class TipoActividad(models.Model):
         return self.tipo
 
 class Actividad(models.Model):
-    id_tipo_actividad=models.ForeignKey(TipoActividad, on_delete=models.SET_NULL, db_column='id_tipo_actividad', null=True)
-    id_usuario=models.ForeignKey(Usuario, on_delete=models.SET_NULL, db_column='id_usuario', null=True)
+    id_tipo_actividad=models.ForeignKey(TipoActividad, on_delete=models.SET_NULL, db_column='id_tipo_actividad', null=True, related_name='actividades_tipos')
+    id_usuario=models.ForeignKey(Usuario, on_delete=models.SET_NULL, db_column='id_usuario', null=True, related_name='usuarios')
     titulo = models.CharField(max_length=50)
     fecha=models.DateField()
+    usuarios=models.ManyToManyField(Usuario, through='UsuarioActividad', related_name='actividades')
 
     class Meta:
         managed = True
@@ -26,6 +27,25 @@ class Actividad(models.Model):
 
     def __str__(self):
         return str(self.fecha)
+
+class Puntaje(models.Model):
+    id_tipo_actividad=models.ForeignKey(TipoActividad, on_delete=models.CASCADE, db_column='id_tipo_actividad',related_name='puntajes_tipos')
+    puntaje = models.SmallIntegerField()
+    
+    class Meta:
+        managed = True
+        db_table = 'puntaje'
+
+
+class UsuarioActividad(models.Model):
+    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
+    actividad = models.ForeignKey(Actividad, on_delete=models.CASCADE)
+    puntaje = models.ForeignKey(Puntaje, on_delete=models.CASCADE)
+
+    class Meta:
+        managed = True
+        db_table = 'usuario_actividad'
+
 
 class TipoForo(models.Model):
     tipo=tipo = models.CharField(max_length=20)
@@ -39,7 +59,7 @@ class TipoForo(models.Model):
 
 class Foro(models.Model):
     id_tipo_foro=models.ForeignKey(TipoForo, db_column='id_tipo_foro', on_delete=models.PROTECT)
-    id_actividad=models.ForeignKey(Actividad, db_column='id_actividad', on_delete=models.SET_NULL, null=True)
+    id_actividad=models.ForeignKey(Actividad, db_column='id_actividad', on_delete=models.SET_NULL, null=True, unique=True)
     titulo=models.CharField(max_length=50)
     descripcion=models.TextField(blank=True, null=True)
 
