@@ -17,6 +17,7 @@
         <div class="card-body">
             <form method="POST">
                 {% csrf_token %}
+                {{form.errors.fecha}}
                 <!--{{ form.as_p }}-->
                 <div class="form-group">
                   <label for="inputTitulo">{{form.titulo.label}}</label>
@@ -26,10 +27,8 @@
                   <label for="inputFecha">{{form.fecha.label}}</label>
                   <input type="date" name="fecha" value="{{ form.fecha.value | date:'c' }}" class="form-control" required>
                 </div>
-                <div class="form-group">
-                  <label for="inputDescripcion">{{form.descripcion.label}}</label>
-                  <textarea class="form-control" name="descripcion" rows="5" required>{{form.descripcion.value}}</textarea>
-                </div>
+
+                
               <!--  {% for campo in form %}
                 <div class="form-group">
                   <label for="inputNombre">{{campo.label}}</label>
@@ -77,13 +76,3 @@
 </script>
 
 {% endblock js %}
-
-{% comment %} <form method="POST">
-{% csrf_token %}
-Nombre: {{form.nombre}}
-<br>
-Apellido Paterno: {{form.apellidoPaterno}}
-<br>
-Apellido Materno: {{form.apellidoMaterno}}
-<button type="submit">Agregar</button>
-</form> {% endcomment %}

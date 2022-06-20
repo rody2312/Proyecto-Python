@@ -1,62 +1,242 @@
 {% extends 'home.html' %}
+{% load static %}
 
+{% block libs %}
 
+<style>
+  .hidden{
+    display:none;
+  }
+</style>
+
+<!-- DataTables -->
+<link rel="stylesheet" href="{% static 'lib/adminlte-3.2.0/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css' %}">
+<link rel="stylesheet" href="{% static 'lib/adminlte-3.2.0/plugins/datatables-responsive/css/responsive.bootstrap4.min.css' %}">
+<link rel="stylesheet" href="{% static 'lib/adminlte-3.2.0/plugins/datatables-buttons/css/buttons.bootstrap4.min.css' %}">
+
+{% endblock libs %}
 
 {% block content %}
 
 <div class="container-fluid">
 
   <div class="row">
-    <div class="col-12">
+    <div class="col-6 mx-auto">
 
       <div class="card">
         <div class="card-header">
-          <h3 class="card-title">Puntajes de las tareas</h3>
+          <h3 class="card-title">Puntajes de actividad</h3>
           <a class="btn btn-primary float-right" href="{% url 'tareas:tareas' %}">Volver</a>
         </div>
-        <!-- /.card-header -->
         <div class="card-body">
           <table id="example1" class="table table-bordered table-striped">
             <thead>
               <tr>
-                <th>Usuario</th>
+                <th>Alumno</th>
                 <th>Puntaje</th>
+                <th>Editar</th>
               </tr>
             </thead>
-            <tbody>
-              {% for usuario in usuarios %}
-              {% comment %} <a href="{% url 'app:details' usuario.id %}">{{usuario.nombre}}</a> {% endcomment %}
-              {% comment %} <a href="{% url 'app:update' usuario.id %}">Editar</a> {% endcomment %}
-              {% comment %} <a href="{% url 'app:delete' usuario.id %}">Eliminar</a> {% endcomment %}
-              
-              <tr>
-                  <td>{{usuario.nombre}} {{usuario.apellido_paterno}} {{usuario.apellido_materno}}</td>
-                  <td class="text-center">
+            <tbody id="tests-table">
 
-                    <div class="row justify-content-center">
-                      <a class="btn btn-primary btn-sm" href="">
-                          <i class="fas fa-folder">
-                          </i>
-                      </a>
-                      <a class="btn btn-info btn-sm" href="">
-                          <i class="fas fa-pencil-alt">
-                          </i>
-                      </a>
-                    </div>
-                  </td>
-              </tr>
-              {% endfor %}
             </tbody>
           </table>
         </div>
-        <!-- /.card-body -->
       </div>
-      <!-- /.card -->
     </div>
-    <!-- /.col -->
   </div>
-  <!-- /.row -->
 </div>
-<!-- /.container-fluid -->
 
 {% endblock content %}
+
+
+{% block js %}
+
+<!-- DataTables  & Plugins -->
+<script src="{%static 'lib/adminlte-3.2.0/plugins/datatables/jquery.dataTables.min.js'%}"></script>
+<script src="{%static 'lib/adminlte-3.2.0/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js'%}"></script>
+<script src="{%static 'lib/adminlte-3.2.0/plugins/datatables-responsive/js/dataTables.responsive.min.js'%}"></script>
+<script src="{%static 'lib/adminlte-3.2.0/plugins/datatables-responsive/js/responsive.bootstrap4.min.js'%}"></script>
+<script src="{%static 'lib/adminlte-3.2.0/plugins/datatables-buttons/js/dataTables.buttons.min.js'%}"></script>
+<script src="{%static 'lib/adminlte-3.2.0/plugins/datatables-buttons/js/buttons.bootstrap4.min.js'%}"></script>
+<script src="{%static 'lib/adminlte-3.2.0/plugins/jszip/jszip.min.js'%}"></script>
+<script src="{%static 'lib/adminlte-3.2.0/plugins/pdfmake/pdfmake.min.js'%}"></script>
+<script src="{%static 'lib/adminlte-3.2.0/plugins/pdfmake/vfs_fonts.js'%}"></script>
+<script src="{%static 'lib/adminlte-3.2.0/plugins/datatables-buttons/js/buttons.html5.min.js'%}"></script>
+<script src="{%static 'lib/adminlte-3.2.0/plugins/datatables-buttons/js/buttons.print.min.js'%}"></script>
+<script src="{%static 'lib/adminlte-3.2.0/plugins/datatables-buttons/js/buttons.colVis.min.js'%}"></script>
+
+<script>
+
+  
+  function updatePuntajePOST(data){
+    var url = '/updatePuntaje/'
+
+    $.ajax({
+      method:'POST',
+      url:url,
+      data:data,
+      success:function(){
+
+      }
+    })
+
+  }
+
+  //Se guardan los alumnos de la base de datos en esta lista
+  var idTarea = JSON.parse("{{ tarea.id|escapejs }}")
+  var usuarios = []
+  var dataURL = '/actividadPuntajesAPI/'+ idTarea+'/'
+    $.ajax({
+      method:'GET',
+      url:dataURL,
+      success:function(response){
+        usuarios = response
+        for(var i in usuarios){
+          addRow(usuarios[i])
+        }
+      }
+    })
+
+
+  
+  //Comprobar si existe el puntaje para mostrar el puntaje o una opcion por defecto sin valor
+  function comprobarExistenciaPuntaje(obj){
+    if(typeof obj.puntaje === 'undefined' || obj.puntaje == null){
+      return '<option value="0" selected>Seleccione el puntaje</option>'
+    }else{
+      return '<option value="'+ obj.puntajeID +'" selected>'+obj.puntaje+'</option>'
+    }
+  }
+
+  //Mostrar las opciones del select de puntajes de cada usuario
+  function mostrarOpciones(obj){
+    listPuntajes = obj.opcionesPuntaje
+    opciones = ''
+    opcion= ''
+    idPuntaje = 0
+    puntaje = ''
+    //Object.keys(listPuntajes[key]).length
+    for (var key in listPuntajes) {
+      idPuntaje = listPuntajes[key]['id']
+      puntaje = listPuntajes[key]['puntaje']
+      if(obj.puntajeID != idPuntaje){
+        opcion += '<option value="'+ idPuntaje +'">'+ puntaje +'</option>'
+      }
+      opciones += opcion
+      opcion = ''
+      console.log(opciones)
+      
+
+      
+    }
+    return opciones
+  }
+
+    
+
+
+  function addRow(obj){
+    //`<tr scope="row" class="test-row-${obj.id}">
+    var userCol = `<td>${obj.nombre} ${obj.apellido_paterno} ${obj.apellido_materno}</td>`
+      
+    var puntajeCol = `<td class="text-center">
+                       <div class="row justify-content-center">
+                         <select class="col-6 custom-select" id="selectPuntaje-${obj.id}" disabled>
+                           ${comprobarExistenciaPuntaje(obj)}
+                           ${mostrarOpciones(obj)}
+                         </select>
+                       </div>
+                     </td>`
+    var btnCol =   `<td>
+                    <div class="row justify-content-center">
+                      <button class="btn btn-info btn-sm" href="#" id="edit-${obj.id}" data-userid="${obj.id}">
+                        <i class="fas fa-pencil-alt">
+                        </i>
+                      </button>
+                      <button class="btn btn-success btn-sm hidden" href="#" id="save-${obj.id}" data-userid="${obj.id}">
+                        <i class="fas fa-check"></i>
+                        </i>
+                      </button>
+                    </div>
+                  </td>`
+  //</tr>`
+  //$('#tests-table').append(row)
+
+  var tabla = $("#example1").DataTable()
+  tabla.row.add(
+    [userCol, puntajeCol, btnCol]
+  ).draw(false)
+
+  $(`#edit-${obj.id}`).on('click', editPuntaje)
+  $(`#save-${obj.id}`).on('click', savePuntaje)
+
+
+  }
+
+
+  function editPuntaje(){
+    var userid = $(this).data('userid')
+
+    var editBtn = $(`#edit-${userid}`)
+    var saveBtn = $(`#save-${userid}`)
+
+    var selectInput = $(`#selectPuntaje-${userid}`)
+
+    editBtn.addClass('hidden')
+    saveBtn.removeClass('hidden')
+
+    selectInput.prop('disabled', false);
+  }
+
+  function savePuntaje(){
+    var userid = $(this).data('userid')
+
+    var editBtn = $(`#edit-${userid}`)
+    var saveBtn = $(`#save-${userid}`)
+
+    var selectInput = $(`#selectPuntaje-${userid}`)
+
+    saveBtn.addClass('hidden')
+    editBtn.removeClass('hidden')
+
+    //Todas las id necesarias se guardan en una variable para mandarlo a la view y guardarlo en la bd
+    var data = {'usuario': userid, 'puntaje': selectInput.val(), 'actividad':idTarea}
+    console.log(data)
+    updatePuntajePOST(data)
+
+    selectInput.prop('disabled', true);
+    
+  }
+  
+</script>
+
+<script>
+
+    //Creación de data table con jquery
+    $(function () {
+      $("#example1").DataTable({
+        "responsive": true, "lengthChange": true, "autoWidth": false,
+        "language": {
+          "lengthMenu": "Mostrar _MENU_ registros",
+          "processing":     "Procesando...",
+          "infoEmpty":      "Mostrando 0 a 0 de 0 registro",
+          "infoFiltered":   "(filtrado de un total de _MAX_ registros)",
+          "search": "Buscar:",
+          "zeroRecords":    "No se encuentran registros",
+          "paginate": {
+              "first":      "Primero",
+              "last":       "Ultimo",
+              "next":       "Siguiente",
+              "previous":   "Anterior"
+          },
+          "emptyTable":     "No hay registros para mostrar",
+          "info":           "Mostrando _START_ a _END_ de _TOTAL_ registros",
+          "infoEmpty":      "Mostrando 0 a 0 de 0 registros",
+        },
+      }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+    });
+
+</script>
+
+{% endblock js %}

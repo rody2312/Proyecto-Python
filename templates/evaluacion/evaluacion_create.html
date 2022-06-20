@@ -18,39 +18,8 @@
             <form method="POST">
                 {% csrf_token %}
                 {{ form.as_p }}
-                <!--<div class="form-group">
-                    <label for="inputNombre">Nombre</label>
-                    {{form.nombre}}
-                </div>
-                <div class="form-group">
-                    <label for="inputApellidoP">Apellido Paterno</label>
-                    {{form.apellido_paterno}}
-                </div>
-                <div class="form-group">
-                    <label for="inputApellidoM">Apellido Materno</label>
-                    {{form.apellido_materno}}
-                </div>
-                <div class="form-group">
-                    <label for="inputFono">Fono</label>
-                    {{form.fono}}
-                </div>
-                <div class="form-group">
-                    <label for="inputEmail">Email</label>
-                    {{form.email}}
-                    <ul>
-                    {% for error in form.email.errors %}
-                      <div class="text-danger">
-                        <li>{{error}}</li>
-                      </div>
-                    {% endfor %}
-                    </ul>
-                </div>
-                <div class="form-group">
-                    <label for="inputTipo">Tipo de usuario</label>
-                    {{form.tipo}}
-                </div>-->
               <div class="col">
-                  <a href="{% url 'app:evaluacion' %}" class="btn btn-secondary">Cancelar</a>
+                  <a href="{% url 'evaluacion:evaluaciones' %}" class="btn btn-secondary">Cancelar</a>
                   <input type="submit" value="Crear nueva evaluacion" class="btn btn-success float-right">
               </div>
             </form>
