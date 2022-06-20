@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'app',
     'tareas',
     'asistencia',
+    'evaluacion',
 ]
 
 MIDDLEWARE = [

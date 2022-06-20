@@ -103,15 +103,6 @@ class Notificacion(models.Model):
         managed = True
         db_table = 'notificacion'
 
-class Evaluacion(models.Model):
-    titulo = models.TextField(null=False)
-    descripcion = models.TextField(null=False)
-    fecha = models.DateField(null=False)
-
-    class Meta():
-        managed = True
-        db_table = 'evaluacion'
-
 
 
 

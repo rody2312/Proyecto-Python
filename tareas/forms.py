@@ -22,24 +22,27 @@ class TareaCreateForm(forms.ModelForm):
 
     class Meta:
         model=Actividad
-        fields=('fecha',)
+        fields=('titulo','fecha')
         labels={
             'fecha': 'Fecha de la tarea'
         }
         
         widgets = {
+            'titulo': forms.TextInput(attrs={'class': 'form-control'}),
             'fecha': forms.DateInput(attrs={'class':'form-control', 
                                     'placeholder':'Selecciona una fecha',
-                                    'type':'date'},
-                                    format = '%d/%m/%Y')
+                                    'type':'date'})
         }
+
+    def clean_fecha(self):
+        fecha = self.cleaned_data.get("fecha")
     
     def clean_fecha(self):
         fecha = self.cleaned_data.get("fecha")
         existe = Actividad.objects.filter(fecha=fecha, id_tipo_actividad=1).exists()
         if existe:
             self.fields['fecha'].widget.attrs['class'] = 'form-control is-invalid'
-            raise forms.ValidationError("Ya existe una tarea con esta fecha , ingresa otra fecha")
+            self.add_error(('fecha'),forms.ValidationError("Ya existe una tarea con esta fecha , ingresa otra fecha"))
         return fecha
 
 

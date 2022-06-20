@@ -1,4 +1,10 @@
-from django.http import HttpResponseRedirect
+import re
+from django.http import QueryDict
+from django.core.exceptions import ObjectDoesNotExist
+
+
+from django.views.decorators.csrf import csrf_exempt
+from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse, reverse_lazy
 from django.views.generic import View, UpdateView, DeleteView
@@ -7,7 +13,7 @@ from app.models import Usuario
 from tareas.forms import ArchivoCreateForm, TareaCreateForm, ForoCreateForm
 from django.contrib import messages
 
-from tareas.models import Foro, Actividad, TipoForo, TipoActividad
+from tareas.models import Foro, Actividad, Puntaje, TipoForo, TipoActividad, UsuarioActividad
 
 # Create your views here.
 
@@ -44,11 +50,12 @@ class TareasCreateView(LoginRequiredMixin ,View):
         if request.method=="POST":
             form = TareaCreateForm(request.POST)
             if form.is_valid():
+                titulo = form.cleaned_data.get('titulo')
                 fecha = form.cleaned_data.get('fecha')
                 tipoTarea = TipoActividad.objects.get(pk=1)
                 usuarioActual= request.user
 
-                u, created = Actividad.objects.get_or_create(id_usuario=usuarioActual, id_tipo_actividad=tipoTarea , fecha=fecha)
+                u, created = Actividad.objects.get_or_create(id_usuario=usuarioActual, titulo=titulo, id_tipo_actividad=tipoTarea , fecha=fecha)
                 u.save()
 
                 messages.success(request, "Tarea agregada correctamente")
@@ -64,13 +71,71 @@ class TareasCreateView(LoginRequiredMixin ,View):
 
 class TareaDetailsView(LoginRequiredMixin, View):
     def get(self, request, pk, *args, **kwargs):
-        usuarios = Usuario.objects.all()
         tarea = get_object_or_404(Actividad, pk=pk)
+        usuariosActividad = UsuarioActividad.objects.select_related('usuario','actividad','puntaje').filter(actividad_id=pk)
+        puntajes = Puntaje.objects.filter(id_tipo_actividad=tarea.id_tipo_actividad)
         context={
-            'usuarios':usuarios,
-            'titulo': 'Detalles ' + tarea.titulo +" / Fecha: "+ str(tarea.fecha)
+            'puntajes': puntajes,
+            'tarea': tarea,
+            'usuarios':usuariosActividad,
+            'titulo': 'Puntajes ' + tarea.titulo +" / Fecha: "+ str(tarea.fecha)
         }
         return render(request, 'tareas/tarea_details.html', context)
+
+#Obtiene los usuario de la actividad
+@csrf_exempt
+def usuariosActividadAPI(request,pk):
+    users = Usuario.objects.filter(id_tipo_usuario=3)
+
+    data = []
+    #Se verifica la existencia de cada usuario alumno en la tabla de usuario_actividad, y si no existe, se crea. Y todos se guardan en una lista
+    for i in users:
+        if not UsuarioActividad.objects.prefetch_related('usuario','actividad','puntaje').filter(actividad_id=pk,usuario_id=i.id).exists():
+            UsuarioActividad.objects.create(actividad_id=pk,usuario_id=i.id)
+
+        usuarioActividad = UsuarioActividad.objects.prefetch_related('usuario','actividad','puntaje').filter(actividad_id=pk,usuario_id=i.id)
+        data.append(usuarioActividad)
+    
+    dataList = []
+    tarea = get_object_or_404(Actividad, pk=pk)
+    puntajes = list(Puntaje.objects.filter(id_tipo_actividad=tarea.id_tipo_actividad).values())
+    for i in data:
+        idUser = i.values('usuario').get()['usuario']
+        idPuntaje = i.values('puntaje').get()['puntaje']
+        usuario = Usuario.objects.get(pk=idUser)
+        try:
+            puntaje = Puntaje.objects.get(pk=idPuntaje)
+            puntajeP = puntaje.puntaje
+        except ObjectDoesNotExist:
+            puntajeP = None
+        
+        nombre = usuario.nombre
+        apellido_paterno = usuario.apellido_paterno
+        apellido_materno = usuario.apellido_materno
+
+        dataList.append({'id':idUser,'nombre':nombre, 'apellido_paterno':apellido_paterno, 'apellido_materno':apellido_materno,
+                        'puntajeID':idPuntaje, 'puntaje':puntajeP, 'opcionesPuntaje':puntajes})
+    return JsonResponse(dataList, safe=False)
+
+#Actualiza el puntaje de la actividad
+@csrf_exempt
+def updatePuntaje(request):
+    userID = request.POST.get('usuario')
+    puntajeID = request.POST.get('puntaje')
+    #puntajeObject = get_object_or_404(Puntaje, pk=puntajeID)
+    actividadID = request.POST.get('actividad')
+
+    if puntajeID == '0':
+        puntajeID = None
+
+    if UsuarioActividad.objects.filter(usuario=userID, actividad=actividadID).exists():
+        UsuarioActividad.objects.filter(usuario=userID, actividad=actividadID).update(puntaje=puntajeID)
+    else:
+        usuarioActividad = UsuarioActividad.objects.get_or_create(usuario=userID, actividad=actividadID)
+        usuarioActividad.puntaje = puntajeID
+        usuarioActividad.save()
+
+    return JsonResponse('Puntaje actualizado', safe=False)
 
 
 class TareaDeleteView(LoginRequiredMixin, DeleteView):

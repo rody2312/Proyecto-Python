@@ -22,6 +22,7 @@ class Actividad(models.Model):
     usuarios=models.ManyToManyField(Usuario, through='UsuarioActividad', related_name='actividades')
 
     class Meta:
+        unique_together = ('fecha', 'id_tipo_actividad')
         managed = True
         db_table = 'actividad'
 
@@ -40,11 +41,14 @@ class Puntaje(models.Model):
 class UsuarioActividad(models.Model):
     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
     actividad = models.ForeignKey(Actividad, on_delete=models.CASCADE)
-    puntaje = models.ForeignKey(Puntaje, on_delete=models.CASCADE)
+    puntaje = models.ForeignKey(Puntaje, on_delete=models.CASCADE, null=True)
 
     class Meta:
         managed = True
         db_table = 'usuario_actividad'
+    
+    def __str__(self):
+        return str(str(self.usuario) + ' ' + str(self.actividad) + ' ' + str(self.puntaje))
 
 
 class TipoForo(models.Model):

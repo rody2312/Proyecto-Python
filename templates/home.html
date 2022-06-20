@@ -149,6 +149,15 @@
            </li>
 
            <li class="nav-item">
+            <a href="{% url 'evaluacion:evaluaciones' %}" class="nav-link {% if titulo == "Evaluaciones" %} active {% endif %}">
+              <i class="nav-icon fas fa-file"></i>
+              <p>
+                Evaluaciones
+              </p>
+            </a>
+           </li>
+
+           <li class="nav-item">
             <a href="{% url 'app:notificacion' %}" class="nav-link {% if titulo == "Notificaciones" %} active {% endif %}">
               <i class="nav-icon fas fa-th"></i>
               <p>
@@ -175,15 +184,6 @@
               </p>
             </a>
            </li>
-
-         <li class="nav-item">
-          <a href="{% url 'app:puntaje' %}" class="nav-link {% if titulo == "Puntajes" %} active {% endif %}">
-            <i class="nav-icon fas fa-book"></i>
-            <p>
-              Puntajes
-            </p>
-          </a>
-        </li>
        </nav>
        <!-- /.sidebar-menu -->
      </div>
