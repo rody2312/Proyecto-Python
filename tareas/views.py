@@ -156,7 +156,7 @@ class TareaDeleteView(LoginRequiredMixin, DeleteView):
 class TareaEditView(LoginRequiredMixin, UpdateView):
     model = Actividad
     form_class = TareaCreateForm
-    template_name = "tareas/tarea_edit.html"
+    template_name = "tareas/tarea_create.html"
 
     def get_success_url(self):
         messages.success(self.request, "La tarea ha sido actualizado correctamente")

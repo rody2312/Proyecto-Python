@@ -2,6 +2,13 @@
 
 {% block content %}
 
+{% block libs %}
+
+<link rel="stylesheet" href="//code.jquery.com/ui/1.13.1/themes/base/jquery-ui.css">
+<link rel="stylesheet" href="/resources/demos/style.css">
+
+{% endblock libs %}
+
 <div class="container">
     <div class="col-md-6 mx-auto">
       <div class="card card-primary">
@@ -20,7 +27,7 @@
                 {{ form.as_p }}
               <div class="col">
                   <a href="{% url 'evaluacion:evaluaciones' %}" class="btn btn-secondary">Cancelar</a>
-                  <input type="submit" value="Crear nueva evaluacion" class="btn btn-success float-right">
+                  <input type="submit" value="Guardar" class="btn btn-success float-right">
               </div>
             </form>
         </div>
@@ -36,9 +43,30 @@
 {% endblock content %}
 
 {% block js %}
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
-
+<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+<script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js"></script>
 <script>
+
+  $( function() {
+    $( ".datepicker" ).datepicker();
+  } );
+
+  flatpickr(".date", {
+    "locale": {
+      firstDayOfWeek: 1,
+      weekdays: {
+        shorthand: ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sa'],
+        longhand: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],         
+      }, 
+      months: {
+        shorthand: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Оct', 'Nov', 'Dic'],
+        longhand: ['Enero', 'Febrero', 'Мarzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+      },
+    },
+  })
+
   function loadingButton() {
     let timerInterval
     Swal.fire({

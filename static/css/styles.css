@@ -10,6 +10,10 @@ ul .nav-blanco{
     background-color: rgb(0, 0, 0);
 }
 
+.date {
+    background-color: white !important;
+}
+
 /* .contentPrincipal{
     background-color: #FFF9EE;
 } */

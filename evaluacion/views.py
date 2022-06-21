@@ -78,15 +78,12 @@ class EvaluacionDetailsView(LoginRequiredMixin, View):
         }
         return render(request, 'evaluacion/evaluacion_details.html', context)
 
-# EDITAR EVALUACION
+class EvaluacionEditView(LoginRequiredMixin, UpdateView):
+    model = Evaluacion
+    form_class = EvaluacionCreateForm
+    template_name = "evaluacion/evaluacion_create.html"
 
-#class EvaluacionEditView(LoginRequiredMixin, UpdateView):
-    #model = Evaluacion
-    #form_class = EvaluacionEditForm
-    #template_name = "evaluacion/evaluacion_edit.html"
-
-
-    #def get_success_url(self):
-     #   messages.success(self.request, "El usuario ha sido actualizado correctamente")
-      #  return reverse_lazy('app:usuarios')
+    def get_success_url(self):
+        messages.success(self.request, "La evaluación ha sido actualizado correctamente")
+        return reverse_lazy('evaluacion:evaluaciones')
 

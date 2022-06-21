@@ -5,7 +5,7 @@ from app.models import Usuario
 # Create your models here.
 
 class TipoActividad(models.Model):
-    tipo=tipo = models.CharField(max_length=20)
+    tipo=models.CharField(max_length=20)
 
     class Meta:
         managed = True
