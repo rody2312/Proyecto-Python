@@ -90,6 +90,9 @@ class Usuario(AbstractUser):
     class Meta:
         managed = True
         db_table = 'usuarios'
+    
+    def __str__(self):
+        return self.nombre + " " + self.apellido_paterno + " " + self.apellido_materno
 
 class Notificacion(models.Model):
     id_usuario = models.ForeignKey(Usuario, models.DO_NOTHING, db_column='id_usuario')
@@ -100,23 +103,6 @@ class Notificacion(models.Model):
         managed = True
         db_table = 'notificacion'
 
-class Evaluacion(models.Model):
-    titulo = models.TextField(null=False)
-    descripcion = models.TextField(null=False)
-    fecha = models.DateField(null=False)
-
-    class Meta():
-        managed = True
-        db_table = 'evaluacion'
-
-class Puntaje(models.Model):
-    clase = models.TextField(null=False)
-    fecha = models.DateField(null=False)
-    detalles = models.TextField(null=False)
-
-    class Meta():
-        managed = True
-        db_table = 'puntaje'
 
 
 

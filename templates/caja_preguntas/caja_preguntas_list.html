@@ -1,4 +1,4 @@
-{% extends 'home.html' %}
+{% extends 'home.html' %} 
 {% load static %}
 
 {% block libs %}
@@ -8,7 +8,7 @@
 <link rel="stylesheet" href="{% static 'lib/adminlte-3.2.0/plugins/datatables-buttons/css/buttons.bootstrap4.min.css' %}">
 {% endblock %}
 
-{% block content %}
+{% block content %} 
 
 <div class="container-fluid">
 
@@ -17,44 +17,46 @@
 
         <div class="card">
           <div class="card-header">
-            <h3 class="card-title">Lista de puntajes</h3>
+            <h3 class="card-title">Lista de {{titulo}}</h3>
           </div>
           <!-- /.card-header -->
           <div class="card-body">
-            <a class="btn btn-primary mb-2" href="{% url 'app:crear_puntaje' %}">Crear nuevo puntaje</a>
+            <a class="btn btn-primary mb-2" href="{% url 'tareas:crear_caja_preguntas' %}">Crear nuevo registro</a>
             <br>
 
             <table id="example1" class="table table-bordered table-striped">
               <thead>
               <tr>
-                <th>Clase</th>
                 <th>Fecha</th>
-                <th>Detalles</th>
-                <th>Acciones</th>
+                <th>Creado por</th>
+                <th>Opciones</th>
               </tr>
               </thead>
               <tbody>
-                {% for puntaje in puntajes %}
+                {% for tarea in tareas_caja %}
                 <tr>
-                  <td>{{puntaje.clase}}</td>
-                  <td>{{puntaje.fecha}}</td>
-                  <td>{{puntaje.detalles}}</td>
+                    <td>{{tarea.fecha}}</td>
+                    <td>{{tarea.id_usuario}}</td>
                     <td class="text-center">
 
-                      <!--<div class="row justify-content-center">
-                        <form action="{% url 'app:notificacion_delete' notificacion.id %}" method="POST" id="deleteForm">
+                      <div class="row justify-content-center">
+                        <a class="btn btn-primary btn-sm" href="{% url 'tareas:details' tarea.id %}">
+                            <i class="fas fa-folder">
+                            </i>
+                        </a>
+                        <form action="{% url 'tareas:caja_preguntas_delete' tarea.id %}" method="POST" id="deleteForm">
                           {% csrf_token %}
-                          <a class="btn btn-danger btn-sm" href="#" onclick="eliminarNotificacion({{notificacion.id}})">
+                          <a class="btn btn-danger btn-sm" href="#" onclick="eliminarTarea({{tarea.id}})">
                               <i class="fas fa-trash">
                               </i>
-                            </a>
+                          </a>
                         </form>
-                        <div>!-->
+                      </div>
                     </td>
-                </tr> 
+                      
+                </tr>
                 {% endfor %}
               </tbody>
-              </tfoot>
             </table>
           </div>
           <!-- /.card-body -->
@@ -67,10 +69,12 @@
   </div>
   <!-- /.container-fluid -->
 
-{% endblock %}
+{% endblock content %} 
+
 
 
 {% block js %}
+
 <!-- DataTables  & Plugins -->
 <script src="{%static 'lib/adminlte-3.2.0/plugins/datatables/jquery.dataTables.min.js'%}"></script>
 <script src="{%static 'lib/adminlte-3.2.0/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js'%}"></script>
@@ -84,69 +88,55 @@
 <script src="{%static 'lib/adminlte-3.2.0/plugins/datatables-buttons/js/buttons.html5.min.js'%}"></script>
 <script src="{%static 'lib/adminlte-3.2.0/plugins/datatables-buttons/js/buttons.print.min.js'%}"></script>
 <script src="{%static 'lib/adminlte-3.2.0/plugins/datatables-buttons/js/buttons.colVis.min.js'%}"></script>
-<!-- Page specific script -->
 
 <script>
-
   $(function () {
-    $("#example1").DataTable({
-      "responsive": true, "lengthChange": false, "autoWidth": false,
-      "language": {
-        "processing":     "Procesando...",
-        "infoEmpty":      "Mostrando 0 a 0 de 0 registro",
-        "infoFiltered":   "(filtrado de un total de _MAX_ registros)",
-        "search": "Buscar:",
-        "zeroRecords":    "No se encuentran registros",
-        "paginate": {
-            "first":      "Primero",
-            "last":       "Ultimo",
-            "next":       "Siguiente",
-            "previous":   "Anterior"
+    $("#example1")
+      .DataTable({
+        responsive: true,
+        lengthChange: false,
+        autoWidth: false,
+        language: {
+          processing: "Procesando...",
+          infoEmpty: "Mostrando 0 a 0 de 0 registro",
+          infoFiltered: "(filtrado de un total de _MAX_ registros)",
+          search: "Buscar:",
+          zeroRecords: "No se encuentran registros",
+          paginate: {
+            first: "Primero",
+            last: "Ultimo",
+            next: "Siguiente",
+            previous: "Anterior",
+          },
+          emptyTable: "No hay registros para mostrar",
+          info: "Mostrando _START_ a _END_ de _TOTAL_ registros",
+          infoEmpty: "Mostrando 0 a 0 de 0 registros",
         },
-        "emptyTable":     "No hay registros para mostrar",
-        "info":           "Mostrando _START_ a _END_ de _TOTAL_ registros",
-        "infoEmpty":      "Mostrando 0 a 0 de 0 registros",
-      },
-      "buttons": [
-      {
-        extend: "copy", text: "Copiar"
-      },
-      {
-        extend: "csv"
-      },
-      {
-        extend: "pdf"
-      },
-      {
-        extend: "print", text: "Imprimir"
-      },
-      {
-        extend: "colvis", text: "Columnas visibles"
-      }]
-    }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
-    $('#example2').DataTable({
-      "paging": true,
-      "lengthChange": false,
-      "searching": false,
-      "ordering": true,
-      "info": true,
-      "autoWidth": false,
-      "responsive": true,
+
+      })
+      .buttons()
+      .container()
+      .appendTo("#example1_wrapper .col-md-6:eq(0)");
+    $("#example2").DataTable({
+      paging: true,
+      lengthChange: false,
+      searching: false,
+      ordering: true,
+      info: true,
+      autoWidth: false,
+      responsive: true,
     });
   });
-
-
-  
 </script>
 
 <script>
-  function eliminarNotificacion(id){
+  function eliminarTarea(id){
     event.preventDefault();
-    var url = "{% url 'app:notificacion_delete' 123 %}";
+    var url = "{% url 'tareas:caja_preguntas_delete' 123 %}";
     console.log(id)
     Swal.fire({
-      title: '¿Estas seguro de eliminar la notificacion?',
-      text: "No se podra deshacer!",
+      title: '¿Estas seguro de eliminar la tarea?',
+      text: "También sera eliminado el foro relacionado!",
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
@@ -174,4 +164,4 @@
   {% endfor %}
 </script>
 
-{% endblock  %}
+{% endblock js %}

@@ -1,0 +1,65 @@
+{% extends 'home.html' %}
+
+{% load static %}
+
+{% block libs %}
+
+  <!-- summernote -->
+  <link rel="stylesheet" href="{% static 'lib/adminlte-3.2.0/plugins/summernote/summernote-bs4.min.css' %}">
+  <!-- SimpleMDE -->
+  <link rel="stylesheet" href="../../plugins/simplemde/simplemde.min.css">
+  <!-- CodeMirror -->
+  <link rel="stylesheet" href="{% static 'lib/adminlte-3.2.0/plugins/codemirror/codemirror.css'%}">
+  <link rel="stylesheet" href="{% static 'lib/adminlte-3.2.0/plugins/codemirror/theme/monokai.css'%}">
+
+{% endblock libs %}
+
+{% block content %}
+
+<div class="container">
+    <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">{{foro.titulo}}</h3>
+        </div>
+        <div class="card-body" id="summernote">
+            {{foro.descripcion | safe}}
+        </div>
+        <div class="card-footer card-comments">
+            <div class="card-comment">
+              <div class="comment-text">
+                <span class="username">
+                  Maria Gonzales
+                  <span class="text-muted float-right">8:03 PM Today</span>
+                </span><!-- /.username -->
+                It is a long established fact that a reader will be distracted
+                by the readable content of a page when looking at its layout.
+              </div>
+              <!-- /.comment-text -->
+            </div>
+            <!-- /.card-comment -->
+            <div class="card-comment">
+
+              <div class="comment-text">
+                <span class="username">
+                  Nora Havisham
+                  <span class="text-muted float-right">8:03 PM Today</span>
+                </span><!-- /.username -->
+                The point of using Lorem Ipsum is that it hrs a morer-less
+                normal distribution of letters, as opposed to using
+                'Content here, content here', making it look like readable English.
+              </div>
+              <!-- /.comment-text -->
+            </div>
+            <!-- /.card-comment -->
+          </div>
+    </div>
+</div>
+
+{% block js %}
+
+<!-- Summernote -->
+<script src="{% static 'lib/adminlte-3.2.0/plugins/summernote/summernote-bs4.min.js' %}"></script>
+
+{% endblock js %}
+
+{% endblock content %}

@@ -41,6 +41,8 @@ INSTALLED_APPS = [
     'core',
     'app',
     'tareas',
+    'asistencia',
+    'evaluacion',
 ]
 
 MIDDLEWARE = [
@@ -146,6 +148,8 @@ AUTH_USER_MODEL = 'app.Usuario'
 LOGIN_REDIRECT_URL="/"
 LOGIN_URL="/login/"
 LOGOUT_REDIRECT_URL="/login/"
+
+USE_L10N = False
 
 
 

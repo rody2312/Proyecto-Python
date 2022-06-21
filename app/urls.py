@@ -1,11 +1,9 @@
 from unicodedata import name
 from django.urls import path, re_path, include
-#from app.views.views_archivo import ArchivoCreateView, ArchivoListView
-from app.views.views_evaluacion import EvaluacionDeleteView, EvaluacionDetailsView, EvaluacionListView, EvaluacionCreateView
+from app.views.views_archivo import ArchivoCreateView, ArchivoListView
 from app.views.views_notificacion import NotificacionDeleteView, NotificacionListView, NotificacionCreateView
-#from app.views.views_puntaje import PuntajeCreateView, PuntajeListView
 
-from .views import UsuariosListView,UsuarioCreateView,UsuarioDetailsView, UsuarioUpdateView,UsuarioDeleteView,UsuarioEditView, LoginView
+from .views import UsuariosListView,UsuarioCreateView,UsuarioDetailsView, UsuarioDeleteView,UsuarioEditView, LoginView
 from .forms import CambiarPassForm
 from django.contrib.auth import views as auth_views
 from django.urls import reverse_lazy
@@ -18,7 +16,7 @@ urlpatterns= [
     path('usuarios/', UsuariosListView.as_view(), name="usuarios"),
     path('usuarios/create/', UsuarioCreateView.as_view(), name="create"),
     path('usuarios/details/<int:pk>/', UsuarioDetailsView.as_view(), name="details"),
-    path('usuarios/update/<int:pk>/', UsuarioUpdateView.as_view(), name="update"),
+    path('usuarios/edit/<int:pk>/', UsuarioEditView.as_view(), name="edit"),
     path('usuarios/delete/<int:pk>/', UsuarioDeleteView.as_view(), name="delete"),
 
     #NOTIFICACION
@@ -29,23 +27,6 @@ urlpatterns= [
     #ARCHIVOS
     #path('archivos/', ArchivoListView.as_view(), name="archivos"),
     #path('archivo_create/', ArchivoCreateView.as_view(), name="crear_archivo"),
-
-    #EVALUACION
-    path('evaluacion/', EvaluacionListView.as_view(), name="evaluacion"),
-    path('evaluacion_create/', EvaluacionCreateView.as_view(), name="crear_evaluacion"),
-    path('evaluacion/details/<int:pk>/', EvaluacionDetailsView.as_view(), name="evaluacion_details"),
-    path('evaluacion/delete/<int:pk>/', EvaluacionDeleteView.as_view(), name="evaluacion_delete"),
-
-    #PUNTAJES
-    #path('puntaje/', PuntajeListView.as_view(), name="puntaje"),
-    #path('puntaje_create/', PuntajeCreateView.as_view(), name="crear_puntaje"),
-
-
-
-
-
-    
-#Evaluacion
 
     # autenticación
     path('login/', LoginView.as_view(), name="login"),
@@ -90,6 +71,5 @@ urlpatterns= [
     #re_path('password_reset/done/',auth_views.PasswordResetDoneView.as_view(),name='password_reset_done'),
     #re_path('reset/<uidb64>/<token>/',auth_views.PasswordResetConfirmView.as_view(),name='password_reset_confirm'),
     #re_path('reset/done/',auth_views.PasswordResetCompleteView.as_view(),name='password_reset_complete'),
-    path('usuarios/edit/<int:pk>/', UsuarioEditView.as_view(), name="edit")
 
 ]

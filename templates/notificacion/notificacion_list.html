@@ -90,7 +90,6 @@
 
   $(function () {
     $("#example1").DataTable({
-      "responsive": true, "lengthChange": false, "autoWidth": false,
       "language": {
         "processing":     "Procesando...",
         "infoEmpty":      "Mostrando 0 a 0 de 0 registro",
@@ -107,22 +106,7 @@
         "info":           "Mostrando _START_ a _END_ de _TOTAL_ registros",
         "infoEmpty":      "Mostrando 0 a 0 de 0 registros",
       },
-      "buttons": [
-      {
-        extend: "copy", text: "Copiar"
-      },
-      {
-        extend: "csv"
-      },
-      {
-        extend: "pdf"
-      },
-      {
-        extend: "print", text: "Imprimir"
-      },
-      {
-        extend: "colvis", text: "Columnas visibles"
-      }]
+      "responsive": true, "lengthChange": false, "autoWidth": false,
     }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
     $('#example2').DataTable({
       "paging": true,

@@ -3,12 +3,10 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse, reverse_lazy
 from django.views.generic import View, DeleteView, UpdateView
-from ..forms import EvaluacionCreateForm
+from evaluacion.forms import EvaluacionCreateForm
 from app import forms
 from django.contrib import messages
-from ..models import Evaluacion
-
-from app.models import Evaluacion
+from evaluacion.models import Evaluacion
 
 
 #LISTAR EVALUACION
@@ -27,10 +25,10 @@ class EvaluacionListView(LoginRequiredMixin ,View):
 
 class EvaluacionCreateView(LoginRequiredMixin ,View):
     def get(self,request, *args, **kwargs):
-        form=EvaluacionCreateForm
+        form=EvaluacionCreateForm()
         context={
             'form': form,
-            'titulo': 'Crear Evaluacion'
+            'titulo': 'Crear Evaluación'
         }
         return render(request, 'evaluacion/evaluacion_create.html', context)
 
@@ -39,24 +37,30 @@ class EvaluacionCreateView(LoginRequiredMixin ,View):
             form = EvaluacionCreateForm(request.POST)
             if form.is_valid():
                 titulo = form.cleaned_data.get('titulo')
-                descripcion = form.cleaned_data.get('descripcion')
                 fecha = form.cleaned_data.get('fecha')
+                usuarioActual= request.user
                 
-                u, created = Evaluacion.objects.get_or_create(titulo=titulo, descripcion=descripcion, fecha=fecha)
+                u, created = Evaluacion.objects.get_or_create(id_usuario=usuarioActual, titulo=titulo, fecha=fecha)
                 u.save()
 
                 messages.success(request, "Evaluacion agregada correctamente")
-                return redirect('app:evaluacion')
+                return redirect('evaluacion:evaluaciones')
+
+        context={
+            'titulo': 'Crear Evaluación',
+            'form': form
+        }
+        return render(request, 'evaluacion/evaluacion_create.html', context)
 
 # ELIMINAR EVALUACION                
 
 class EvaluacionDeleteView(LoginRequiredMixin, DeleteView):
     model = Evaluacion
-    success_url = reverse_lazy('app:evaluacion')
+    success_url = reverse_lazy('evaluacion:evaluaciones')
 
     def get_success_url(self):
         messages.success(self.request, "Eliminada correctamente")
-        return reverse('app:evaluacion')
+        return reverse('evaluacion:evaluaciones')
 
     def delete(self, request, *args, **kwargs):
         self.object = self.get_object()

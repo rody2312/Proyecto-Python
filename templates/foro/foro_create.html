@@ -1,0 +1,72 @@
+{% extends 'home.html' %}
+
+{% load static %}
+
+{% block libs %}
+
+  <!-- summernote -->
+  <link rel="stylesheet" href="{% static 'lib/adminlte-3.2.0/plugins/summernote/summernote-bs4.min.css' %}">
+  <!-- SimpleMDE -->
+  <link rel="stylesheet" href="../../plugins/simplemde/simplemde.min.css">
+
+{% endblock libs %}
+
+
+{% block content %}
+
+<div class="container">
+    <div class="col-md-10 mx-auto">
+      <div class="card card-primary">
+        <div class="card-header">
+          <h3 class="card-title">{{titulo}}</h3>
+        </div>
+        <div class="card-body">
+            <form method="POST">
+                {% csrf_token %}
+                {{form.as_p}}
+                <div class="col">
+                    <a href="{% url 'tareas:foros' %}" class="btn btn-secondary">Cancelar</a>
+                    <input type="submit" value="Crear foro" class="btn btn-success float-right">
+                  </div>
+            </form>
+        </div>
+      </div>
+        
+    </div>
+</div>
+    
+
+{% endblock content %}
+
+
+{% block js %}
+
+<!-- Summernote -->
+<script src="{% static 'lib/adminlte-3.2.0/plugins/summernote/summernote-bs4.min.js'%}"></script>
+
+<script>
+  $(function () {
+    // Summernote
+    $('#summernote').summernote({
+      height: 250,
+      toolbar: [
+        ['style', ['style']],
+        ['font', ['bold', 'underline', 'clear']],
+        ['fontname', ['fontname']],
+        ['color', ['color']],
+        ['para', ['ul', 'ol', 'paragraph']],
+        ['table', ['table']],
+        ['insert', ['link']],
+      ],
+
+    })
+
+    // CodeMirror
+    CodeMirror.fromTextArea(document.getElementById("codeMirrorDemo"), {
+      mode: "htmlmixed",
+      theme: "paper"
+    });
+  })
+</script>
+
+{% endblock js %}
