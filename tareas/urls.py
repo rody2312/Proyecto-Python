@@ -25,4 +25,5 @@ urlpatterns = [
     path('caja-preguntas/create/', CajaDePreguntasCreateView.as_view(), name="crear_caja_preguntas"),
     path('caja-preguntas/delete/<int:pk>/', CajaDePreguntasDeleteView.as_view(), name="caja_preguntas_delete"),
 
+    
 ]
