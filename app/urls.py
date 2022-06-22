@@ -2,7 +2,7 @@ from unicodedata import name
 from django.urls import path, re_path, include
 from app.views.views_archivo import ArchivoCreateView, ArchivoListView
 from app.views.views_notificacion import NotificacionDeleteView, NotificacionEditView, NotificacionListView, NotificacionCreateView
-from app.views.views_tipo_actividad import TipoActividadCreateView, TipoActividadDeleteView, TipoActividadEditView, TipoActividadListView
+from app.views.views_tipo_actividad import TipoActividadCreateView, TipoActividadDeleteView, TipoActividadEditView, TipoActividadListView, delete
 
 from .views import UsuariosListView,UsuarioCreateView,UsuarioDetailsView, UsuarioDeleteView,UsuarioEditView, LoginView
 from .forms import CambiarPassForm
@@ -33,7 +33,7 @@ urlpatterns= [
     #TIPO ACTIVIDAD
     path('tipo_actividad/', TipoActividadListView.as_view(), name="list_tipo_actividad"),
     path('tipo_actividad/create/', TipoActividadCreateView.as_view(), name="crear_tipo_actividad"),
-    path('tipo_actividad/delete/<int:pk>/', TipoActividadDeleteView.as_view(), name="delete_tipo_actividad"),
+    path('tipo_actividad/delete/<int:pk>/', delete, name="delete_tipo_actividad"),
     path('tipo_actividad/edit/<int:pk>/', TipoActividadEditView.as_view(), name="edit_tipo_actividad"),
 
 

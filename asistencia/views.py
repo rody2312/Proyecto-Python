@@ -5,7 +5,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse, reverse_lazy
 from django.views.generic import View, DeleteView, UpdateView
 from app.models import Usuario
-from asistencia.forms import AsistenciaCreateForm
+from asistencia.forms import AsistenciaCreateForm, TipoAsistenciaCreateForm
 from asistencia.models import Asistencia, TipoAsistencia, UsuarioAsistencia
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
@@ -153,3 +153,69 @@ def updatePuntaje(request):
         usuarioAsistencia.save()
 
     return JsonResponse('Puntaje actualizado', safe=False)
+
+
+# Listar tipos de asistencia
+class TipoAsistenciaListView(LoginRequiredMixin ,View):
+     
+    def get(self,request, *args, **kwargs):
+
+        tipos_asistencia = TipoAsistencia.objects.all()
+        context={
+            'tipos_asistencia': tipos_asistencia,
+            'titulo': 'Tipos de Asistencia'
+        }
+        return render(request, 'asistencia/tipo_asistencia_list.html', context)
+
+#CREAR TIPO ACTIVIDAD
+
+class TipoAsistenciaCreateView(LoginRequiredMixin ,View):
+    
+    def get(self,request, *args, **kwargs):
+        form=TipoAsistenciaCreateForm()
+        context={
+            'form': form,
+            'titulo': 'Crear Tipo de Actividad'
+        }
+        return render(request, 'asistencia/tipo_asistencia_create.html', context)
+
+    def post(self, request,*args, **kwargs):
+        if request.method=="POST":
+            form = TipoAsistenciaCreateForm(request.POST)
+            if form.is_valid():
+                nombre_tipo = form.cleaned_data.get('nombre_tipo')
+                puntaje = form.cleaned_data.get('puntaje')
+
+                u, created = TipoAsistencia.objects.get_or_create(nombre_tipo=nombre_tipo, puntaje=puntaje)
+                u.save()
+
+                messages.success(request, "Tipo de actividad agregada correctamente")
+                return redirect('asistencia:list_tipo_asistencia')
+        context={
+            'titulo': 'Crear tipo asistencia',
+            'form': form
+        }
+        return render(request, 'asistencia/tipo_asistencia_create.html', context)
+
+
+#Eliminar tipo de asistencia SI USAR##
+def delete(request, pk, *args, **kwargs):
+    tipo = TipoAsistencia.objects.get(id=pk)
+    if UsuarioAsistencia.objects.filter(tipo_asistencia=pk).exists():
+        messages.error(request, "No se puede eliminar, debido a que existen registros de actividades relacionados a '" + tipo.nombre_tipo + "'")
+        return HttpResponseRedirect(reverse_lazy('asistencia:list_tipo_asistencia'))
+    else:
+        if tipo.delete():
+            messages.success(request, "Se elimino correctamente")
+        return HttpResponseRedirect(reverse_lazy('asistencia:list_tipo_asistencia'))
+
+#EDITAR TIPO ACTIVIDAD
+
+class TipoAsistenciaEditView(LoginRequiredMixin, UpdateView):
+    model = TipoAsistencia
+    form_class = TipoAsistenciaCreateForm
+    template_name = "asistencia/tipo_asistencia_edit.html"
+
+    def get_success_url(self):
+        messages.success(self.request, "El tipo de asistencia ha sido actualizado correctamente")
+        return reverse_lazy('asistencia:list_tipo_asistencia')

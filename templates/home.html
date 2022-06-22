@@ -147,12 +147,6 @@
                   <p>Tarea semanal</p>
                 </a>
               </li>
-              <li class="nav-item">
-                <a href="{% url 'tareas:caja_preguntas_list' %}" class="nav-link {% if titulo == "Caja de preguntas" %} active {% endif %}">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Caja de preguntas</p>
-                </a>
-              </li>
             </ul>
            </li>
 
@@ -193,8 +187,8 @@
             </a>
            </li>
 
-           <li class="nav-item {% if titulo == "Tipo actividad" or titulo == "Caja de preguntas" %} menu-open {% endif %}">
-            <a href="#" class="nav-link {% if titulo == "Tipo actividad" or titulo == "Caja de preguntas" %} active {% endif %}">
+           <li class="nav-item {% if titulo == "Tipos de Actividades" or titulo == "Tipos de Asistencia" %} menu-open {% endif %}">
+            <a href="#" class="nav-link {% if titulo == "Tipos de Actividades" or titulo == "Tipos de Asistencia" %} active {% endif %}">
               <i class="nav-icon fas fa-book"></i>
               <p>
                 Configuraciones
@@ -203,9 +197,17 @@
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="{% url 'app:list_tipo_actividad' %}" class="nav-link {% if titulo == "Tipo actividad" %} active {% endif %}">
+                <a href="{% url 'app:list_tipo_actividad' %}" class="nav-link {% if titulo == "Tipos de Actividades" %} active {% endif %}">
                   <i class="far fa-circle nav-icon"></i>
-                  <p>Tipo de actividades</p>
+                  <p>Tipos de actividades</p>
+                </a>
+              </li>
+            </ul>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="{% url 'asistencia:list_tipo_asistencia' %}" class="nav-link {% if titulo == "Tipos de Asistencia" %} active {% endif %}">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Tipos de asistencias</p>
                 </a>
               </li>
             </ul>

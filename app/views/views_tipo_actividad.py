@@ -1,10 +1,11 @@
+from http.client import error
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import HttpResponseRedirect
+from django.http import Http404, HttpResponseForbidden, HttpResponseRedirect
 from django.shortcuts import redirect, render
 from django.urls import reverse, reverse_lazy
 from django.views.generic import View, DeleteView, UpdateView
 
-from tareas.models import TipoActividad
+from tareas.models import Actividad, TipoActividad
 from app import forms
 from django.contrib import messages
 
@@ -17,7 +18,7 @@ class TipoActividadListView(LoginRequiredMixin ,View):
         tipo_actividad = TipoActividad.objects.all()
         context={
             'tipo_actividades': tipo_actividad,
-            'titulo': 'Tipo actividad'
+            'titulo': 'Tipos de Actividades'
         }
         return render(request, 'actividad/tipo_actividad_list.html', context)
 
@@ -51,20 +52,34 @@ class TipoActividadCreateView(LoginRequiredMixin ,View):
         return render(request, 'actividad/tipo_actividad_create.html', context)
 
 #ELIMINAR TIPO ACTIVIDAD
-
+# NO USAR ########################
 class TipoActividadDeleteView(LoginRequiredMixin, DeleteView):
     model = TipoActividad
     success_url = reverse_lazy('app:list_tipo_actividad')
-
-    def get_success_url(self):
-        messages.success(self.request, "Eliminado correctamente")
-        return reverse('app:list_tipo_actividad')
-
+    #
     def delete(self, request, *args, **kwargs):
         self.object = self.get_object()
-        success_url = self.get_success_url()
-        self.object.delete()
-        return HttpResponseRedirect(success_url)
+        if Actividad.objects.filter(id_tipo_actividad=self.object.id).exists():
+            print('a')
+            messages.success(self.request, "No se puede eliminar el usuario")
+            return HttpResponseForbidden('xD')
+        else:
+            print('b')
+            messages.success(self.request, "A")
+            success_url = self.get_success_url()
+            #self.object.delete()
+            return HttpResponseRedirect(success_url)
+
+#SI USAR
+def delete(request, pk, *args, **kwargs):
+    tipo = TipoActividad.objects.get(id=pk)
+    if Actividad.objects.filter(id_tipo_actividad=pk).exists():
+        messages.error(request, "No se puede eliminar, debido a que existen registros de actividades relacionados a '" + tipo.tipo +"'")
+        return HttpResponseRedirect(reverse_lazy('app:list_tipo_actividad'))
+    else:
+        if tipo.delete():
+            messages.success(request, "Se elimino correctamente")
+        return HttpResponseRedirect(reverse_lazy('app:list_tipo_actividad'))
 
 #EDITAR TIPO ACTIVIDAD
 
