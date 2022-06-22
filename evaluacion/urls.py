@@ -1,4 +1,4 @@
-from evaluacion.views import EvaluacionDeleteView, EvaluacionDetailsView, EvaluacionEditView, EvaluacionListView, EvaluacionCreateView
+from evaluacion.views import EvaluacionDeleteView, EvaluacionDetailsView, EvaluacionEditView, EvaluacionListView, EvaluacionCreateView, updatePuntaje, usuariosEvaluacionAPI
 from django.urls import path
 
 app_name="evaluacion"
@@ -11,5 +11,8 @@ urlpatterns= [
     path('evaluacion/details/<int:pk>/', EvaluacionDetailsView.as_view(), name="evaluacion_details"),
     path('evaluacion/eliminar/<int:pk>/', EvaluacionDeleteView.as_view(), name="evaluacion_delete"),
     path('evaluacion/editar/<int:pk>/', EvaluacionEditView.as_view(), name="evaluacion_edit"),
+    path('evaluacionPuntajesAPI/<int:pk>/', usuariosEvaluacionAPI),
+    path('updatePuntajeEv/', updatePuntaje),
+
 
 ]

@@ -25,15 +25,15 @@
 
       <div class="card">
         <div class="card-header">
-          <h3 class="card-title">Puntajes de actividad</h3>
-          <a class="btn btn-primary float-right" href="{% url 'tareas:tareas' %}">Volver</a>
+          <h3 class="card-title">Registro de asistencia</h3>
+          <a class="btn btn-primary float-right" href="{% url 'asistencia:asistencias' %}">Volver</a>
         </div>
         <div class="card-body">
           <table id="example1" class="table table-bordered table-striped">
             <thead>
               <tr>
                 <th>Alumno</th>
-                <th>Puntaje</th>
+                <th>Asistencia</th>
                 <th>Editar</th>
               </tr>
             </thead>
@@ -62,7 +62,7 @@
 
   
   function updatePuntajePOST(data){
-    var url = '/updatePuntaje/'
+    var url = '/updatePuntajeAsis/'
 
     $.ajax({
       method:'POST',
@@ -76,9 +76,9 @@
   }
 
   //Se guardan los alumnos de la base de datos en esta lista
-  var idTarea = JSON.parse("{{ tarea.id|escapejs }}")
+  var idAsis = JSON.parse("{{ asistencia.id|escapejs }}")
   var usuarios = []
-  var dataURL = '/actividadPuntajesAPI/'+ idTarea+'/'
+  var dataURL = '/asistenciaPuntajesAPI/'+ idAsis+'/'
     $.ajax({
       method:'GET',
       url:dataURL,
@@ -111,9 +111,10 @@
     //Object.keys(listPuntajes[key]).length
     for (var key in listPuntajes) {
       idPuntaje = listPuntajes[key]['id']
+      nombreTipo = listPuntajes[key]['nombre_tipo']
       puntaje = listPuntajes[key]['puntaje']
       if(obj.puntajeID != idPuntaje){
-        opcion += '<option value="'+ idPuntaje +'">'+ puntaje +'</option>'
+        opcion += '<option value="'+ idPuntaje +'">'+ nombreTipo + ' (' + puntaje +')</option>'
       }
       opciones += opcion
       opcion = ''
@@ -134,7 +135,7 @@
       
     var puntajeCol = `<td class="text-center">
                        <div class="row justify-content-center">
-                         <select class="col-6 custom-select" id="selectPuntaje-${obj.id}" disabled>
+                         <select class="col-8 custom-select" id="selectPuntaje-${obj.id}" disabled>
                            ${comprobarExistenciaPuntaje(obj)}
                            ${mostrarOpciones(obj)}
                          </select>
@@ -155,7 +156,26 @@
   //</tr>`
   //$('#tests-table').append(row)
 
-  var tabla = $("#example1").DataTable()
+  var tabla = $("#example1").DataTable({
+        "responsive": true, "lengthChange": true, "autoWidth": false,
+        "language": {
+          "lengthMenu": "Mostrar _MENU_ registros",
+          "processing":     "Procesando...",
+          "infoEmpty":      "Mostrando 0 a 0 de 0 registro",
+          "infoFiltered":   "(filtrado de un total de _MAX_ registros)",
+          "search": "Buscar:",
+          "zeroRecords":    "No se encuentran registros",
+          "paginate": {
+              "first":      "Primero",
+              "last":       "Ultimo",
+              "next":       "Siguiente",
+              "previous":   "Anterior"
+          },
+          "emptyTable":     "No hay registros para mostrar",
+          "info":           "Mostrando _START_ a _END_ de _TOTAL_ registros",
+          "infoEmpty":      "Mostrando 0 a 0 de 0 registros",
+        },
+      })
   tabla.row.add(
     [userCol, puntajeCol, btnCol]
   ).draw(false)
@@ -193,41 +213,41 @@
     editBtn.removeClass('hidden')
 
     //Todas las id necesarias se guardan en una variable para mandarlo a la view y guardarlo en la bd
-    var data = {'usuario': userid, 'puntaje': selectInput.val(), 'actividad':idTarea}
+    var data = {'usuario': userid, 'puntaje': selectInput.val(), 'asistencia':idAsis}
     console.log(data)
     updatePuntajePOST(data)
 
     selectInput.prop('disabled', true);
     
   }
-  
+
 </script>
 
 <script>
 
     //Creación de data table con jquery
-    $(function () {
-      $("#example1").DataTable({
-        "responsive": true, "lengthChange": true, "autoWidth": false,
-        "language": {
-          "lengthMenu": "Mostrar _MENU_ registros",
-          "processing":     "Procesando...",
-          "infoEmpty":      "Mostrando 0 a 0 de 0 registro",
-          "infoFiltered":   "(filtrado de un total de _MAX_ registros)",
-          "search": "Buscar:",
-          "zeroRecords":    "No se encuentran registros",
-          "paginate": {
-              "first":      "Primero",
-              "last":       "Ultimo",
-              "next":       "Siguiente",
-              "previous":   "Anterior"
-          },
-          "emptyTable":     "No hay registros para mostrar",
-          "info":           "Mostrando _START_ a _END_ de _TOTAL_ registros",
-          "infoEmpty":      "Mostrando 0 a 0 de 0 registros",
-        },
-      })
-    });
+    //$(function () {
+    //  $("#example1").DataTable({
+    //    "responsive": true, "lengthChange": true, "autoWidth": false,
+    //    "language": {
+    //      "lengthMenu": "Mostrar _MENU_ registros",
+    //      "processing":     "Procesando...",
+    //      "infoEmpty":      "Mostrando 0 a 0 de 0 registro",
+    //      "infoFiltered":   "(filtrado de un total de _MAX_ registros)",
+    //      "search": "Buscar:",
+    //      "zeroRecords":    "No se encuentran registros",
+    //      "paginate": {
+    //          "first":      "Primero",
+    //          "last":       "Ultimo",
+    //          "next":       "Siguiente",
+    //          "previous":   "Anterior"
+    //      },
+    //      "emptyTable":     "No hay registros para mostrar",
+    //      "info":           "Mostrando _START_ a _END_ de _TOTAL_ registros",
+    //      "infoEmpty":      "Mostrando 0 a 0 de 0 registros",
+    //    },
+    //  })
+    //});
 
 </script>
 

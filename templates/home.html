@@ -124,7 +124,15 @@
                </p>
              </a>
            </li>
-           <li class="nav-item {% if titulo == "Tareas" or titulo == "Caja de preguntas" %} menu-open {% endif %}">
+           <li class="nav-item">
+            <a href="{% url 'asistencia:asistencias' %}" class="nav-link {% if titulo == "Asistencia" %} active {% endif %}">
+              <i class="nav-icon fas fa-users"></i>
+              <p>
+                Asistencia
+              </p>
+            </a>
+            </li>
+            <li class="nav-item {% if titulo == "Tareas" or titulo == "Caja de preguntas" %} menu-open {% endif %}">
             <a href="#" class="nav-link {% if titulo == "Tareas" or titulo == "Caja de preguntas" %} active {% endif %}">
               <i class="nav-icon fas fa-book"></i>
               <p>
