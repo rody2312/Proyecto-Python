@@ -192,6 +192,25 @@
               </p>
             </a>
            </li>
+
+           <li class="nav-item {% if titulo == "Tipo actividad" or titulo == "Caja de preguntas" %} menu-open {% endif %}">
+            <a href="#" class="nav-link {% if titulo == "Tipo actividad" or titulo == "Caja de preguntas" %} active {% endif %}">
+              <i class="nav-icon fas fa-book"></i>
+              <p>
+                Configuraciones
+                <i class="right fas fa-angle-left"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="{% url 'app:list_tipo_actividad' %}" class="nav-link {% if titulo == "Tipo actividad" %} active {% endif %}">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Tipo de actividades</p>
+                </a>
+              </li>
+            </ul>
+           </li>
+
        </nav>
        <!-- /.sidebar-menu -->
      </div>

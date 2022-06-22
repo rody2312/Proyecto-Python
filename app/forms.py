@@ -1,4 +1,6 @@
 from django import forms
+
+from tareas.models import TipoActividad
 from .models import Notificacion, Usuario,TipoUsuario
 
 
@@ -117,6 +119,23 @@ class NotificacionCreateForm(forms.ModelForm):
         super(NotificacionCreateForm, self).__init__(*args, **kwargs)
         self.fields['texto'].required = True
 
+
+
+class TipoActividadCreateForm(forms.ModelForm):
+    class Meta:
+        model=TipoActividad
+        fields=('tipo',)
+
+        widgets = {
+            'tipo': forms.TextInput(attrs={'class': 'form-control'}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super(TipoActividadCreateForm, self).__init__(*args, **kwargs)
+        self.fields['tipo'].required = True
+
+
+        
 
 
 

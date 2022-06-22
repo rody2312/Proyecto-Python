@@ -1,9 +1,10 @@
 from unicodedata import name
 from django.urls import path, re_path, include
 from app.views.views_archivo import ArchivoCreateView, ArchivoListView
-from app.views.views_notificacion import NotificacionDeleteView, NotificacionListView, NotificacionCreateView
+from app.views.views_notificacion import NotificacionDeleteView, NotificacionEditView, NotificacionListView, NotificacionCreateView
+from app.views.views_tipo_actividad import TipoActividadCreateView, TipoActividadDeleteView, TipoActividadEditView, TipoActividadListView
 
-from .views import UsuariosListView,UsuarioCreateView,UsuarioDetailsView, UsuarioUpdateView,UsuarioDeleteView,UsuarioEditView, LoginView
+from .views import UsuariosListView,UsuarioCreateView,UsuarioDetailsView, UsuarioDeleteView,UsuarioEditView, LoginView
 from .forms import CambiarPassForm
 from django.contrib.auth import views as auth_views
 from django.urls import reverse_lazy
@@ -23,10 +24,18 @@ urlpatterns= [
     path('notificacion/', NotificacionListView.as_view(), name="notificacion"),
     path('notificacion_create/', NotificacionCreateView.as_view(), name="crear_notificacion"),
     path('notificacion/delete/<int:pk>/', NotificacionDeleteView.as_view(), name="notificacion_delete"),
-
+    path('notificacion/edit/<int:pk>/', NotificacionEditView.as_view(), name="notificacion_edit"),
+    
     #ARCHIVOS
     path('archivos/', ArchivoListView.as_view(), name="archivos"),
     path('archivo_create/', ArchivoCreateView.as_view(), name="crear_archivo"),
+
+    #TIPO ACTIVIDAD
+    path('tipo_actividad/', TipoActividadListView.as_view(), name="list_tipo_actividad"),
+    path('tipo_actividad/create/', TipoActividadCreateView.as_view(), name="crear_tipo_actividad"),
+    path('tipo_actividad/delete/<int:pk>/', TipoActividadDeleteView.as_view(), name="delete_tipo_actividad"),
+    path('tipo_actividad/edit/<int:pk>/', TipoActividadEditView.as_view(), name="edit_tipo_actividad"),
+
 
     # autenticación
     path('login/', LoginView.as_view(), name="login"),

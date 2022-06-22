@@ -2,7 +2,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, render
 from django.urls import reverse, reverse_lazy
-from django.views.generic import View, DeleteView
+from django.views.generic import View, DeleteView, UpdateView
 from ..forms import NotificacionCreateForm
 from app import forms
 from django.contrib import messages
@@ -67,3 +67,14 @@ class NotificacionDeleteView(LoginRequiredMixin, DeleteView):
         success_url = self.get_success_url()
         self.object.delete()
         return HttpResponseRedirect(success_url)
+
+#EDITAR NOTIFICACION
+
+class NotificacionEditView(LoginRequiredMixin, UpdateView):
+    model = Notificacion
+    form_class = forms.NotificacionCreateForm
+    template_name = "notificacion/notificacion_edit.html"
+
+    def get_success_url(self):
+        messages.success(self.request, "La notificacion ha sido actualizado correctamente")
+        return reverse_lazy('app:notificacion')
