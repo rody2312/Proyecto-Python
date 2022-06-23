@@ -202,7 +202,7 @@ class TipoAsistenciaCreateView(LoginRequiredMixin ,View):
 def delete(request, pk, *args, **kwargs):
     tipo = TipoAsistencia.objects.get(id=pk)
     if UsuarioAsistencia.objects.filter(tipo_asistencia=pk).exists():
-        messages.error(request, "No se puede eliminar, debido a que existen registros de actividades relacionados a '" + tipo.nombre_tipo + "'")
+        messages.error(request, "No se puede eliminar, debido a que existen registros de asistencias relacionados a '" + tipo.nombre_tipo + "'")
         return HttpResponseRedirect(reverse_lazy('asistencia:list_tipo_asistencia'))
     else:
         if tipo.delete():

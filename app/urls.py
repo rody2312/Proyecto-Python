@@ -2,7 +2,7 @@ from unicodedata import name
 from django.urls import path, re_path, include
 from app.views.views_archivo import ArchivoCreateView, ArchivoListView
 from app.views.views_notificacion import NotificacionDeleteView, NotificacionEditView, NotificacionListView, NotificacionCreateView
-from app.views.views_tipo_actividad import TipoActividadCreateView, TipoActividadDeleteView, TipoActividadEditView, TipoActividadListView, delete
+from app.views.views_tipo_actividad import PuntajeCreateView, PuntajeEditView, TipoActividadCreateView, TipoActividadDetailsView, TipoActividadEditView, TipoActividadListView, delete, deletePuntaje
 
 from .views import UsuariosListView,UsuarioCreateView,UsuarioDetailsView, UsuarioDeleteView,UsuarioEditView, LoginView
 from .forms import CambiarPassForm
@@ -31,10 +31,16 @@ urlpatterns= [
     path('archivo_create/', ArchivoCreateView.as_view(), name="crear_archivo"),
 
     #TIPO ACTIVIDAD
-    path('tipo_actividad/', TipoActividadListView.as_view(), name="list_tipo_actividad"),
-    path('tipo_actividad/create/', TipoActividadCreateView.as_view(), name="crear_tipo_actividad"),
-    path('tipo_actividad/delete/<int:pk>/', delete, name="delete_tipo_actividad"),
-    path('tipo_actividad/edit/<int:pk>/', TipoActividadEditView.as_view(), name="edit_tipo_actividad"),
+    path('configuracion/tipo_actividad/', TipoActividadListView.as_view(), name="list_tipo_actividad"),
+    path('configuracion/tipo_actividad/create/', TipoActividadCreateView.as_view(), name="crear_tipo_actividad"),
+    path('configuracion/tipo_actividad/delete/<int:pk>/', delete, name="delete_tipo_actividad"),
+    path('configuracion/tipo_actividad/edit/<int:pk>/', TipoActividadEditView.as_view(), name="edit_tipo_actividad"),
+
+    #Puntajes para cada tipo de actividad
+    path('configuracion/tipo_actividad/puntajes/<int:pk>/', TipoActividadDetailsView.as_view(), name="tipo_actividad_puntajes"),
+    path('configuracion/tipo_actividad/puntajes/crear/<int:tipo_id>', PuntajeCreateView.as_view(), name="crear_puntaje"),
+    path('configuracion/tipo_actividad/puntajes/editar/<int:tipo_id>/<int:pk>/', PuntajeEditView.as_view(), name="editar_puntaje"),
+    path('configuracion/puntajes/eliminar/<int:pk>/', deletePuntaje, name="delete_puntaje"),
 
 
     # autenticación

@@ -13,50 +13,45 @@
 <div class="container-fluid">
 
     <div class="row">
-      <div class="col-6 mx-auto">
+      <div class="col-4 mx-auto">
 
         <div class="card">
           <div class="card-header">
-            <h3 class="card-title">Tipos de actividades</h3>
+            <h3 class="card-title">Puntajes de <b>{{tipoActividad.tipo}}</b> </h3>
+            <a class="btn btn-secondary float-right" onClick="window.history.go(-1); return false;">Volver</a>
           </div>
           <!-- /.card-header -->
           <div class="card-body">
-            <a class="btn btn-primary mb-2" href="{% url 'app:crear_tipo_actividad' %}">Crear nuevo tipo de actividad</a>
+            <a class="btn btn-primary mb-2" href="{% url 'app:crear_puntaje' tipo_id=tipo_id %}">Crear nuevo puntaje</a>
             <br>
 
-            <table id="example1" class="table table-bordered table-striped">
+            <table id="example1" class="table table-bordered">
               <thead>
               <tr>
-                <th>Nombre</th>
+                <th>Puntaje</th>
                 <th>Acciones</th>
-                <th>Puntajes</th>
               </tr>
               </thead>
               <tbody>
-                {% for tipo in tipo_actividades %}
+                {% for p in puntajes %}
                 <tr>
-                  <td>{{tipo.tipo}}</td>
+                  <td>{{p.puntaje}}</td>
                     <td class="text-center">
                       <div class="row justify-content-center">
-                        <a class="btn btn-info btn-sm" href="{% url 'app:edit_tipo_actividad' tipo.id %}">
+                        <a class="btn btn-info btn-sm" href="{% url 'app:editar_puntaje' tipo_id=tipo_id pk=p.id %}">
                           <i class="fas fa-pencil-alt">
                           </i>
                         </a>
-                        <form action="{% url 'app:delete_tipo_actividad' tipo.id %}" method="POST" id="deleteForm">
+                        <form action="{% url 'app:delete_puntaje' p.id %}" method="POST" id="deleteForm">
                           {% csrf_token %}
-                          <a class="btn btn-danger btn-sm" href="#" onclick="eliminarTipoActividad({{tipo.id}})">
+                          <a class="btn btn-danger btn-sm" href="#" onclick="eliminarPuntajeTipoActividad({{p.id}})">
                               <i class="fas fa-trash">
                               </i>
                           </a>
                         </form>
                       </div>
                     </td>
-                    <td class="text-center">
-                      <a class="btn btn-primary btn-sm" href="{% url 'app:tipo_actividad_puntajes' tipo.id%}">
-                        <i class="fas fa-folder">
-                        </i>
-                    </a>
-                    </td>
+                      
                 </tr>
                 {% endfor %}
               </tbody>
@@ -113,9 +108,9 @@
 </script>
 
 <script>
-  function eliminarTipoActividad(id){
+  function eliminarPuntajeTipoActividad(id){
     event.preventDefault();
-    var url = "{% url 'app:delete_tipo_actividad' 123 %}";
+    var url = "{% url 'app:delete_puntaje' 123 %}";
     console.log(id)
     Swal.fire({
       title: '¿Estas seguro de eliminar la actividad?',

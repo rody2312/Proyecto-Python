@@ -1,4 +1,4 @@
-from evaluacion.models import Evaluacion
+from evaluacion.models import Evaluacion, PuntajeEvaluacion
 from django import forms
 
 #Evaluacion
@@ -28,3 +28,11 @@ class EvaluacionCreateForm(forms.ModelForm):
     #    self.fields['fecha'].required = True
     
     
+class PuntajeEvCreateForm(forms.ModelForm):
+    class Meta:
+        model=PuntajeEvaluacion
+        fields=('puntaje',)
+
+        widgets = {
+            'puntaje': forms.NumberInput(attrs={'class': 'form-control'}),
+        }

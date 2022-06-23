@@ -187,8 +187,8 @@
             </a>
            </li>
 
-           <li class="nav-item {% if titulo == "Tipos de Actividades" or titulo == "Tipos de Asistencia" %} menu-open {% endif %}">
-            <a href="#" class="nav-link {% if titulo == "Tipos de Actividades" or titulo == "Tipos de Asistencia" %} active {% endif %}">
+           <li class="nav-item {% if titulo == "Tipos de Actividades" or titulo == "Tipos de Asistencia" or titulo == "Puntajes de evaluacion"%} menu-open {% endif %}">
+            <a href="#" class="nav-link {% if titulo == "Tipos de Actividades" or titulo == "Tipos de Asistencia" or titulo == "Puntajes de evaluacion" %} active {% endif %}">
               <i class="nav-icon fas fa-book"></i>
               <p>
                 Configuraciones
@@ -208,6 +208,14 @@
                 <a href="{% url 'asistencia:list_tipo_asistencia' %}" class="nav-link {% if titulo == "Tipos de Asistencia" %} active {% endif %}">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Tipos de asistencias</p>
+                </a>
+              </li>
+            </ul>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="{% url 'evaluacion:evaluacion_puntajes' %}" class="nav-link {% if titulo == "Puntajes de evaluacion" %} active {% endif %}">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Puntajes de evaluación</p>
                 </a>
               </li>
             </ul>

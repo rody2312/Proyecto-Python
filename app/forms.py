@@ -1,6 +1,6 @@
 from django import forms
 
-from tareas.models import TipoActividad
+from tareas.models import Puntaje, TipoActividad
 from .models import Notificacion, Usuario,TipoUsuario
 
 
@@ -120,6 +120,7 @@ class NotificacionCreateForm(forms.ModelForm):
         self.fields['texto'].required = True
 
 
+#Forms para sección de configuraciones (Cambiar a app de tareas)
 
 class TipoActividadCreateForm(forms.ModelForm):
     class Meta:
@@ -133,6 +134,20 @@ class TipoActividadCreateForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(TipoActividadCreateForm, self).__init__(*args, **kwargs)
         self.fields['tipo'].required = True
+
+
+class PuntajeCreateForm(forms.ModelForm):
+    class Meta:
+        model=Puntaje
+        fields=('puntaje',)
+
+        widgets = {
+            'puntaje': forms.NumberInput(attrs={'class': 'form-control'}),
+        }
+
+    #def __init__(self, *args, **kwargs):
+    #    super(TipoActividadCreateForm, self).__init__(*args, **kwargs)
+    #    self.fields['tipo'].required = True
 
 
         

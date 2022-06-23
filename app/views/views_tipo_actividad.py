@@ -1,11 +1,11 @@
 from http.client import error
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import Http404, HttpResponseForbidden, HttpResponseRedirect
-from django.shortcuts import redirect, render
+from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse, reverse_lazy
 from django.views.generic import View, DeleteView, UpdateView
 
-from tareas.models import Actividad, TipoActividad
+from tareas.models import Actividad, Puntaje, TipoActividad, UsuarioActividad
 from app import forms
 from django.contrib import messages
 
@@ -91,3 +91,74 @@ class TipoActividadEditView(LoginRequiredMixin, UpdateView):
     def get_success_url(self):
         messages.success(self.request, "El tipo de actividad ha sido actualizado correctamente")
         return reverse_lazy('app:list_tipo_actividad')
+
+
+class TipoActividadDetailsView(LoginRequiredMixin , View):
+    def get(self, request, pk, *args, **kwargs):
+        tipoActividad = get_object_or_404(TipoActividad, pk=pk)
+        puntajes = Puntaje.objects.filter(id_tipo_actividad=pk)
+        context={
+            'puntajes':puntajes,
+            'tipoActividad':tipoActividad,
+            'tipo_id':pk,
+            'titulo':'Puntajes',
+        }
+        return render(request, 'actividad/tipo_actividad_puntajes.html', context)
+
+#Eliminar tipo de asistencia SI USAR##
+def deletePuntaje(request, pk, *args, **kwargs):
+    puntaje = Puntaje.objects.get(id=pk)
+
+    #Comprobar si el puntaje existe en algun registro de actividad
+    if UsuarioActividad.objects.filter(puntaje=pk).exists():
+        messages.error(request, "No se puede eliminar, debido a que existen registros de puntaje relacionados a '" + str(puntaje.puntaje) + "'")
+        return HttpResponseRedirect(reverse_lazy('app:tipo_actividad_puntajes', kwargs={'pk': puntaje.id_tipo_actividad.id}))
+    else:
+        if puntaje.delete():
+            messages.success(request, "Se elimino correctamente")
+        return HttpResponseRedirect(reverse_lazy('app:tipo_actividad_puntajes', kwargs={'pk': puntaje.id_tipo_actividad.id}))
+
+#Views para crear y editar un puntaje a un tipo de asistencia
+
+class PuntajeCreateView(LoginRequiredMixin ,View):
+    
+    def get(self,request, *args, **kwargs):
+        form=forms.PuntajeCreateForm()
+        context={
+            'form': form,
+            'titulo': 'Crear Nuevo Puntaje',
+        }
+        return render(request, 'actividad/puntaje_create.html', context)
+
+    def post(self, request, tipo_id, *args, **kwargs):
+        if request.method=="POST":
+            form = forms.PuntajeCreateForm(request.POST)
+            if form.is_valid():
+                puntaje = form.cleaned_data.get('puntaje')
+
+                u, created = Puntaje.objects.get_or_create(puntaje=puntaje, id_tipo_actividad=TipoActividad.objects.get(id=tipo_id))
+                u.save()
+
+                messages.success(request, "Puntaje agregado correctamente")
+                return redirect('app:tipo_actividad_puntajes', tipo_id)
+        context={
+            'titulo': 'Crear nuevo puntaje',
+            'form': form
+        }
+        return render(request, 'actividad/puntaje_create.html', context)
+
+
+
+class PuntajeEditView(LoginRequiredMixin, UpdateView):
+    model = Puntaje
+    form_class = forms.PuntajeCreateForm
+    template_name = "actividad/puntaje_create.html"
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['titulo'] = 'Editar puntaje'
+        return context
+
+    def get_success_url(self):
+        messages.success(self.request, "El puntaje ha sido actualizado correctamente")
+        return reverse_lazy('app:tipo_actividad_puntajes', kwargs={'pk': self.kwargs['tipo_id']})

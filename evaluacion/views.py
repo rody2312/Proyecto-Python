@@ -4,7 +4,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse, reverse_lazy
 from django.views.generic import View, DeleteView, UpdateView
 from app.models import Usuario
-from evaluacion.forms import EvaluacionCreateForm
+from evaluacion.forms import EvaluacionCreateForm, PuntajeEvCreateForm
 from app import forms
 from django.contrib import messages
 from evaluacion.models import Evaluacion, PuntajeEvaluacion, UsuarioEvaluacion
@@ -147,3 +147,75 @@ def updatePuntaje(request):
         usuarioEvaluacion.save()
 
     return JsonResponse('Puntaje actualizado', safe=False)
+
+
+
+#### Views CRUD Puntaje Evaluacion #####
+
+#Mostrar todos los puntajes de evaluación
+class PuntajesEvListView(LoginRequiredMixin , View):
+    def get(self, request, *args, **kwargs):
+        puntajes = PuntajeEvaluacion.objects.all()
+        context={
+            'puntajes':puntajes,
+            'titulo':'Puntajes de evaluacion',
+        }
+        return render(request, 'evaluacion/puntajes_ev_list.html', context)
+
+#Eliminar puntaje de evaluacion
+def deletePuntajeEv(request, pk, *args, **kwargs):
+    puntajeEv = PuntajeEvaluacion.objects.get(id=pk)
+
+    #Comprobar si el puntaje existe en algun registro de actividad
+    if UsuarioEvaluacion.objects.filter(puntaje=pk).exists():
+        messages.error(request, "No se puede eliminar, debido a que existen registros de puntaje relacionados a '" + str(puntajeEv.puntaje) + "'")
+        return HttpResponseRedirect(reverse_lazy('evaluacion:evaluacion_puntajes'))
+    else:
+        if puntajeEv.delete():
+            messages.success(request, "Se elimino correctamente")
+        return HttpResponseRedirect(reverse_lazy('evaluacion:evaluacion_puntajes'))
+
+#Views para crear y editar un puntaje a un tipo de asistencia
+
+class PuntajeEvCreateView(LoginRequiredMixin ,View):
+    
+    def get(self,request, *args, **kwargs):
+        form=forms.PuntajeCreateForm()
+        context={
+            'form': form,
+            'titulo': 'Crear Nuevo Puntaje',
+        }
+        return render(request, 'evaluacion/puntajes_ev_create.html', context)
+
+    def post(self, request, *args, **kwargs):
+        if request.method=="POST":
+            form = PuntajeEvCreateForm(request.POST)
+            if form.is_valid():
+                puntaje = form.cleaned_data.get('puntaje')
+
+                u, created = PuntajeEvaluacion.objects.get_or_create(puntaje=puntaje)
+                u.save()
+
+                messages.success(request, "Puntaje agregado correctamente")
+                return redirect('evaluacion:evaluacion_puntajes')
+        context={
+            'titulo': 'Crear nuevo puntaje',
+            'form': form
+        }
+        return render(request, 'evaluacion/puntajes_ev_create.html', context)
+
+
+
+class PuntajeEvEditView(LoginRequiredMixin, UpdateView):
+    model = PuntajeEvaluacion
+    form_class = PuntajeEvCreateForm
+    template_name = "evaluacion/puntajes_ev_create.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['titulo'] = 'Editar puntaje'
+        return context
+
+    def get_success_url(self):
+        messages.success(self.request, "El puntaje ha sido actualizado correctamente")
+        return reverse_lazy('evaluacion:evaluacion_puntajes')
