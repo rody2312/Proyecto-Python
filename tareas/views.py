@@ -19,10 +19,11 @@ from tareas.models import Foro, Actividad, Puntaje, TipoForo, TipoActividad, Usu
 
 class TareasListView(LoginRequiredMixin, View):
 
-    def get(self,request, *args, **kwargs):
+    def get(self,request, tipo_id, *args, **kwargs):
         #CAMBIAR EL FILTRO POR EL QUE SE MANDE POR EL URL, PORQUE SERAN MUCHOS TIPOS QUE SE CREARAN DINAMICAMENTE
-        actividades = Actividad.objects.filter(id_tipo_actividad=1)
+        actividades = Actividad.objects.filter(id_tipo_actividad=tipo_id)
         foros = Foro.objects.all()
+        tipo = TipoActividad.objects.get(pk=tipo_id)
 
         #Obtiene la lista de foros para que en la plantilla html se pueda ver si existe una id de tarea
         list_foros = [foro.id_actividad for foro in foros]
@@ -30,7 +31,8 @@ class TareasListView(LoginRequiredMixin, View):
             'list_foros': list_foros,
             'foros': foros,
             'actividades': actividades,
-            'titulo': 'Tareas'
+            'titulo': tipo.tipo,
+            'tipo_act_nav': tipo.tipo,
         }
         return render(request, 'tareas/tareas_list.html', context)
 

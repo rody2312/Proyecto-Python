@@ -5,7 +5,7 @@ app_name="tareas"
 
 urlpatterns = [
     #Tareas
-    path('tareas/', TareasListView.as_view(), name='tareas'),
+    path('tareas/<int:tipo_id>/', TareasListView.as_view(), name='tareas'),
     path('tareas/create/', TareasCreateView.as_view(), name='crear_tarea'),
     path('tareas/detalles/<int:pk>/', TareaDetailsView.as_view(), name="details"),
     path('tareas/edit/<int:pk>/', TareaEditView.as_view(), name="edit"),
