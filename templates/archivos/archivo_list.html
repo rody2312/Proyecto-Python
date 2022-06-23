@@ -27,11 +27,36 @@
             <table id="example1" class="table table-bordered table-striped">
               <thead>
                 <tr>
-                    <th>N de Archivo</th>
-                    <th>Nombre de archivo</th>
+                    <th>Nombre</th>
                     <th>Fecha de subida</th>
                     <th>Descargar (Link)</th>
-
+                    <th>Acciones</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for archivo in archivos %}
+                  <tr>
+                    <td>{{form.nombre}}</td>
+                    <td>{{form.directorio}}</td>
+                    <td>{{texto.texto}}</td>
+                      <td class="text-center">
+  
+                        <div class="row justify-content-center">
+                          <a class="btn btn-info btn-sm" href="{% url 'app:archivo_edit' archivo.id %}">
+                            <i class="fas fa-pencil-alt">
+                            </i>
+                          </a>
+                          <form action="{% url 'app:archivo_delete' archivo.id %}" method="POST" id="deleteForm">
+                            {% csrf_token %}
+                            <a class="btn btn-danger btn-sm" href="#" onclick="eliminarArchivo({{archivo.id}})">
+                                <i class="fas fa-trash">
+                                </i>
+                              </a>
+                          </form>
+                          <div>
+                      </td>
+                  </tr>
+{% endfor %} 
             </table>
           </div>
           <!-- /.card-body -->

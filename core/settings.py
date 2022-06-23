@@ -151,6 +151,9 @@ LOGOUT_REDIRECT_URL="/login/"
 
 USE_L10N = False
 
+# CONFIGURACION DE ARCHIVOS MULTIMEDIA
 
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
+MEDIA_URL = '/media/'
 
 
