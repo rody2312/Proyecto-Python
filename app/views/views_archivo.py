@@ -7,11 +7,12 @@ from django.shortcuts import redirect, render
 from django.urls import reverse, reverse_lazy
 from django.views.generic import View, DeleteView, UpdateView, CreateView
 from app import forms
-from tareas.forms import ArchivoCreateForm
+from app.forms import ArchivoCreateForm
 from tareas.models import Archivo
 from django.contrib import messages
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
+from django.core.files.storage import FileSystemStorage
 
 #LISTAR ARCHIVO
 
@@ -26,6 +27,24 @@ class ArchivoListView(LoginRequiredMixin ,View):
         return render(request, 'archivos/archivo_list.html', context)
 
 #CREAR ARCHIVO
+def upload_file(request):
+    if request.method == 'POST':
+        form = ArchivoCreateForm(request.POST, request.FILES)
+        nombre = request.POST['nombre']
+        file = request.FILES['directorio']
+        fs = FileSystemStorage()
+
+        filename = fs.save(file.name, file)
+        #uploaded_file_url = fs.url(filename)
+
+        usuarioActual= request.user
+        archivo = Archivo.objects.create(nombre = nombre, directorio = file, id_usuario = usuarioActual)
+        archivo.save()
+        messages.success(request, "Archivo subido correctamente")
+        return redirect('app:archivo')
+    else:
+        form = ArchivoCreateForm()
+    return render(request, 'archivos/archivo_create.html', {'form': form})
 
 class ArchivoCreateView2(LoginRequiredMixin ,CreateView):
     model = Archivo
@@ -99,13 +118,4 @@ class ArchivoDeleteView(LoginRequiredMixin, DeleteView):
         self.object.delete()
         return HttpResponseRedirect(success_url)
 
-#EDITAR ARCHIVO
 
-class ArchivoEditView(LoginRequiredMixin, UpdateView):
-    model = Archivo
-    form = ArchivoCreateForm
-    template_name = "archivos/archivo_edit.html"
-
-    def get_success_url(self):
-        messages.success(self.request, "El archivo ha sido actualizado correctamente")
-        return reverse_lazy('app:archivo')

@@ -1,20 +1,7 @@
 
 from datetime import date, datetime
 from django import forms
-from tareas.models import Archivo, Foro, Actividad
-
-
-class ArchivoCreateForm(forms.ModelForm):
-
-    class Meta:
-        model=Archivo
-        fields=('nombre', 'directorio')
-        
-        widgets = {
-            'nombre': forms.TextInput(attrs={'class': 'form-control'}),
-            'directorio': forms.ClearableFileInput(attrs={'class': 'form-control', 'name':'myfile'})
-
-        }
+from tareas.models import Foro, Actividad
 
 
 

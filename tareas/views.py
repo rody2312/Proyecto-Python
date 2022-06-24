@@ -10,7 +10,7 @@ from django.urls import reverse, reverse_lazy
 from django.views.generic import View, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from app.models import Usuario
-from tareas.forms import ArchivoCreateForm, TareaCreateForm, ForoCreateForm, TareaEditForm
+from tareas.forms import TareaCreateForm, ForoCreateForm, TareaEditForm
 from django.contrib import messages
 
 from tareas.models import Foro, Actividad, Puntaje, TipoForo, TipoActividad, UsuarioActividad

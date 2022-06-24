@@ -1,3 +1,9 @@
+#mail
+/core/mail_pass.py
+
+#media files
+media/*
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
