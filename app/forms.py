@@ -1,7 +1,7 @@
 
 from django import forms
 
-from tareas.models import TipoActividad
+from tareas.models import Puntaje, TipoActividad
 from .models import Notificacion, Usuario,TipoUsuario
 
 
@@ -23,7 +23,8 @@ class UsuarioCreateForm(forms.ModelForm):
             'nombre': forms.TextInput(attrs={'class': 'form-control'}),
             'apellido_paterno': forms.TextInput(attrs={'class': 'form-control'}),
             'apellido_materno': forms.TextInput(attrs={'class': 'form-control'}),
-            'fono': forms.NumberInput(attrs={'class': 'form-control'}),
+            'fono': forms.NumberInput(attrs={'class': 'form-control',
+                                            'min': 1}),
             'email': forms.EmailInput(attrs={'class': 'form-control'}),
             'id_tipo_usuario': forms.Select(attrs={'class': 'form-control'})
         }
@@ -161,6 +162,7 @@ class NotificacionCreateForm(forms.ModelForm):
         self.fields['texto'].required = True
 
 
+#Forms para sección de configuraciones (Cambiar a app de tareas)
 
 class TipoActividadCreateForm(forms.ModelForm):
     class Meta:
@@ -174,6 +176,20 @@ class TipoActividadCreateForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(TipoActividadCreateForm, self).__init__(*args, **kwargs)
         self.fields['tipo'].required = True
+
+
+class PuntajeCreateForm(forms.ModelForm):
+    class Meta:
+        model=Puntaje
+        fields=('puntaje',)
+
+        widgets = {
+            'puntaje': forms.NumberInput(attrs={'class': 'form-control'}),
+        }
+
+    #def __init__(self, *args, **kwargs):
+    #    super(TipoActividadCreateForm, self).__init__(*args, **kwargs)
+    #    self.fields['tipo'].required = True
 
 
         

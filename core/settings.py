@@ -68,6 +68,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'core.context_processors.load_navbar_tipos',
             ],
         },
     },
@@ -136,7 +137,7 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'rody.ch2312@gmail.com'
-EMAIL_HOST_PASSWORD = 'phbqvmtcxqwgzutq'
+EMAIL_HOST_PASSWORD = 'aouonueminxicimv'
 
 
 

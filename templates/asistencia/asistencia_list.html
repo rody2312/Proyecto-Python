@@ -13,46 +13,42 @@
 <div class="container-fluid">
 
     <div class="row">
-      <div class="col-12">
+      <div class="col-6 mx-auto">
 
         <div class="card">
           <div class="card-header">
-            <h3 class="card-title">Lista de evaluaciones</h3>
+            <h3 class="card-title">Registros de asistencia</h3>
           </div>
           <!-- /.card-header -->
           <div class="card-body">
-            <a class="btn btn-primary mb-2" href="{% url 'evaluacion:crear_evaluacion' %}">Crear nueva evaluacion</a>
+            <a class="btn btn-primary mb-2" href="{% url 'asistencia:crear_asistencia' %}">Crear nuevo registro</a>
             <br>
 
             <table id="example1" class="table table-bordered table-striped">
               <thead>
               <tr>
-                <th>Titulo</th>
                 <th>Fecha</th>
-                <th>Creado por</th>
                 <th>Opciones</th>
               </tr>
               </thead>
               <tbody>
-                {% for evaluacion in evaluaciones %}
+                {% for asistencia in asistencias %}
                 <tr>
-                  <td>{{evaluacion.titulo}}</td>
-                  <td>{{evaluacion.fecha}}</td>
-                  <td>{{evaluacion.id_usuario}}</td>
+                  <td>{{asistencia.fecha}}</td>
                     <td class="text-center">
 
                       <div class="row justify-content-center">
-                        <a class="btn btn-primary btn-sm" href="{% url 'evaluacion:evaluacion_details' evaluacion.id %}">
+                        <a class="btn btn-primary btn-sm" href="{% url 'asistencia:asistencia_details' asistencia.id %}">
                           <i class="fas fa-folder">
                           </i>
                         </a>
-                        <a class="btn btn-info btn-sm" href="{% url 'evaluacion:evaluacion_edit' evaluacion.id %}">
+                        <a class="btn btn-info btn-sm" href="{% url 'asistencia:asistencia_edit' asistencia.id %}">
                           <i class="fas fa-pencil-alt">
                           </i>
                         </a>
-                        <form action="{% url 'evaluacion:evaluacion_delete' evaluacion.id %}" method="POST" id="deleteForm">
+                        <form action="{% url 'asistencia:asistencia_delete' asistencia.id %}" method="POST" id="deleteForm">
                           {% csrf_token %}
-                          <a class="btn btn-danger btn-sm" href="#" onclick="eliminarEvaluacion({{evaluacion.id}})">
+                          <a class="btn btn-danger btn-sm" href="#" onclick="eliminarAsistencia({{asistencia.id}})">
                               <i class="fas fa-trash">
                               </i>
                             </a>
@@ -121,12 +117,12 @@
 </script>
 
 <script>
-  function eliminarEvaluacion(id){
+  function eliminarAsistencia(id){
     event.preventDefault();
-    var url = "{% url 'evaluacion:evaluacion_delete' 123 %}";
+    var url = "{% url 'asistencia:asistencia_delete' 123 %}";
     console.log(id)
     Swal.fire({
-      title: '¿Estas seguro de eliminar la evaluacion?',
+      title: '¿Estas seguro de eliminar el registro de asistencia?',
       text: "No se podra deshacer!",
       icon: 'warning',
       showCancelButton: true,

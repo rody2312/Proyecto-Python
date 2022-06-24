@@ -10,7 +10,7 @@ from django.urls import reverse, reverse_lazy
 from django.views.generic import View, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from app.models import Usuario
-from tareas.forms import ArchivoCreateForm, TareaCreateForm, ForoCreateForm
+from tareas.forms import ArchivoCreateForm, TareaCreateForm, ForoCreateForm, TareaEditForm
 from django.contrib import messages
 
 from tareas.models import Foro, Actividad, Puntaje, TipoForo, TipoActividad, UsuarioActividad
@@ -19,10 +19,11 @@ from tareas.models import Foro, Actividad, Puntaje, TipoForo, TipoActividad, Usu
 
 class TareasListView(LoginRequiredMixin, View):
 
-    def get(self,request, *args, **kwargs):
+    def get(self,request, tipo_id, *args, **kwargs):
         #CAMBIAR EL FILTRO POR EL QUE SE MANDE POR EL URL, PORQUE SERAN MUCHOS TIPOS QUE SE CREARAN DINAMICAMENTE
-        actividades = Actividad.objects.filter(id_tipo_actividad=1)
+        actividades = Actividad.objects.filter(id_tipo_actividad=tipo_id)
         foros = Foro.objects.all()
+        tipo = TipoActividad.objects.get(pk=tipo_id)
 
         #Obtiene la lista de foros para que en la plantilla html se pueda ver si existe una id de tarea
         list_foros = [foro.id_actividad for foro in foros]
@@ -30,7 +31,9 @@ class TareasListView(LoginRequiredMixin, View):
             'list_foros': list_foros,
             'foros': foros,
             'actividades': actividades,
-            'titulo': 'Tareas'
+            'titulo': tipo.tipo,
+            'tipo_act_nav': tipo.tipo,
+            'tipo_id': tipo.id,
         }
         return render(request, 'tareas/tareas_list.html', context)
 
@@ -39,32 +42,34 @@ class TareasListView(LoginRequiredMixin, View):
 class TareasCreateView(LoginRequiredMixin ,View):
     
     def get(self,request, *args, **kwargs):
-        form = TareaCreateForm()
+        form = TareaCreateForm(tipo_id=kwargs.get('tipo_id'))
         context={
             'form': form,
-            'titulo': 'Crear Tarea'
+            'titulo': 'Crear Tarea',
+            'tipo_id': kwargs.get('tipo_id'),
         }
         return render(request, 'tareas/tarea_create.html', context)
 
-    def post(self, request,*args, **kwargs):
+    def post(self, request, tipo_id, *args, **kwargs):
         if request.method=="POST":
-            form = TareaCreateForm(request.POST)
+            form = TareaCreateForm(tipo_id=kwargs.get('tipo_id'), data=request.POST)
             if form.is_valid():
                 titulo = form.cleaned_data.get('titulo')
                 fecha = form.cleaned_data.get('fecha')
-                tipoTarea = TipoActividad.objects.get(pk=1)
+                tipoTarea = TipoActividad.objects.get(pk=tipo_id)
                 usuarioActual= request.user
 
                 u, created = Actividad.objects.get_or_create(id_usuario=usuarioActual, titulo=titulo, id_tipo_actividad=tipoTarea , fecha=fecha)
                 u.save()
 
                 messages.success(request, "Tarea agregada correctamente")
-                return redirect('tareas:tareas')
+                return redirect('tareas:tareas', tipo_id)
 
         
         context={
             'titulo': 'Crear Tarea',
-            'form': form
+            'form': form,
+            'tipo_id': tipo_id
         }
         return render(request, 'tareas/tarea_create.html', context)
 
@@ -142,9 +147,11 @@ class TareaDeleteView(LoginRequiredMixin, DeleteView):
     model = Actividad
     success_url = reverse_lazy('tareas:tareas')
 
-    def get_success_url(self):
+    def get_success_url(self, *args, **kwargs):
         messages.success(self.request, "Eliminado correctamente")
-        return reverse('tareas:tareas')
+        print(self.object.id_tipo_actividad.id)
+        tipo_id = self.object.id_tipo_actividad.id
+        return reverse('tareas:tareas', kwargs={'tipo_id': tipo_id})
 
     def delete(self, request, *args, **kwargs):
         self.object = self.get_object()
@@ -155,12 +162,27 @@ class TareaDeleteView(LoginRequiredMixin, DeleteView):
 
 class TareaEditView(LoginRequiredMixin, UpdateView):
     model = Actividad
-    form_class = TareaCreateForm
-    template_name = "tareas/tarea_edit.html"
+    form_class = TareaEditForm
+    template_name = "tareas/tarea_create.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['titulo'] = 'Editar tarea'
+        context['tipo_id'] = self.object.id_tipo_actividad.id
+        return context
+    
+    #def get_form_kwargs(self, *args, **kwargs):
+    #    print(self.object.id_tipo_actividad.id)
+    #    tipo_id = self.object.id_tipo_actividad.id
+    #    print("aaaa"+ str(tipo_id))
+    #    kwargs.update({'tipo_id': tipo_id})
+    #    return kwargs
 
     def get_success_url(self):
-        messages.success(self.request, "La tarea ha sido actualizado correctamente")
-        return reverse_lazy('tareas:tareas')
+        messages.success(self.request, "La tarea ha sido actualizada correctamente")
+        print(self.object.id_tipo_actividad.id)
+        tipo_id = self.object.id_tipo_actividad.id
+        return reverse('tareas:tareas', kwargs={'tipo_id': tipo_id})
 
 
 class ForosListView(LoginRequiredMixin, View):

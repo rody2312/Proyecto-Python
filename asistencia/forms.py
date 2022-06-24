@@ -1,14 +1,14 @@
-from evaluacion.models import Evaluacion, PuntajeEvaluacion
+from asistencia.models import Asistencia, TipoAsistencia
+from evaluacion.models import Evaluacion
 from django import forms
 
-#Evaluacion
+#Asistencia
 
-class EvaluacionCreateForm(forms.ModelForm):
+class AsistenciaCreateForm(forms.ModelForm):
     class Meta:
-        model=Evaluacion
-        fields=('titulo','fecha')
+        model=Asistencia
+        fields=('fecha',)
         widgets = {
-            'titulo': forms.TextInput(attrs={'class': 'form-control'}),
             'fecha': forms.TextInput(attrs={'class':'form-control datepicker',
                                     'placeholder':'Selecciona una fecha',
                                     'type':'text',
@@ -17,7 +17,7 @@ class EvaluacionCreateForm(forms.ModelForm):
 
     def clean_fecha(self):
         fecha = self.cleaned_data.get("fecha")
-        existe = Evaluacion.objects.filter(fecha=fecha).exists()
+        existe = Asistencia.objects.filter(fecha=fecha).exists()
         if existe:
             self.fields['fecha'].widget.attrs['class'] = 'form-control is-invalid datepicker'
             raise forms.ValidationError("Ya existe una evaluación con esta fecha , ingresa otra fecha")
@@ -27,12 +27,18 @@ class EvaluacionCreateForm(forms.ModelForm):
     #    super(EvaluacionCreateForm, self).__init__(*args, **kwargs)
     #    self.fields['fecha'].required = True
     
-    
-class PuntajeEvCreateForm(forms.ModelForm):
+
+class TipoAsistenciaCreateForm(forms.ModelForm):
     class Meta:
-        model=PuntajeEvaluacion
-        fields=('puntaje',)
+        model=TipoAsistencia
+        fields=('nombre_tipo', 'puntaje',)
 
         widgets = {
+            'nombre_tipo': forms.TextInput(attrs={'class': 'form-control'}),
             'puntaje': forms.NumberInput(attrs={'class': 'form-control'}),
         }
+
+    #def __init__(self, *args, **kwargs):
+    #    super(TipoAsistenciaCreateForm, self).__init__(*args, **kwargs)
+    #    self.fields['tipo'].required = True
+    

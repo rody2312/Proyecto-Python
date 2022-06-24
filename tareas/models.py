@@ -15,7 +15,7 @@ class TipoActividad(models.Model):
         return self.tipo
 
 class Actividad(models.Model):
-    id_tipo_actividad=models.ForeignKey(TipoActividad, on_delete=models.SET_NULL, db_column='id_tipo_actividad', null=True, related_name='actividades_tipos')
+    id_tipo_actividad=models.ForeignKey(TipoActividad, on_delete=models.RESTRICT, db_column='id_tipo_actividad', null=True, related_name='actividades_tipos')
     id_usuario=models.ForeignKey(Usuario, on_delete=models.SET_NULL, db_column='id_usuario', null=True, related_name='usuarios')
     titulo = models.CharField(max_length=50)
     fecha=models.DateField()

@@ -11,19 +11,17 @@
         <div class="card-body">
             <form method="POST">
                 {% csrf_token %}
-                {{form.as_p}}
+                {{ form.as_p}}
                 <div class="col">
-                    <a href="{% url 'tareas:caja_preguntas_list' %}" class="btn btn-secondary">Cancelar</a>
-                    <input type="submit" value="Crear nueva tarea" class="btn btn-success float-right">
+                    <a onclick="window.history.go(-1); return false;" class="btn btn-secondary">Cancelar</a>
+                    <input type="submit" value="Guardar" class="btn btn-success float-right">
                   </div>
             </form>
         </div>
-        <!-- /.card-body -->
       </div>
-      <!-- /.card -->
         
     </div>
-</div>
+    </div>
     
 
 {% endblock content %}
