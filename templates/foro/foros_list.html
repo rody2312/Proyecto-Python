@@ -13,11 +13,11 @@
 <div class="container-fluid">
 
     <div class="row">
-      <div class="col-12">
+      <div class="col-6 mx-auto">
 
         <div class="card">
           <div class="card-header">
-            <h3 class="card-title">Lista de usuarios</h3>
+            <h3 class="card-title">Lista de foro</h3>
           </div>
           <!-- /.card-header -->
           <div class="card-body">
@@ -28,7 +28,6 @@
               <thead>
               <tr>
                 <th>Titulo</th>
-                <th>Tarea</th>
                 <th></th>
               </tr>
               </thead>
@@ -37,7 +36,7 @@
                 
                 <tr>
                     <td>{{foro.titulo}}</td>
-                    <td>{% if foro.id_tarea %} {{foro.id_tarea}} {% else %} No hay tarea relacionada {% endif %}</td>
+                    <!--<td>{% if foro.id_tarea %} {{foro.id_tarea}} {% else %} No hay tarea relacionada {% endif %}</td>-->
                     <td class="text-center">
                       <div class="row justify-content-center">
                         <a class="btn btn-primary btn-sm" href="{% url 'tareas:foro_details' foro.id %}">
