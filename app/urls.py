@@ -3,6 +3,7 @@ from django.urls import path, re_path, include
 from app.views.views_archivo import ArchivoCreateView2, ArchivoDeleteView, ArchivoEditView, ArchivoListView
 from app.views.views_notificacion import NotificacionDeleteView, NotificacionEditView, NotificacionListView, NotificacionCreateView
 from app.views.views_tipo_actividad import TipoActividadCreateView, TipoActividadDeleteView, TipoActividadEditView, TipoActividadListView
+from app.views.views_usuarios import UserChangePasswordView
 
 from .views import UsuariosListView,UsuarioCreateView,UsuarioDetailsView, UsuarioDeleteView,UsuarioEditView, LoginView
 from .forms import CambiarPassForm
@@ -22,6 +23,7 @@ urlpatterns= [
     path('usuarios/details/<int:pk>/', UsuarioDetailsView.as_view(), name="details"),
     path('usuarios/edit/<int:pk>/', UsuarioEditView.as_view(), name="edit"),
     path('usuarios/delete/<int:pk>/', UsuarioDeleteView.as_view(), name="delete"),
+    path('usuarios/change_password/', UserChangePasswordView.as_view(), name="user_change_password"),
 
     #NOTIFICACION
     path('notificacion/', NotificacionListView.as_view(), name="notificacion"),

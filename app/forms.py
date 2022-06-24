@@ -1,3 +1,4 @@
+
 from django import forms
 
 from tareas.models import TipoActividad
@@ -5,10 +6,9 @@ from .models import Notificacion, Usuario,TipoUsuario
 
 
 from django.contrib.auth.forms import UserCreationForm
-from django.forms import ValidationError
+from django.forms import ModelForm, ValidationError
 from django.contrib.auth import password_validation
 from django.utils.translation import gettext_lazy as _
-
 
 
 class UsuarioCreateForm(forms.ModelForm):
@@ -49,8 +49,49 @@ class UsuarioCreateForm(forms.ModelForm):
         self.fields['email'].required = True
         self.fields['id_tipo_usuario'].required = True
 
-    
-    
+
+#class UserProfileForm(ModelForm)
+#c   def __init__(self, *args, **kwargs):
+#c
+#c   class Meta:
+#c       model = Usuario
+#c       fields = 'nombre', 'apellido_paterno', 'apellido_materno', 'fono', 'email', 'id_tipo_usuario'
+#c       widgets = {}
+#c           'nombre': forms.TextInput(attrs='class': 'form-control'),
+#
+#
+#
+#   def save(self, commit = True):
+#       data = {}
+#       form = super()
+#       try:
+#           if form.is_valid():
+#               pwd = self.cleaned_data['password']
+#               u = form.save(commit=False)
+#               if u.pk is None:
+#                   u.set_password(pwd)
+#               else:
+#                   user = Usuario.objects.get(pk=u.pk)
+#                   if user.password != pwd:
+#                       u.set_password(pwd)
+#               u.save()
+#           else:
+#               data['error'] = form.errors
+#       except Exception as e:
+#           data['error'] = str(e)
+#       return data
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 class CustomUserCreationForm(UserCreationForm):
