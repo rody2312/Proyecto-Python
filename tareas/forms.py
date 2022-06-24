@@ -12,7 +12,7 @@ class ArchivoCreateForm(forms.ModelForm):
         
         widgets = {
             'nombre': forms.TextInput(attrs={'class': 'form-control'}),
-            'directorio': forms.FileInput(attrs={'class': 'form-control'})
+            'directorio': forms.ClearableFileInput(attrs={'class': 'form-control', 'name':'myfile'})
 
         }
 

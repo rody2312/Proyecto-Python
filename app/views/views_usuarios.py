@@ -1,16 +1,22 @@
+from multiprocessing import context
 from re import template
 from django.shortcuts import get_object_or_404, redirect, render
-from django.views.generic import View, UpdateView, DeleteView
+from django.views.generic import View, UpdateView, DeleteView, FormView
 from ..forms import CustomUserCreationForm, UsuarioCreateForm, UsuarioEditForm 
 from ..models import TipoUsuario, Usuario
 from django.urls import reverse_lazy
 from django.contrib import messages
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse
 import random
 from django.contrib.auth.views import PasswordResetView
 from django.core.mail import EmailMessage
 from django.contrib.auth.hashers import make_password
 from django.template.loader import render_to_string
+
+from django.contrib.auth.forms import PasswordChangeForm
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth import update_session_auth_hash
 
 from django.urls import reverse
 from django.utils.encoding import force_bytes, force_str, DjangoUnicodeDecodeError
@@ -19,8 +25,6 @@ from django.contrib.sites.shortcuts import get_current_site
 from ..utils import token_generator
 from django.contrib.auth.mixins import LoginRequiredMixin
 import logging
-
-# Create your views here.
 
 class UsuariosListView(LoginRequiredMixin ,View):
     
@@ -177,3 +181,48 @@ class UsuarioEditView(LoginRequiredMixin, UpdateView):
         #            u, created = Usuario.objects.update(nombre=nombre, apellido_paterno=apellidoPaterno, apellido_materno=apellidoMaterno, fono=fono, email=email, id_tipo_usuario=tipo_usuario)
         #            u.save()
         #            return redirect('app:usuarios')
+
+
+class UserChangePasswordView(LoginRequiredMixin, FormView):
+    model = Usuario
+    form_class = PasswordChangeForm
+    template_name = 'usuario/change_password.html'
+    success_url = reverse_lazy('app:login')
+
+    @method_decorator(csrf_exempt)
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_form(self, forma_class=None):
+        form = PasswordChangeForm(user=self.request.user)
+        form.fields['old_password'].widget.attrs['class'] = 'form-control'
+        form.fields['new_password1'].widget.attrs['class'] = 'form-control'
+        form.fields['new_password2'].widget.attrs['class'] = 'form-control'
+        return form
+  
+    def post(self, request, *args, **kwargs):
+        data = {}
+        try:
+            action = request.POST['action']
+            if action == 'edit':
+                form = PasswordChangeForm(user=request.user, data=request.POST)
+                if form.is_valid():
+                    form.save()
+                    update_session_auth_hash(request, form.user)
+                else:
+                    data['error'] = form.errors
+            else:
+                data['error'] = 'No ha ingresado ninguna opcion'
+        except Exception as e:
+            data['error'] = str(e)
+        return JsonResponse(data)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Edicion de password'
+        context['entity'] = 'Password'
+        context['list_url'] = self.success_url
+        context['action'] = 'edit'
+        return context
+
+#{"error": "'action'"}

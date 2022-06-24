@@ -181,7 +181,7 @@
            </li>
 
            <li class="nav-item">
-            <a href="{% url 'app:archivos' %}" class="nav-link {% if titulo == "Archivos" %} active {% endif %}">
+            <a href="{% url 'app:archivo' %}" class="nav-link {% if titulo == "Archivos" %} active {% endif %}">
               <i class="nav-icon fas fa-file"></i>
               <p>
                 Archivos
@@ -218,6 +218,14 @@
                 <a href="{% url 'evaluacion:evaluacion_puntajes' %}" class="nav-link {% if titulo == "Puntajes de evaluacion" %} active {% endif %}">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Puntajes de evaluación</p>
+                </a>
+              </li>
+            </ul>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="{% url 'app:user_change_password' %}" class="nav-link {% if titulo == "Cambiar contraseña" %} active {% endif %}">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Cambiar contraseña</p>
                 </a>
               </li>
             </ul>
