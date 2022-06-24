@@ -23,7 +23,8 @@ class UsuarioCreateForm(forms.ModelForm):
             'nombre': forms.TextInput(attrs={'class': 'form-control'}),
             'apellido_paterno': forms.TextInput(attrs={'class': 'form-control'}),
             'apellido_materno': forms.TextInput(attrs={'class': 'form-control'}),
-            'fono': forms.NumberInput(attrs={'class': 'form-control'}),
+            'fono': forms.NumberInput(attrs={'class': 'form-control',
+                                            'min': 1}),
             'email': forms.EmailInput(attrs={'class': 'form-control'}),
             'id_tipo_usuario': forms.Select(attrs={'class': 'form-control'})
         }

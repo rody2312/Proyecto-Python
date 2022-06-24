@@ -18,7 +18,7 @@
         <div class="card">
           <div class="card-header">
             <h3 class="card-title">Puntajes de <b>{{tipoActividad.tipo}}</b> </h3>
-            <a class="btn btn-secondary float-right" onClick="window.history.go(-1); return false;">Volver</a>
+            <a class="btn btn-secondary float-right" href="{% url 'app:list_tipo_actividad' %}">Volver</a>
           </div>
           <!-- /.card-header -->
           <div class="card-body">
