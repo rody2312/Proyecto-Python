@@ -1,24 +1,32 @@
 from unicodedata import name
 from django.urls import path, re_path, include
-from app.views.views_archivo import ArchivoCreateView, ArchivoListView
+from app.views.views_archivo import ArchivoCreateView2, ArchivoDeleteView, ArchivoEditView, ArchivoListView
 from app.views.views_notificacion import NotificacionDeleteView, NotificacionEditView, NotificacionListView, NotificacionCreateView
+
+from app.views.views_tipo_actividad import TipoActividadCreateView, TipoActividadDeleteView, TipoActividadEditView, TipoActividadListView
+from app.views.views_usuarios import UserChangePasswordView
 from app.views.views_tipo_actividad import PuntajeCreateView, PuntajeEditView, TipoActividadCreateView, TipoActividadDetailsView, TipoActividadEditView, TipoActividadListView, delete, deletePuntaje
+
 
 from .views import UsuariosListView,UsuarioCreateView,UsuarioDetailsView, UsuarioDeleteView,UsuarioEditView, LoginView
 from .forms import CambiarPassForm
 from django.contrib.auth import views as auth_views
 from django.urls import reverse_lazy
 
+from app import views
+
 
 app_name="app"
 
 urlpatterns= [
+
     #USUARIOS
     path('usuarios/', UsuariosListView.as_view(), name="usuarios"),
     path('usuarios/create/', UsuarioCreateView.as_view(), name="create"),
     path('usuarios/details/<int:pk>/', UsuarioDetailsView.as_view(), name="details"),
     path('usuarios/edit/<int:pk>/', UsuarioEditView.as_view(), name="edit"),
     path('usuarios/delete/<int:pk>/', UsuarioDeleteView.as_view(), name="delete"),
+    path('usuarios/change_password/', UserChangePasswordView.as_view(), name="user_change_password"),
 
     #NOTIFICACION
     path('notificacion/', NotificacionListView.as_view(), name="notificacion"),
@@ -27,8 +35,10 @@ urlpatterns= [
     path('notificacion/edit/<int:pk>/', NotificacionEditView.as_view(), name="notificacion_edit"),
     
     #ARCHIVOS
-    path('archivos/', ArchivoListView.as_view(), name="archivos"),
-    path('archivo_create/', ArchivoCreateView.as_view(), name="crear_archivo"),
+    path('archivos/', ArchivoListView.as_view(), name="archivo"),
+    path('archivo_create/', ArchivoCreateView2.as_view(), name="crear_archivo"),
+    path('archivo/delete/<int:pk>/', ArchivoDeleteView.as_view(), name="archivo_delete"),
+    path('archivo/edit/<int:pk>/', ArchivoEditView.as_view(), name="archivo_edit"),
 
     #TIPO ACTIVIDAD
     path('configuracion/tipo_actividad/', TipoActividadListView.as_view(), name="list_tipo_actividad"),
@@ -41,6 +51,7 @@ urlpatterns= [
     path('configuracion/tipo_actividad/puntajes/crear/<int:tipo_id>', PuntajeCreateView.as_view(), name="crear_puntaje"),
     path('configuracion/tipo_actividad/puntajes/editar/<int:tipo_id>/<int:pk>/', PuntajeEditView.as_view(), name="editar_puntaje"),
     path('configuracion/puntajes/eliminar/<int:pk>/', deletePuntaje, name="delete_puntaje"),
+
 
 
     # autenticación
@@ -75,6 +86,7 @@ urlpatterns= [
         auth_views.PasswordResetCompleteView.as_view(template_name='registration/password_create_complete.html'),
         name="custom_password_create_complete"),
 
+]
 
 
     #re_path('password_reset/',auth_views.PasswordResetView.as_view(
@@ -87,4 +99,4 @@ urlpatterns= [
     #re_path('reset/<uidb64>/<token>/',auth_views.PasswordResetConfirmView.as_view(),name='password_reset_confirm'),
     #re_path('reset/done/',auth_views.PasswordResetCompleteView.as_view(),name='password_reset_complete'),
 
-]
+

@@ -9,18 +9,19 @@
           <h3 class="card-title">Crear nuevo archivo</h3>
         </div>
         <div class="card-body">
-            <form method="POST">
+            <form method="POST" enctype="multipart/form-data">
                 {% csrf_token %}
-                <div class="form-group">
+                {{ form.as_p }}
+<!--                <div class="form-group">
                     <label for="inputNombre">Nombre</label>
                     {{form.nombre}}
                 </div>
                 <div class="form-group">
                     <label for="inputFono">Subir</label>
                     {{form.directorio}}
-                </div>
+                </div>-->
                 <div class="col">
-                    <a href="{% url 'app:archivos' %}" class="btn btn-secondary">Cancelar</a>
+                    <a href="{% url 'app:archivo' %}" class="btn btn-secondary">Cancelar</a>
                     <input type="submit" value="Crear nuevo archivo" class="btn btn-success float-right">
                   </div>
             </form>

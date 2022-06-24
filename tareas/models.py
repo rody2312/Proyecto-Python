@@ -73,9 +73,9 @@ class Foro(models.Model):
 
 
 class Archivo(models.Model):
-    id_usuario=models.ForeignKey(Usuario, db_column='id_usuario', on_delete=models.CASCADE)
+    id_usuario=models.ForeignKey(Usuario, db_column='id_usuario', on_delete=models.SET_NULL, null=True)
     nombre=models.CharField(max_length=20)
-    directorio=models.CharField(max_length=200)
+    directorio=models.FileField(max_length=200)
 
     class Meta:
         managed = True
