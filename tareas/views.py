@@ -1,8 +1,8 @@
 import re
 from django.http import QueryDict
 from django.core.exceptions import ObjectDoesNotExist
-
-
+from django.db.models import Q
+from datetime import datetime
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
@@ -10,6 +10,8 @@ from django.urls import reverse, reverse_lazy
 from django.views.generic import View, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from app.models import Usuario
+from asistencia.models import Asistencia, UsuarioAsistencia
+from evaluacion.models import Evaluacion
 from tareas.forms import TareaCreateForm, ForoCreateForm, TareaEditForm
 from django.contrib import messages
 
@@ -20,7 +22,6 @@ from tareas.models import Foro, Actividad, Puntaje, TipoForo, TipoActividad, Usu
 class TareasListView(LoginRequiredMixin, View):
 
     def get(self,request, tipo_id, *args, **kwargs):
-        #CAMBIAR EL FILTRO POR EL QUE SE MANDE POR EL URL, PORQUE SERAN MUCHOS TIPOS QUE SE CREARAN DINAMICAMENTE
         actividades = Actividad.objects.filter(id_tipo_actividad=tipo_id)
         foros = Foro.objects.all()
         tipo = TipoActividad.objects.get(pk=tipo_id)
@@ -268,58 +269,77 @@ class ForoDeleteView(LoginRequiredMixin, DeleteView):
         return HttpResponseRedirect(success_url)
 
 
-class CajaDePreguntasListView(LoginRequiredMixin, View):
+class ResumenListView(LoginRequiredMixin, View):
 
     def get(self,request, *args, **kwargs):
-        tareas_caja = Actividad.objects.filter(id_tipo_actividad=2)
-
-        context={
-            'tareas_caja': tareas_caja,
-            'titulo': 'Caja de preguntas'
-        }
-        return render(request, 'caja_preguntas/caja_preguntas_list.html', context)
-
-class CajaDePreguntasCreateView(LoginRequiredMixin ,View):
-    
-    def get(self,request, *args, **kwargs):
-        form = TareaCreateForm()
-        context={
-            'form': form,
-            'titulo': 'Crear registro de Caja de Preguntas'
-        }
-        return render(request, 'caja_preguntas/caja_preguntas_create.html', context)
-
-    def post(self, request,*args, **kwargs):
-        if request.method=="POST":
-            form = CajaDePreguntasCreateForm(request.POST)
-            if form.is_valid():
-                fecha = form.cleaned_data.get('fecha')
-                tipoTarea = TipoActividad.objects.get(pk=2)
-                usuarioActual= request.user
-
-                u, created = Actividad.objects.get_or_create(id_usuario=usuarioActual, id_tipo_actividad=tipoTarea , fecha=fecha)
-                u.save()
-
-                messages.success(request, "Tarea agregada correctamente")
-                return redirect('tareas:caja_preguntas_list')
-
+        actividades = Actividad.objects.all()
+        evaluaciones = Evaluacion.objects.all()
+        asistencias = Asistencia.objects.all()
+        fechas = []
+        for (a,b,c) in zip(actividades,evaluaciones,asistencias):
+            if a.fecha not in fechas: fechas.append(a.fecha)
+            if b.fecha not in fechas: fechas.append(b.fecha)
+            if c.fecha not in fechas: fechas.append(c.fecha)
         
+        #Ordenar lista de fechas de forma descendiente
+        fechas.sort(reverse=True)
         context={
-            'titulo': 'Crear registro de Caja de Preguntas',
-            'form': form
+            'fechas': fechas,
+            'titulo': 'Resumen'
         }
-        return render(request, 'caja_preguntas/caja_preguntas_create.html', context)
+        return render(request, 'puntajes/puntajes_list.html', context)
 
-class CajaDePreguntasDeleteView(LoginRequiredMixin, DeleteView):
-    model = Actividad
-    success_url = reverse_lazy('tareas:caja_preguntas_list')
 
-    def get_success_url(self):
-        messages.success(self.request, "Eliminado correctamente")
-        return reverse('tareas:caja_preguntas_list')
+class ResumenDetailsView(LoginRequiredMixin, View):
 
-    def delete(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        success_url = self.get_success_url()
-        self.object.delete()
-        return HttpResponseRedirect(success_url)
+    def get(self, request, fecha, *args, **kwargs):
+        #columnas para listar en el template
+        columnas = []
+        #alumnos para listar en el template
+        alumnos = []
+        alumnosList = []
+
+
+        if Evaluacion.objects.filter(fecha=fecha).exists():
+            columnas.append('Evaluación')
+            evaluacion = Evaluacion.objects.filter(fecha=fecha)
+            
+        else:
+            tipoActividades = TipoActividad.objects.all()
+            columnas.append('Asistencia')
+            for x in tipoActividades:
+                columnas.append(x.tipo)
+            
+            alumnos = Usuario.objects.filter(usuarioasistencia__asistencia__fecha=fecha).values(
+                'nombre','apellido_paterno','apellido_materno','usuarioasistencia__tipo_asistencia__puntaje')
+            for a in alumnos:
+                alumno=[]
+                alumno.append(a['nombre'])
+                alumno.append(a['apellido_paterno'])
+                alumno.append(a['apellido_materno'])
+                alumno.append(a['usuarioasistencia__tipo_asistencia__puntaje'])
+                #Crear lista de puntajes de todas las actividades
+                puntajeList= []
+                puntajes = Usuario.objects.filter(usuarioactividad__actividad_id__fecha=fecha).values(
+                'nombre','apellido_paterno','apellido_materno','usuarioasistencia__tipo_asistencia__puntaje')
+                if puntajes:
+                    for t in puntajes:
+                        if t:
+                            print(t)
+                        else:
+                            print('f')
+                else:
+                    for t in tipoActividades:
+                        puntajeList.append('0')
+                alumno.append(puntajeList)
+                alumnosList.append(alumno)
+                    
+            print(alumnosList)
+            
+        context={
+            'columnas': columnas,
+            'alumnos': alumnosList,
+            'fechas': '',
+            'titulo': 'Resumen Clase '+ fecha
+        }
+        return render(request, 'puntajes/puntajes_details.html', context)

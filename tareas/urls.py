@@ -20,10 +20,7 @@ urlpatterns = [
     path('foro/edit/<int:pk>/', ForoEditView.as_view(), name="foro_edit"),
     path('foro/<int:pk>/', ForoDetailsView.as_view(), name="foro_details"),
 
-    #Caja de preguntas
-    path('caja-preguntas/', CajaDePreguntasListView.as_view(), name="caja_preguntas_list"),
-    path('caja-preguntas/create/', CajaDePreguntasCreateView.as_view(), name="crear_caja_preguntas"),
-    path('caja-preguntas/delete/<int:pk>/', CajaDePreguntasDeleteView.as_view(), name="caja_preguntas_delete"),
-
-    
+    #Resumen de puntajes
+    path('resumen/', ResumenListView.as_view(), name="resumen"),
+    path('resumen/<str:fecha>/', ResumenDetailsView.as_view(), name="resumen_detalles"),
 ]
