@@ -11,7 +11,7 @@ from django.views.generic import View, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from app.models import Usuario
 from asistencia.models import Asistencia, UsuarioAsistencia
-from evaluacion.models import Evaluacion
+from evaluacion.models import Evaluacion, UsuarioEvaluacion
 from tareas.forms import TareaCreateForm, ForoCreateForm, TareaEditForm
 from django.contrib import messages
 
@@ -95,6 +95,7 @@ def usuariosActividadAPI(request,pk):
 
     data = []
     #Se verifica la existencia de cada usuario alumno en la tabla de usuario_actividad, y si no existe, se crea. Y todos se guardan en una lista
+    ### La razon de hacer esto es para que se actualice siempre la lista, en caso de que se cree un usuario, se vuelva a actualizar #####
     for i in users:
         if not UsuarioActividad.objects.prefetch_related('usuario','actividad','puntaje').filter(actividad_id=pk,usuario_id=i.id).exists():
             UsuarioActividad.objects.create(actividad_id=pk,usuario_id=i.id)
@@ -298,47 +299,78 @@ class ResumenDetailsView(LoginRequiredMixin, View):
         #alumnos para listar en el template
         alumnos = []
         alumnosList = []
+        alumnosListEv = []
+        #Obtiene todos los usuarios alumno
+        alumnos = Usuario.objects.filter(id_tipo_usuario=3)
 
 
         if Evaluacion.objects.filter(fecha=fecha).exists():
             columnas.append('Evaluación')
-            evaluacion = Evaluacion.objects.filter(fecha=fecha)
             
+            for a in alumnos:
+                alumno=[]
+                alumno.append(a.nombre)
+                alumno.append(a.apellido_paterno)
+                alumno.append(a.apellido_materno)
+
+                puntajeEv = UsuarioEvaluacion.objects.filter(usuario_id=a.id,evaluacion__fecha=fecha)
+
+                if puntajeEv:
+                    alumno.append(puntajeEv.values('puntaje_id__puntaje')[0]['puntaje_id__puntaje'])
+                else:
+                    alumno.append('0')
+                
+                alumnosListEv.append(alumno)
+
         else:
             tipoActividades = TipoActividad.objects.all()
             columnas.append('Asistencia')
             for x in tipoActividades:
                 columnas.append(x.tipo)
-            
-            alumnos = Usuario.objects.filter(usuarioasistencia__asistencia__fecha=fecha).values(
-                'nombre','apellido_paterno','apellido_materno','usuarioasistencia__tipo_asistencia__puntaje')
+
+            #Se itera cada alumno para ir agregando 1 por 1 a la lista de alumnos que se mostrara en el template
             for a in alumnos:
                 alumno=[]
-                alumno.append(a['nombre'])
-                alumno.append(a['apellido_paterno'])
-                alumno.append(a['apellido_materno'])
-                alumno.append(a['usuarioasistencia__tipo_asistencia__puntaje'])
+                alumno.append(a.nombre)
+                alumno.append(a.apellido_paterno)
+                alumno.append(a.apellido_materno)
+                #Obtiene el puntaje de asistencia del alumno actual, y lo agrega a la variable
+                alumno.append(UsuarioAsistencia.objects.filter(usuario_id=a.id,asistencia__fecha=fecha).values('tipo_asistencia__puntaje')[0]['tipo_asistencia__puntaje'])
+                
                 #Crear lista de puntajes de todas las actividades
                 puntajeList= []
-                puntajes = Usuario.objects.filter(usuarioactividad__actividad_id__fecha=fecha).values(
-                'nombre','apellido_paterno','apellido_materno','usuarioasistencia__tipo_asistencia__puntaje')
+
+                puntajes = TipoActividad.objects.filter(actividades_tipos__usuarioactividad__usuario_id=a.id,actividades_tipos__fecha=fecha).values(
+                    'tipo','actividades_tipos__usuarioactividad__puntaje_id__puntaje').order_by('id')
+                print(puntajes)
+
+                #Se verifica si la query de obtener los puntajes del usuario existe al menos un puntaje, y en caso de que no exista, se agregan 0
                 if puntajes:
-                    for t in puntajes:
-                        if t:
-                            print(t)
-                        else:
-                            print('f')
+                    cont=0
+                    for t in range(tipoActividades.count()):
+                        try:
+                            #Si encuentra un dato en ese index (t), entonces se agrega a las tareas
+                            #print(t)
+                            #print(puntajes[cont].get('usuarioactividad__actividad_id__id_tipo_actividad__tipo'))
+                            if puntajes[t]:
+                                puntajeList.append(puntajes[t].get('actividades_tipos__usuarioactividad__puntaje_id__puntaje'))
+                            else:
+                                puntajeList.append('0')
+                        finally:
+                            cont=cont+1
+
                 else:
                     for t in tipoActividades:
                         puntajeList.append('0')
                 alumno.append(puntajeList)
                 alumnosList.append(alumno)
                     
-            print(alumnosList)
+            
             
         context={
             'columnas': columnas,
             'alumnos': alumnosList,
+            'alumnosEv': alumnosListEv,
             'fechas': '',
             'titulo': 'Resumen Clase '+ fecha
         }

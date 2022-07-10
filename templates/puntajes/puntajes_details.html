@@ -33,24 +33,43 @@
               </tr>
               </thead>
               <tbody>
-                {% for nombre,apellido_paterno,apellido_materno,usuarioasistencia__tipo_asistencia__puntaje, puntajeList in alumnos %}
+                {% if alumnos %}
+                  {% for nombre,apellido_paterno,apellido_materno,usuarioasistencia__tipo_asistencia__puntaje, puntajeList in alumnos %}
 
-                <tr>
-                    <td>{{nombre}} {{apellido_paterno}} {{apellido_materno}}</td>
-                    <td class="text-center"> 
-                      {% if usuarioasistencia__tipo_asistencia__puntaje %} 
-                        {{usuarioasistencia__tipo_asistencia__puntaje}}
-                      {% else %}
-                        0
-                      {% endif %} 
-                    </td>
+                  <tr>
+                      <td>{{nombre}} {{apellido_paterno}} {{apellido_materno}}</td>
+                      <td class="text-center"> 
+                        {% if usuarioasistencia__tipo_asistencia__puntaje %} 
+                          {{usuarioasistencia__tipo_asistencia__puntaje}}
+                        {% else %}
+                          0
+                        {% endif %} 
+                      </td>
 
-                    {% for p in puntajeList %}
-                      <td class="text-center">{{p}}</td>
+                      {% for p in puntajeList %}
+
+                        <td class="text-center">{% if p %} {{p}} {% else %} 0 {% endif %}</td>
+                      {% endfor %}
+
+                  </tr>
+                  {% endfor %}
+
+                {% else %}
+
+                    {% for nombre,apellido_paterno,apellido_materno,puntajeEv in alumnosEv %}
+                    <tr>
+                      <td>{{nombre}} {{apellido_paterno}} {{apellido_materno}}</td>
+                          <td class="text-center"> 
+                            {% if puntajeEv %} 
+                              {{puntajeEv}}
+                            {% else %}
+                              0
+                            {% endif %} 
+                      </td>
+                    </tr>
                     {% endfor %}
-                    
-                </tr>
-                {% endfor %}
+
+                {% endif %}
               </tbody>
             </table>
           </div>
