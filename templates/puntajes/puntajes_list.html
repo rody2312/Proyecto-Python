@@ -1,4 +1,6 @@
+
 {% extends 'home.html' %}
+
 {% load static %}
 
 {% block libs %}
@@ -13,46 +15,39 @@
 <div class="container-fluid">
 
     <div class="row">
-      <div class="col-8 mx-auto">
+      <div class="col-6 mx-auto">
 
         <div class="card">
           <div class="card-header">
-            <h3 class="card-title">Lista de archivos</h3>
+            <h3 class="card-title">Resumen de puntajes</h3>
           </div>
           <!-- /.card-header -->
           <div class="card-body">
-            <a class="btn btn-primary mb-2" href="{% url 'app:subir_archivo' %}">Crear nuevo archivo</a>
-            <br>
-
-            <table id="example1" class="table table-bordered">
+            <table id="example1" class="table table-bordered table-striped">
               <thead>
+              <tr>
+                <th>Fecha de Clase</th>
+                <th>Ver detalles</th>
+              </tr>
+              </thead>
+              <tbody>
+                {% for f in fechas %}
+                
                 <tr>
-                    <th>Nombre</th>
-                    <th>Fecha de subida</th>
-                    <th>Archivo</th>
-                    <th>Acciones</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {% for archivo in archivos %}
-                  <tr>
-                    <td>{{archivo.nombre}}</td>
-                    <td>{{archivo.fecha}}</td>
-                    <td><a href="/media/{{archivo.directorio}}">{{archivo.directorio}}</a></td>
-                      <td class="text-center">
-  
-                        <div class="row justify-content-center">
-                          <form action="{% url 'app:archivo_delete' archivo.id %}" method="POST" id="deleteForm">
-                            {% csrf_token %}
-                            <a class="btn btn-danger btn-sm" href="#" onclick="eliminarArchivo({{archivo.id}})">
-                                <i class="fas fa-trash">
-                                </i>
-                              </a>
-                          </form>
-                          <div>
-                      </td>
-                  </tr>
-                  {% endfor %} 
+                    <td>{{f | date:"d/m/Y"}}</td>
+                    <td class="text-center">
+
+                      <div class="row justify-content-center">
+                        <a class="btn btn-primary btn-sm" href="{% url 'tareas:resumen_detalles' fecha=f %}">
+                            <i class="fas fa-folder">
+                            </i>
+                        </a>
+                      </div>
+                    </td>
+                    
+                </tr>
+                {% endfor %}
+              </tbody>
             </table>
           </div>
           <!-- /.card-body -->
@@ -76,6 +71,9 @@
 <script src="{%static 'lib/adminlte-3.2.0/plugins/datatables-responsive/js/responsive.bootstrap4.min.js'%}"></script>
 <script src="{%static 'lib/adminlte-3.2.0/plugins/datatables-buttons/js/dataTables.buttons.min.js'%}"></script>
 <script src="{%static 'lib/adminlte-3.2.0/plugins/datatables-buttons/js/buttons.bootstrap4.min.js'%}"></script>
+<script src="{%static 'lib/adminlte-3.2.0/plugins/jszip/jszip.min.js'%}"></script>
+<script src="{%static 'lib/adminlte-3.2.0/plugins/pdfmake/pdfmake.min.js'%}"></script>
+<script src="{%static 'lib/adminlte-3.2.0/plugins/pdfmake/vfs_fonts.js'%}"></script>
 <script src="{%static 'lib/adminlte-3.2.0/plugins/datatables-buttons/js/buttons.html5.min.js'%}"></script>
 <script src="{%static 'lib/adminlte-3.2.0/plugins/datatables-buttons/js/buttons.print.min.js'%}"></script>
 <script src="{%static 'lib/adminlte-3.2.0/plugins/datatables-buttons/js/buttons.colVis.min.js'%}"></script>
@@ -86,6 +84,7 @@
   $(function () {
     $("#example1").DataTable({
       "responsive": true, "lengthChange": false, "autoWidth": false,
+      "ordering": false,
       "language": {
         "processing":     "Procesando...",
         "infoEmpty":      "Mostrando 0 a 0 de 0 registro",
@@ -102,54 +101,8 @@
         "info":           "Mostrando _START_ a _END_ de _TOTAL_ registros",
         "infoEmpty":      "Mostrando 0 a 0 de 0 registros",
       },
-    })
+    }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)').sort();
   });
-
-  {% for message in messages %}
-    {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
-    Swal.fire(
-      'Actualizado!',
-      '{{message}}',
-      'success'
-    )
-    {% else %}
-    Swal.fire(
-      'Error',
-      '{{message}}',
-      'error'
-    )
-  {% endif %}
-  
-{% endfor %}
-  
 </script>
 
-
-<script>
-  function eliminarArchivo(id){
-    event.preventDefault();
-    var url = "{% url 'app:archivo_delete' 123 %}";
-    console.log(id)
-    Swal.fire({
-      title: '¿Estas seguro de eliminar el registro de asistencia?',
-      text: "No se podra deshacer!",
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Si, eliminar!',
-      cancelButtonText: 'Cancelar'
-    }).then((result) => {
-      if (result.isConfirmed) {
-        document.getElementById('deleteForm').setAttribute('action',url.replace('123',id));
-        document.querySelector('#deleteForm').submit();
-        //window.location.href = url.replace('123', id);
-      }
-    })
-}
-
-</script>
-
-
-{% endblock  %}
-
+{% endblock js %}

@@ -40,13 +40,10 @@
                     <td class="text-center">
 
                       <div class="row justify-content-center">
-                        <div class="col justify-content-center">
                           <a class="btn btn-info btn-sm" href="{% url 'asistencia:edit_tipo_asistencia' tipo.id %}">
                             <i class="fas fa-pencil-alt">
                             </i>
                           </a>
-                        </div>
-                        <div class="col justify-content-center">
                           <form action="{% url 'asistencia:delete_tipo_asistencia' tipo.id %}" method="POST" id="deleteForm">
                             {% csrf_token %}
                             <a class="btn btn-danger btn-sm" href="#" onclick="eliminarTipoAsistencia({{tipo.id}})">
@@ -54,7 +51,6 @@
                                 </i>
                             </a>
                           </form>
-                        </div>
                       </div>
                     </td>
                       

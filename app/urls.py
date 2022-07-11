@@ -1,6 +1,6 @@
 from unicodedata import name
 from django.urls import path, re_path, include
-from app.views.views_archivo import ArchivoCreateView2, ArchivoDeleteView, ArchivoEditView, ArchivoListView
+from app.views.views_archivo import ArchivoCreateView2, ArchivoDeleteView, ArchivoListView, upload_file
 from app.views.views_notificacion import NotificacionDeleteView, NotificacionEditView, NotificacionListView, NotificacionCreateView
 
 from app.views.views_tipo_actividad import TipoActividadCreateView, TipoActividadDeleteView, TipoActividadEditView, TipoActividadListView
@@ -36,9 +36,8 @@ urlpatterns= [
     
     #ARCHIVOS
     path('archivos/', ArchivoListView.as_view(), name="archivo"),
-    path('archivo_create/', ArchivoCreateView2.as_view(), name="crear_archivo"),
+    path('archivo/subir/', upload_file, name="subir_archivo"),
     path('archivo/delete/<int:pk>/', ArchivoDeleteView.as_view(), name="archivo_delete"),
-    path('archivo/edit/<int:pk>/', ArchivoEditView.as_view(), name="archivo_edit"),
 
     #TIPO ACTIVIDAD
     path('configuracion/tipo_actividad/', TipoActividadListView.as_view(), name="list_tipo_actividad"),

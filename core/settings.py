@@ -4,6 +4,8 @@ from re import T
 import environ
 
 from .db import MYSQL
+from .mail_pass import EMAIL_HOST_PASSWORD
+
 
 env = environ.Env()
 environ.Env.read_env()
@@ -137,7 +139,7 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'rody.ch2312@gmail.com'
-EMAIL_HOST_PASSWORD = 'aouonueminxicimv'
+EMAIL_HOST_PASSWORD = EMAIL_HOST_PASSWORD
 
 
 
@@ -154,7 +156,8 @@ USE_L10N = False
 
 # CONFIGURACION DE ARCHIVOS MULTIMEDIA
 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
+
 
 

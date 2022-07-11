@@ -1,7 +1,8 @@
 
+from cProfile import label
 from django import forms
 
-from tareas.models import Puntaje, TipoActividad
+from tareas.models import Archivo, Puntaje, TipoActividad
 from .models import Notificacion, Usuario,TipoUsuario
 
 
@@ -194,18 +195,18 @@ class PuntajeCreateForm(forms.ModelForm):
 
         
 
-
-
-#class ArchivoCreateForm(forms.ModelForm):
- #   class Meta:
-  #      model=Archivo
-   #     fields=('n de archivo','nombre de archivo','fecha de subida', 'descargar')
-    #    widgets = {
-     #       'n de archivo': forms.TextInput(),
-      #      'nombre de archivo': forms.TextInput(),
-       #     'fecha de subida': forms.TextInput(),
-        #    'descargar': forms.DateInput(),
-#        }
+#Subir archivo
+class ArchivoCreateForm(forms.ModelForm):
+   class Meta:
+       model=Archivo
+       fields=('nombre','directorio',)
+       labels = {
+            'directorio':'Subir archivo'
+        }
+       widgets = {
+           'nombre': forms.TextInput(attrs={'class': 'form-control'}),
+           'directorio': forms.ClearableFileInput(attrs={'class': 'form-control', 'id':'directorio'}),
+        }
 
  #   def __init__(self, *args, **kwargs):
   #      super(ArchivoCreateForm, self).__init__(*args, **kwargs)

@@ -1,8 +1,8 @@
 import re
 from django.http import QueryDict
 from django.core.exceptions import ObjectDoesNotExist
-
-
+from django.db.models import Q
+from datetime import datetime
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
@@ -10,7 +10,9 @@ from django.urls import reverse, reverse_lazy
 from django.views.generic import View, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from app.models import Usuario
-from tareas.forms import ArchivoCreateForm, TareaCreateForm, ForoCreateForm, TareaEditForm
+from asistencia.models import Asistencia, UsuarioAsistencia
+from evaluacion.models import Evaluacion, UsuarioEvaluacion
+from tareas.forms import TareaCreateForm, ForoCreateForm, TareaEditForm
 from django.contrib import messages
 
 from tareas.models import Foro, Actividad, Puntaje, TipoForo, TipoActividad, UsuarioActividad
@@ -20,7 +22,6 @@ from tareas.models import Foro, Actividad, Puntaje, TipoForo, TipoActividad, Usu
 class TareasListView(LoginRequiredMixin, View):
 
     def get(self,request, tipo_id, *args, **kwargs):
-        #CAMBIAR EL FILTRO POR EL QUE SE MANDE POR EL URL, PORQUE SERAN MUCHOS TIPOS QUE SE CREARAN DINAMICAMENTE
         actividades = Actividad.objects.filter(id_tipo_actividad=tipo_id)
         foros = Foro.objects.all()
         tipo = TipoActividad.objects.get(pk=tipo_id)
@@ -94,6 +95,7 @@ def usuariosActividadAPI(request,pk):
 
     data = []
     #Se verifica la existencia de cada usuario alumno en la tabla de usuario_actividad, y si no existe, se crea. Y todos se guardan en una lista
+    ### La razon de hacer esto es para que se actualice siempre la lista, en caso de que se cree un usuario, se vuelva a actualizar #####
     for i in users:
         if not UsuarioActividad.objects.prefetch_related('usuario','actividad','puntaje').filter(actividad_id=pk,usuario_id=i.id).exists():
             UsuarioActividad.objects.create(actividad_id=pk,usuario_id=i.id)
@@ -268,58 +270,108 @@ class ForoDeleteView(LoginRequiredMixin, DeleteView):
         return HttpResponseRedirect(success_url)
 
 
-class CajaDePreguntasListView(LoginRequiredMixin, View):
+class ResumenListView(LoginRequiredMixin, View):
 
     def get(self,request, *args, **kwargs):
-        tareas_caja = Actividad.objects.filter(id_tipo_actividad=2)
-
-        context={
-            'tareas_caja': tareas_caja,
-            'titulo': 'Caja de preguntas'
-        }
-        return render(request, 'caja_preguntas/caja_preguntas_list.html', context)
-
-class CajaDePreguntasCreateView(LoginRequiredMixin ,View):
-    
-    def get(self,request, *args, **kwargs):
-        form = TareaCreateForm()
-        context={
-            'form': form,
-            'titulo': 'Crear registro de Caja de Preguntas'
-        }
-        return render(request, 'caja_preguntas/caja_preguntas_create.html', context)
-
-    def post(self, request,*args, **kwargs):
-        if request.method=="POST":
-            form = CajaDePreguntasCreateForm(request.POST)
-            if form.is_valid():
-                fecha = form.cleaned_data.get('fecha')
-                tipoTarea = TipoActividad.objects.get(pk=2)
-                usuarioActual= request.user
-
-                u, created = Actividad.objects.get_or_create(id_usuario=usuarioActual, id_tipo_actividad=tipoTarea , fecha=fecha)
-                u.save()
-
-                messages.success(request, "Tarea agregada correctamente")
-                return redirect('tareas:caja_preguntas_list')
-
+        actividades = Actividad.objects.all()
+        evaluaciones = Evaluacion.objects.all()
+        asistencias = Asistencia.objects.all()
+        fechas = []
+        for (a,b,c) in zip(actividades,evaluaciones,asistencias):
+            if a.fecha not in fechas: fechas.append(a.fecha)
+            if b.fecha not in fechas: fechas.append(b.fecha)
+            if c.fecha not in fechas: fechas.append(c.fecha)
         
+        #Ordenar lista de fechas de forma descendiente
+        fechas.sort(reverse=True)
         context={
-            'titulo': 'Crear registro de Caja de Preguntas',
-            'form': form
+            'fechas': fechas,
+            'titulo': 'Resumen'
         }
-        return render(request, 'caja_preguntas/caja_preguntas_create.html', context)
+        return render(request, 'puntajes/puntajes_list.html', context)
 
-class CajaDePreguntasDeleteView(LoginRequiredMixin, DeleteView):
-    model = Actividad
-    success_url = reverse_lazy('tareas:caja_preguntas_list')
 
-    def get_success_url(self):
-        messages.success(self.request, "Eliminado correctamente")
-        return reverse('tareas:caja_preguntas_list')
+class ResumenDetailsView(LoginRequiredMixin, View):
 
-    def delete(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        success_url = self.get_success_url()
-        self.object.delete()
-        return HttpResponseRedirect(success_url)
+    def get(self, request, fecha, *args, **kwargs):
+        #columnas para listar en el template
+        columnas = []
+        #alumnos para listar en el template
+        alumnos = []
+        alumnosList = []
+        alumnosListEv = []
+        #Obtiene todos los usuarios alumno
+        alumnos = Usuario.objects.filter(id_tipo_usuario=3)
+
+
+        if Evaluacion.objects.filter(fecha=fecha).exists():
+            columnas.append('Evaluación')
+            
+            for a in alumnos:
+                alumno=[]
+                alumno.append(a.nombre)
+                alumno.append(a.apellido_paterno)
+                alumno.append(a.apellido_materno)
+
+                puntajeEv = UsuarioEvaluacion.objects.filter(usuario_id=a.id,evaluacion__fecha=fecha)
+
+                if puntajeEv:
+                    alumno.append(puntajeEv.values('puntaje_id__puntaje')[0]['puntaje_id__puntaje'])
+                else:
+                    alumno.append('0')
+                
+                alumnosListEv.append(alumno)
+
+        else:
+            tipoActividades = TipoActividad.objects.all()
+            columnas.append('Asistencia')
+            for x in tipoActividades:
+                columnas.append(x.tipo)
+
+            #Se itera cada alumno para ir agregando 1 por 1 a la lista de alumnos que se mostrara en el template
+            for a in alumnos:
+                alumno=[]
+                alumno.append(a.nombre)
+                alumno.append(a.apellido_paterno)
+                alumno.append(a.apellido_materno)
+                #Obtiene el puntaje de asistencia del alumno actual, y lo agrega a la variable
+                alumno.append(UsuarioAsistencia.objects.filter(usuario_id=a.id,asistencia__fecha=fecha).values('tipo_asistencia__puntaje')[0]['tipo_asistencia__puntaje'])
+                
+                #Crear lista de puntajes de todas las actividades
+                puntajeList= []
+
+                puntajes = TipoActividad.objects.filter(actividades_tipos__usuarioactividad__usuario_id=a.id,actividades_tipos__fecha=fecha).values(
+                    'tipo','actividades_tipos__usuarioactividad__puntaje_id__puntaje').order_by('id')
+                print(puntajes)
+
+                #Se verifica si la query de obtener los puntajes del usuario existe al menos un puntaje, y en caso de que no exista, se agregan 0
+                if puntajes:
+                    cont=0
+                    for t in range(tipoActividades.count()):
+                        try:
+                            #Si encuentra un dato en ese index (t), entonces se agrega a las tareas
+                            #print(t)
+                            #print(puntajes[cont].get('usuarioactividad__actividad_id__id_tipo_actividad__tipo'))
+                            if puntajes[t]:
+                                puntajeList.append(puntajes[t].get('actividades_tipos__usuarioactividad__puntaje_id__puntaje'))
+                            else:
+                                puntajeList.append('0')
+                        finally:
+                            cont=cont+1
+
+                else:
+                    for t in tipoActividades:
+                        puntajeList.append('0')
+                alumno.append(puntajeList)
+                alumnosList.append(alumno)
+                    
+            
+            
+        context={
+            'columnas': columnas,
+            'alumnos': alumnosList,
+            'alumnosEv': alumnosListEv,
+            'fechas': '',
+            'titulo': 'Resumen Clase '+ fecha
+        }
+        return render(request, 'puntajes/puntajes_details.html', context)

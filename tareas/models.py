@@ -76,6 +76,7 @@ class Archivo(models.Model):
     id_usuario=models.ForeignKey(Usuario, db_column='id_usuario', on_delete=models.SET_NULL, null=True)
     nombre=models.CharField(max_length=20)
     directorio=models.FileField(max_length=200)
+    fecha=models.DateField(auto_now=True)
 
     class Meta:
         managed = True

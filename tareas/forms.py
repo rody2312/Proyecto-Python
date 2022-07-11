@@ -1,20 +1,7 @@
 
 from datetime import date, datetime
 from django import forms
-from tareas.models import Archivo, Foro, Actividad
-
-
-class ArchivoCreateForm(forms.ModelForm):
-
-    class Meta:
-        model=Archivo
-        fields=('nombre', 'directorio')
-        
-        widgets = {
-            'nombre': forms.TextInput(attrs={'class': 'form-control'}),
-            'directorio': forms.ClearableFileInput(attrs={'class': 'form-control', 'name':'myfile'})
-
-        }
+from tareas.models import Foro, Actividad
 
 
 
@@ -111,19 +98,17 @@ class ForoCreateForm(forms.ModelForm):
 
     class Meta:
         model=Foro
-        fields=('titulo', 'descripcion', 'id_tipo_foro', 'id_actividad')
+        fields=('titulo', 'descripcion', 'id_tipo_foro',)
         labels={
             'id_tipo_foro': 'Tipo de privacidad',
-            'id_actividad': 'Tarea'
         }
         
         widgets = {
             'titulo': forms.TextInput(attrs={'class': 'form-control'}),
             'descripcion': forms.Textarea(attrs={'class': 'form-control', 'id': 'summernote'}),
             'id_tipo_foro': forms.Select(attrs={'class': 'form-control'}),
-            'id_actividad': forms.Select(attrs={'class': 'form-control'})
         }
     
-    def __init__(self, *args, **kwargs):
-        super(ForoCreateForm, self).__init__(*args, **kwargs)
-        self.fields['id_actividad'].required = False
+    #def __init__(self, *args, **kwargs):
+    #    super(ForoCreateForm, self).__init__(*args, **kwargs)
+    #    self.fields['id_actividad'].required = False
