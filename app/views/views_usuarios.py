@@ -24,9 +24,10 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.contrib.sites.shortcuts import get_current_site
 from ..utils import token_generator
 from django.contrib.auth.mixins import LoginRequiredMixin
+from app.mixins import AdminUserMixin, ProfesorUserMixin
 import logging
 
-class UsuariosListView(LoginRequiredMixin ,View):
+class UsuariosListView(LoginRequiredMixin, AdminUserMixin ,View):
     
     def get(self,request, *args, **kwargs):
         usuarios = Usuario.objects.all()
@@ -37,7 +38,7 @@ class UsuariosListView(LoginRequiredMixin ,View):
         return render(request, 'usuario/usuarios_list.html', context)
 
 
-class UsuarioCreateView(LoginRequiredMixin, View):
+class UsuarioCreateView(LoginRequiredMixin, AdminUserMixin, View):
     def get(self, request,*args, **kwargs):
         form=UsuarioCreateForm()
         context={
@@ -109,7 +110,7 @@ class VerificationView(View):
         return redirect('app:usuarios')
 
 
-class UsuarioDetailsView(LoginRequiredMixin, View):
+class UsuarioDetailsView(LoginRequiredMixin, AdminUserMixin, View):
     def get(self, request, pk, *args, **kwargs):
         usuario = get_object_or_404(Usuario, pk=pk)
         context={
@@ -118,7 +119,7 @@ class UsuarioDetailsView(LoginRequiredMixin, View):
         return render(request, 'usuario/usuario_details.html', context)
 
 #Clase no usada
-class UsuarioUpdateView(LoginRequiredMixin, UpdateView):
+class UsuarioUpdateView(LoginRequiredMixin, AdminUserMixin, UpdateView):
     model= Usuario
     fields= ['nombre', 'apellido_paterno', 'apellido_materno']
     template_name= 'usuario/usuario_edit.html'
@@ -128,7 +129,7 @@ class UsuarioUpdateView(LoginRequiredMixin, UpdateView):
         return reverse_lazy('app:details', kwargs={'pk':pk})
 
 
-class UsuarioDeleteView(LoginRequiredMixin, DeleteView):
+class UsuarioDeleteView(LoginRequiredMixin, AdminUserMixin, DeleteView):
     model = Usuario
     success_url = reverse_lazy('app:usuarios')
 
@@ -147,7 +148,7 @@ class UsuarioDeleteView(LoginRequiredMixin, DeleteView):
 #    usuario.delete()
 #    return redirect(to="app:usuarios")
 
-class UsuarioEditView(LoginRequiredMixin, UpdateView):
+class UsuarioEditView(LoginRequiredMixin, AdminUserMixin, UpdateView):
     model = Usuario
     form_class = UsuarioEditForm
     template_name = "usuario/usuario_edit.html"

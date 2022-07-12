@@ -4,6 +4,7 @@ from django.http import Http404, HttpResponseForbidden, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse, reverse_lazy
 from django.views.generic import View, DeleteView, UpdateView
+from app.mixins import AdminUserMixin, ProfesorUserMixin
 
 from tareas.models import Actividad, Puntaje, TipoActividad, UsuarioActividad
 from app import forms
@@ -11,7 +12,7 @@ from django.contrib import messages
 
 # LISTAR TIPO ACTIVIDAD
 
-class TipoActividadListView(LoginRequiredMixin ,View):
+class TipoActividadListView(LoginRequiredMixin, AdminUserMixin, ProfesorUserMixin ,View):
      
     def get(self,request, *args, **kwargs):
 
@@ -24,7 +25,7 @@ class TipoActividadListView(LoginRequiredMixin ,View):
 
 #CREAR TIPO ACTIVIDAD
 
-class TipoActividadCreateView(LoginRequiredMixin ,View):
+class TipoActividadCreateView(LoginRequiredMixin, AdminUserMixin, ProfesorUserMixin ,View):
     
     def get(self,request, *args, **kwargs):
         form=forms.TipoActividadCreateForm()
@@ -53,7 +54,7 @@ class TipoActividadCreateView(LoginRequiredMixin ,View):
 
 #ELIMINAR TIPO ACTIVIDAD
 # NO USAR ########################
-class TipoActividadDeleteView(LoginRequiredMixin, DeleteView):
+class TipoActividadDeleteView(LoginRequiredMixin, AdminUserMixin, ProfesorUserMixin, DeleteView):
     model = TipoActividad
     success_url = reverse_lazy('app:list_tipo_actividad')
     #
@@ -83,7 +84,7 @@ def delete(request, pk, *args, **kwargs):
 
 #EDITAR TIPO ACTIVIDAD
 
-class TipoActividadEditView(LoginRequiredMixin, UpdateView):
+class TipoActividadEditView(LoginRequiredMixin, AdminUserMixin, ProfesorUserMixin, UpdateView):
     model = TipoActividad
     form_class = forms.TipoActividadCreateForm
     template_name = "actividad/tipo_actividad_edit.html"
@@ -93,7 +94,7 @@ class TipoActividadEditView(LoginRequiredMixin, UpdateView):
         return reverse_lazy('app:list_tipo_actividad')
 
 
-class TipoActividadDetailsView(LoginRequiredMixin , View):
+class TipoActividadDetailsView(LoginRequiredMixin, AdminUserMixin, ProfesorUserMixin , View):
     def get(self, request, pk, *args, **kwargs):
         tipoActividad = get_object_or_404(TipoActividad, pk=pk)
         puntajes = Puntaje.objects.filter(id_tipo_actividad=pk)
@@ -120,7 +121,7 @@ def deletePuntaje(request, pk, *args, **kwargs):
 
 #Views para crear y editar un puntaje a un tipo de asistencia
 
-class PuntajeCreateView(LoginRequiredMixin ,View):
+class PuntajeCreateView(LoginRequiredMixin, AdminUserMixin, ProfesorUserMixin ,View):
     
     def get(self,request, *args, **kwargs):
         form=forms.PuntajeCreateForm()
@@ -149,7 +150,7 @@ class PuntajeCreateView(LoginRequiredMixin ,View):
 
 
 
-class PuntajeEditView(LoginRequiredMixin, UpdateView):
+class PuntajeEditView(LoginRequiredMixin, AdminUserMixin, ProfesorUserMixin, UpdateView):
     model = Puntaje
     form_class = forms.PuntajeCreateForm
     template_name = "actividad/puntaje_create.html"

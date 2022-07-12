@@ -6,12 +6,13 @@ from django.views.generic import View, DeleteView, UpdateView
 from ..forms import NotificacionCreateForm
 from app import forms
 from django.contrib import messages
+from app.mixins import AdminUserMixin, ProfesorUserMixin
 
 from app.models import Notificacion
 
 #LISTAR NOTIFICACION
 
-class NotificacionListView(LoginRequiredMixin ,View):
+class NotificacionListView(LoginRequiredMixin, AdminUserMixin, ProfesorUserMixin ,View):
      
     def get(self,request, *args, **kwargs):
 

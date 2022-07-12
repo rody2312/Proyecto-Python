@@ -9,17 +9,19 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse, reverse_lazy
 from django.views.generic import View, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin
+from app.mixins import AdminUserMixin
 from app.models import Usuario
 from asistencia.models import Asistencia, UsuarioAsistencia
 from evaluacion.models import Evaluacion, UsuarioEvaluacion
 from tareas.forms import TareaCreateForm, ForoCreateForm, TareaEditForm
 from django.contrib import messages
+from app.mixins import AdminUserMixin, ProfesorUserMixin
 
 from tareas.models import Foro, Actividad, Puntaje, TipoForo, TipoActividad, UsuarioActividad
 
 # Create your views here.
 
-class TareasListView(LoginRequiredMixin, View):
+class TareasListView(LoginRequiredMixin, AdminUserMixin, ProfesorUserMixin, View):
 
     def get(self,request, tipo_id, *args, **kwargs):
         actividades = Actividad.objects.filter(id_tipo_actividad=tipo_id)
@@ -40,7 +42,7 @@ class TareasListView(LoginRequiredMixin, View):
 
 
 
-class TareasCreateView(LoginRequiredMixin ,View):
+class TareasCreateView(LoginRequiredMixin, AdminUserMixin, ProfesorUserMixin ,View):
     
     def get(self,request, *args, **kwargs):
         form = TareaCreateForm(tipo_id=kwargs.get('tipo_id'))
@@ -75,7 +77,7 @@ class TareasCreateView(LoginRequiredMixin ,View):
         return render(request, 'tareas/tarea_create.html', context)
 
 
-class TareaDetailsView(LoginRequiredMixin, View):
+class TareaDetailsView(LoginRequiredMixin, AdminUserMixin, ProfesorUserMixin, View):
     def get(self, request, pk, *args, **kwargs):
         tarea = get_object_or_404(Actividad, pk=pk)
         usuariosActividad = UsuarioActividad.objects.select_related('usuario','actividad','puntaje').filter(actividad_id=pk)
@@ -145,7 +147,7 @@ def updatePuntaje(request):
     return JsonResponse('Puntaje actualizado', safe=False)
 
 
-class TareaDeleteView(LoginRequiredMixin, DeleteView):
+class TareaDeleteView(LoginRequiredMixin, AdminUserMixin, ProfesorUserMixin, DeleteView):
     model = Actividad
     success_url = reverse_lazy('tareas:tareas')
 
@@ -162,7 +164,7 @@ class TareaDeleteView(LoginRequiredMixin, DeleteView):
         return HttpResponseRedirect(success_url)
 
 
-class TareaEditView(LoginRequiredMixin, UpdateView):
+class TareaEditView(LoginRequiredMixin, AdminUserMixin, ProfesorUserMixin, UpdateView):
     model = Actividad
     form_class = TareaEditForm
     template_name = "tareas/tarea_create.html"
@@ -187,7 +189,7 @@ class TareaEditView(LoginRequiredMixin, UpdateView):
         return reverse('tareas:tareas', kwargs={'tipo_id': tipo_id})
 
 
-class ForosListView(LoginRequiredMixin, View):
+class ForosListView(LoginRequiredMixin, AdminUserMixin, ProfesorUserMixin, View):
 
     def get(self,request, *args, **kwargs):
         foros = Foro.objects.all()
@@ -199,7 +201,7 @@ class ForosListView(LoginRequiredMixin, View):
         return render(request, 'foro/foros_list.html', context)
 
 
-class ForoCreateView(LoginRequiredMixin, View):
+class ForoCreateView(LoginRequiredMixin, AdminUserMixin, ProfesorUserMixin, View):
     
     def get(self,request, *args, **kwargs):
         form = ForoCreateForm()
@@ -232,7 +234,7 @@ class ForoCreateView(LoginRequiredMixin, View):
         return render(request, 'tareas/tarea_create.html', context)
 
 
-class ForoEditView(LoginRequiredMixin, UpdateView):
+class ForoEditView(LoginRequiredMixin, AdminUserMixin, ProfesorUserMixin, UpdateView):
     model = Foro
     form_class = ForoCreateForm
     template_name = "foro/foro_edit.html"
@@ -244,7 +246,7 @@ class ForoEditView(LoginRequiredMixin, UpdateView):
 
 
 #Se muestra el foro seleccionado, las preguntas y respuestas
-class ForoDetailsView(LoginRequiredMixin, View):
+class ForoDetailsView(LoginRequiredMixin, AdminUserMixin, ProfesorUserMixin, View):
     
     def get(self,request, pk, *args, **kwargs):
         foro = get_object_or_404(Foro, pk=pk)
@@ -255,7 +257,7 @@ class ForoDetailsView(LoginRequiredMixin, View):
         }
         return render(request, 'foro/foro_details.html', context)
 
-class ForoDeleteView(LoginRequiredMixin, DeleteView):
+class ForoDeleteView(LoginRequiredMixin, AdminUserMixin, ProfesorUserMixin, DeleteView):
     model = Foro
     success_url = reverse_lazy('tareas:foros')
 
@@ -270,7 +272,7 @@ class ForoDeleteView(LoginRequiredMixin, DeleteView):
         return HttpResponseRedirect(success_url)
 
 
-class ResumenListView(LoginRequiredMixin, View):
+class ResumenListView(LoginRequiredMixin, AdminUserMixin, ProfesorUserMixin, View):
 
     def get(self,request, *args, **kwargs):
         actividades = Actividad.objects.all()
@@ -291,7 +293,8 @@ class ResumenListView(LoginRequiredMixin, View):
         return render(request, 'puntajes/puntajes_list.html', context)
 
 
-class ResumenDetailsView(LoginRequiredMixin, View):
+class ResumenDetailsView(LoginRequiredMixin, AdminUserMixin, ProfesorUserMixin, View):
+
 
     def get(self, request, fecha, *args, **kwargs):
         #columnas para listar en el template

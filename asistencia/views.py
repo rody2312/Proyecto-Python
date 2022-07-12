@@ -10,11 +10,12 @@ from asistencia.models import Asistencia, TipoAsistencia, UsuarioAsistencia
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
 from django.views.decorators.csrf import csrf_exempt
+from app.mixins import AdminUserMixin, ProfesorUserMixin
 
 
 #Listar registros de asistencias
 
-class AsistenciaListView(LoginRequiredMixin ,View):
+class AsistenciaListView(LoginRequiredMixin, AdminUserMixin, ProfesorUserMixin ,View):
     
     def get(self,request, *args, **kwargs):
         asistencias = Asistencia.objects.all()
@@ -26,7 +27,7 @@ class AsistenciaListView(LoginRequiredMixin ,View):
 
 #Crear registro de asistencia
 
-class AsistenciaCreateView(LoginRequiredMixin ,View):
+class AsistenciaCreateView(LoginRequiredMixin, AdminUserMixin, ProfesorUserMixin ,View):
     def get(self,request, *args, **kwargs):
         form=AsistenciaCreateForm()
         context={
@@ -55,7 +56,7 @@ class AsistenciaCreateView(LoginRequiredMixin ,View):
 
 
 # Eliminar registro de asistencia  
-class AsistenciaDeleteView(LoginRequiredMixin, DeleteView):
+class AsistenciaDeleteView(LoginRequiredMixin, AdminUserMixin, ProfesorUserMixin, DeleteView):
     model = Asistencia
     success_url = reverse_lazy('asistencia:asistencias')
 
@@ -70,7 +71,7 @@ class AsistenciaDeleteView(LoginRequiredMixin, DeleteView):
         return HttpResponseRedirect(success_url)
 
 # Detalles del registro de asistencia, para registrar el tipo de asistencia a cada alumno
-class AsistenciaDetailsView(LoginRequiredMixin, View):
+class AsistenciaDetailsView(LoginRequiredMixin, AdminUserMixin, ProfesorUserMixin, View):
     def get(self, request, pk, *args, **kwargs):
         asistencia = get_object_or_404(Asistencia, pk=pk)
         context={
@@ -79,7 +80,7 @@ class AsistenciaDetailsView(LoginRequiredMixin, View):
         }
         return render(request, 'asistencia/asistencia_details.html', context)
 
-class AsistenciaEditView(LoginRequiredMixin, UpdateView):
+class AsistenciaEditView(LoginRequiredMixin, AdminUserMixin, ProfesorUserMixin, UpdateView):
     model = Asistencia
     form_class = AsistenciaCreateForm
     template_name = "asistencia/asistencia_create.html"
@@ -156,7 +157,7 @@ def updatePuntaje(request):
 
 
 # Listar tipos de asistencia
-class TipoAsistenciaListView(LoginRequiredMixin ,View):
+class TipoAsistenciaListView(LoginRequiredMixin, AdminUserMixin,View):
      
     def get(self,request, *args, **kwargs):
 
@@ -169,7 +170,7 @@ class TipoAsistenciaListView(LoginRequiredMixin ,View):
 
 #CREAR TIPO ACTIVIDAD
 
-class TipoAsistenciaCreateView(LoginRequiredMixin ,View):
+class TipoAsistenciaCreateView(LoginRequiredMixin, AdminUserMixin ,View):
     
     def get(self,request, *args, **kwargs):
         form=TipoAsistenciaCreateForm()
@@ -211,7 +212,7 @@ def delete(request, pk, *args, **kwargs):
 
 #EDITAR TIPO ACTIVIDAD
 
-class TipoAsistenciaEditView(LoginRequiredMixin, UpdateView):
+class TipoAsistenciaEditView(LoginRequiredMixin, AdminUserMixin, UpdateView):
     model = TipoAsistencia
     form_class = TipoAsistenciaCreateForm
     template_name = "asistencia/tipo_asistencia_edit.html"
