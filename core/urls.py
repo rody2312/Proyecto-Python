@@ -34,6 +34,8 @@ urlpatterns = [
     path('', include('asistencia.urls', namespace='asistencia')),
 
     path('', include('evaluacion.urls', namespace='evaluacion')),
+
+    path('', include('foro.urls', namespace='foro')),
 ]
 
 if settings.DEBUG:

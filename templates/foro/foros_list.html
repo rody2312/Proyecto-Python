@@ -21,7 +21,7 @@
           </div>
           <!-- /.card-header -->
           <div class="card-body">
-            <a class="btn btn-primary mb-2" href="{% url 'tareas:crear_foro' %}">Crear nuevo tema</a>
+            <a class="btn btn-primary mb-2" href="{% url 'foro:crear_foro' %}">Crear nuevo tema</a>
             <br>
 
             <table id="example1" class="table table-bordered">
@@ -39,11 +39,11 @@
                     <!--<td>{% if foro.id_tarea %} {{foro.id_tarea}} {% else %} No hay tarea relacionada {% endif %}</td>-->
                     <td class="text-center">
                       <div class="row justify-content-center">
-                        <a class="btn btn-primary btn-sm" href="{% url 'tareas:foro_details' foro.id %}">
+                        <a class="btn btn-primary btn-sm" href="{% url 'foro:foro_details' foro.id %}">
                             <i class="fas fa-folder">
                             </i>
                         </a>
-                        <a class="btn btn-info btn-sm" href="{% url 'tareas:foro_edit' foro.id %}">
+                        <a class="btn btn-info btn-sm" href="{% url 'foro:foro_edit' foro.id %}">
                             <i class="fas fa-pencil-alt">
                             </i>
                         </a>
@@ -124,7 +124,7 @@
 <script>
   function eliminarUsuario(id){
     event.preventDefault();
-    var url = "{% url 'tareas:foro_delete' 123 %}";
+    var url = "{% url 'foro:foro_delete' 123 %}";
     console.log(id)
     Swal.fire({
       title: '¿Estas seguro de eliminar el foro?',
