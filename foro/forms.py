@@ -1,5 +1,5 @@
 
-from foro.models import Foro
+from foro.models import Foro, RespuestaForo
 from django import forms
 
 class ForoCreateForm(forms.ModelForm):
@@ -20,3 +20,22 @@ class ForoCreateForm(forms.ModelForm):
     #def __init__(self, *args, **kwargs):
     #    super(ForoCreateForm, self).__init__(*args, **kwargs)
     #    self.fields['id_actividad'].required = False
+
+
+class ForoRespuestaForm(forms.ModelForm):
+
+    class Meta:
+        model=RespuestaForo
+        fields=('texto',)
+        labels={
+            'texto': 'Realiza tu respuesta al foro',
+        }
+        
+        widgets = {
+            'texto': forms.Textarea(attrs={'class': 'form-control', 'id': 'summernote'}),
+        }
+
+
+    def __init__(self, *args, **kwargs):
+        super(ForoRespuestaForm, self).__init__(*args, **kwargs)
+        self.fields['texto'].required = True

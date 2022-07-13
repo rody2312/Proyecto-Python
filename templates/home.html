@@ -66,7 +66,7 @@
             <i class="fas fa-envelope mr-2"></i> Mensajes
           </a>
           <div class="dropdown-divider"></div>
-          <a href="#" class="dropdown-item dropdown-footer">See All Notifications</a>
+          <a href="{% url 'app:notificacion' %}" class="dropdown-item dropdown-footer">Ver todos las notificaciones</a>
         </div>
       </li>
       <li class="nav-item">
@@ -113,52 +113,55 @@
          </div>
        </div>
 
+       
        <!-- Sidebar Menu -->
        <nav class="mt-2">
          <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-           <li class="nav-item">
-             <a href="{% url 'app:usuarios' %}" class="nav-link {% if titulo == "Usuarios" %} active {% endif %}">
-               <i class="nav-icon fas fa-users"></i>
-               <p>
-                 Usuarios
-               </p>
-             </a>
-           </li>
-           <li class="nav-item">
-             <a href="{% url 'tareas:resumen' %}" class="nav-link {% if titulo == "Resumen" %} active {% endif %}">
-               <i class="nav-icon fas fa-folder-open"></i>
-               <p>
-                 Puntajes
-               </p>
-             </a>
-           </li>
-           <li class="nav-item">
-            <a href="{% url 'asistencia:asistencias' %}" class="nav-link {% if titulo == "Asistencia" %} active {% endif %}">
-              <i class="nav-icon fas fa-tasks"></i>
-              <p>
-                Asistencia
-              </p>
-            </a>
+          {% if request.user.id_tipo_usuario.id == 1 or request.user.id_tipo_usuario.id == 2 %}
+
+            <li class="nav-item">
+              <a href="{% url 'app:usuarios' %}" class="nav-link {% if titulo == "Usuarios" %} active {% endif %}">
+                <i class="nav-icon fas fa-users"></i>
+                <p>
+                  Usuarios
+                </p>
+              </a>
             </li>
-            <li class="nav-item {% if tipo_act_nav %} menu-open {% endif %}">
-            <a href="#" class="nav-link {% if tipo_act_nav %} active {% endif %}">
-              <i class="nav-icon fas fa-book"></i>
-              <p>
-                Tareas
-                <i class="right fas fa-angle-left"></i>
-              </p>
-            </a>
-            <ul class="nav nav-treeview">
-              {% for tipo in tipos_actividades_nabvar  %}
-              <li class="nav-item">
-                <a  href="{% url 'tareas:tareas' tipo_id=tipo.id %}"  class="nav-link {% if tipo_act_nav == tipo.tipo %} active {% endif %}">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>{{tipo.tipo}}</p>
-                </a>
-              </li>
-              {% endfor %}
-            </ul>
-           </li>
+            <li class="nav-item">
+              <a href="{% url 'tareas:resumen' %}" class="nav-link {% if titulo == "Resumen" %} active {% endif %}">
+                <i class="nav-icon fas fa-folder-open"></i>
+                <p>
+                  Puntajes
+                </p>
+              </a>
+            </li>
+            <li class="nav-item">
+             <a href="{% url 'asistencia:asistencias' %}" class="nav-link {% if titulo == "Asistencia" %} active {% endif %}">
+               <i class="nav-icon fas fa-tasks"></i>
+               <p>
+                 Asistencia
+               </p>
+             </a>
+             </li>
+             <li class="nav-item {% if tipo_act_nav %} menu-open {% endif %}">
+             <a href="#" class="nav-link {% if tipo_act_nav %} active {% endif %}">
+               <i class="nav-icon fas fa-book"></i>
+               <p>
+                 Tareas
+                 <i class="right fas fa-angle-left"></i>
+               </p>
+             </a>
+             <ul class="nav nav-treeview">
+               {% for tipo in tipos_actividades_nabvar  %}
+               <li class="nav-item">
+                 <a  href="{% url 'tareas:tareas' tipo_id=tipo.id %}"  class="nav-link {% if tipo_act_nav == tipo.tipo %} active {% endif %}">
+                   <i class="far fa-circle nav-icon"></i>
+                   <p>{{tipo.tipo}}</p>
+                 </a>
+               </li>
+               {% endfor %}
+             </ul>
+            </li>
 
            <li class="nav-item">
             <a href="{% url 'evaluacion:evaluaciones' %}" class="nav-link {% if titulo == "Evaluaciones" %} active {% endif %}">
@@ -169,6 +172,7 @@
             </a>
            </li>
 
+           {% endif %}
            <li class="nav-item">
             <a href="{% url 'app:notificacion' %}" class="nav-link {% if titulo == "Notificaciones" %} active {% endif %}">
               <i class="nav-icon fas fa-bell"></i>
@@ -197,47 +201,49 @@
             </a>
            </li>
 
-           <li class="nav-item {% if titulo == "Tipos de Actividades" or titulo == "Tipos de Asistencia" or titulo == "Puntajes de evaluacion"%} menu-open {% endif %}">
-            <a href="#" class="nav-link {% if titulo == "Tipos de Actividades" or titulo == "Tipos de Asistencia" or titulo == "Puntajes de evaluacion" %} active {% endif %}">
-              <i class="nav-icon fas fa-cog"></i>
-              <p>
-                Configuraciones
-                <i class="right fas fa-angle-left"></i>
-              </p>
-            </a>
-            <ul class="nav nav-treeview">
-              <li class="nav-item">
-                <a href="{% url 'app:list_tipo_actividad' %}" class="nav-link {% if titulo == "Tipos de Actividades" %} active {% endif %}">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Tipos de actividades</p>
-                </a>
-              </li>
-            </ul>
-            <ul class="nav nav-treeview">
-              <li class="nav-item">
-                <a href="{% url 'asistencia:list_tipo_asistencia' %}" class="nav-link {% if titulo == "Tipos de Asistencia" %} active {% endif %}">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Tipos de asistencias</p>
-                </a>
-              </li>
-            </ul>
-            <ul class="nav nav-treeview">
-              <li class="nav-item">
-                <a href="{% url 'evaluacion:evaluacion_puntajes' %}" class="nav-link {% if titulo == "Puntajes de evaluacion" %} active {% endif %}">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Puntajes de evaluación</p>
-                </a>
-              </li>
-            </ul>
-            <ul class="nav nav-treeview">
-              <li class="nav-item">
-                <a href="{% url 'app:user_change_password' %}" class="nav-link {% if titulo == "Cambiar contraseña" %} active {% endif %}">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Cambiar contraseña</p>
-                </a>
-              </li>
-            </ul>
-           </li>
+          {% if request.user.id_tipo_usuario.id == 1 %}
+            <li class="nav-item {% if titulo == "Tipos de Actividades" or titulo == "Tipos de Asistencia" or titulo == "Puntajes de evaluacion"%} menu-open {% endif %}">
+             <a href="#" class="nav-link {% if titulo == "Tipos de Actividades" or titulo == "Tipos de Asistencia" or titulo == "Puntajes de evaluacion" %} active {% endif %}">
+               <i class="nav-icon fas fa-cog"></i>
+               <p>
+                 Configuraciones
+                 <i class="right fas fa-angle-left"></i>
+               </p>
+             </a>
+             <ul class="nav nav-treeview">
+               <li class="nav-item">
+                 <a href="{% url 'app:list_tipo_actividad' %}" class="nav-link {% if titulo == "Tipos de Actividades" %} active {% endif %}">
+                   <i class="far fa-circle nav-icon"></i>
+                   <p>Tipos de actividades</p>
+                 </a>
+               </li>
+             </ul>
+             <ul class="nav nav-treeview">
+               <li class="nav-item">
+                 <a href="{% url 'asistencia:list_tipo_asistencia' %}" class="nav-link {% if titulo == "Tipos de Asistencia" %} active {% endif %}">
+                   <i class="far fa-circle nav-icon"></i>
+                   <p>Tipos de asistencias</p>
+                 </a>
+               </li>
+             </ul>
+             <ul class="nav nav-treeview">
+               <li class="nav-item">
+                 <a href="{% url 'evaluacion:evaluacion_puntajes' %}" class="nav-link {% if titulo == "Puntajes de evaluacion" %} active {% endif %}">
+                   <i class="far fa-circle nav-icon"></i>
+                   <p>Puntajes de evaluación</p>
+                 </a>
+               </li>
+             </ul>
+             <ul class="nav nav-treeview">
+               <li class="nav-item">
+                 <a href="{% url 'app:user_change_password' %}" class="nav-link {% if titulo == "Cambiar contraseña" %} active {% endif %}">
+                   <i class="far fa-circle nav-icon"></i>
+                   <p>Cambiar contraseña</p>
+                 </a>
+               </li>
+             </ul>
+            </li>
+          {% endif %}
 
        </nav>
        <!-- /.sidebar-menu -->

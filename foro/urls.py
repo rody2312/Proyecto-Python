@@ -12,4 +12,6 @@ urlpatterns = [
     path('foro/edit/<int:pk>/', ForoEditView.as_view(), name="foro_edit"),
     path('foro/<int:pk>/', ForoDetailsView.as_view(), name="foro_details"),
 
+    path('foro/<int:pk>/responder', ForoResponderView.as_view(), name="responder_foro"),
+
 ]

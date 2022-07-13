@@ -1,10 +1,10 @@
 from django.shortcuts import render
-from app.mixins import AdminUserMixin, ProfesorUserMixin
+from app.mixins import AdminUserMixin, AlumnoUserMixin, ProfesorUserMixin
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import View, UpdateView, DeleteView
 from django.shortcuts import get_object_or_404, redirect, render
-from foro.forms import ForoCreateForm
-from foro.models import Foro
+from foro.forms import ForoCreateForm, ForoRespuestaForm
+from foro.models import Foro, RespuestaForo
 from django.contrib import messages
 from django.urls import reverse, reverse_lazy
 from django.http import HttpResponseRedirect
@@ -13,7 +13,7 @@ from django.http import HttpResponseRedirect
 # Create your views here.
 
 
-class ForosListView(LoginRequiredMixin, AdminUserMixin, ProfesorUserMixin, View):
+class ForosListView(LoginRequiredMixin, View):
 
     def get(self,request, *args, **kwargs):
         foros = Foro.objects.all()
@@ -70,7 +70,7 @@ class ForoEditView(LoginRequiredMixin, AdminUserMixin, ProfesorUserMixin, Update
 
 
 #Se muestra el foro seleccionado, las preguntas y respuestas
-class ForoDetailsView(LoginRequiredMixin, AdminUserMixin, ProfesorUserMixin, View):
+class ForoDetailsView(LoginRequiredMixin, View):
     
     def get(self,request, pk, *args, **kwargs):
         foro = get_object_or_404(Foro, pk=pk)
@@ -80,6 +80,41 @@ class ForoDetailsView(LoginRequiredMixin, AdminUserMixin, ProfesorUserMixin, Vie
             'titulo': 'Foro '
         }
         return render(request, 'foro/foro_details.html', context)
+
+class ForoResponderView(LoginRequiredMixin, View):
+    
+    def get(self,request, pk, *args, **kwargs):
+        form = ForoRespuestaForm()
+        foro = get_object_or_404(Foro, pk=pk)
+        context={
+            'form': form,
+            'foro': foro,
+            'descripcion': foro.descripcion,
+            'titulo': 'Foro '
+        }
+        return render(request, 'foro/foro_responder.html', context)
+    
+    def post(self, request, pk, *args, **kwargs):
+        if request.method=="POST":
+            form = ForoRespuestaForm(request.POST)
+            if form.is_valid():
+                texto = form.cleaned_data.get('texto')
+                foro = get_object_or_404(Foro, pk=pk)
+                usuario = request.user
+
+                r, created = RespuestaForo.objects.get_or_create(texto=texto, id_foro=foro , id_usuario=usuario)
+                r.save()
+
+                messages.success(request, "Respuesta subida correctamente")
+                return redirect('foro:foro_details', pk)
+
+        
+        context={
+            'titulo': 'Crear foro',
+            'form': form
+        }
+        return render(request, 'tareas/tarea_create.html', context)
+
 
 class ForoDeleteView(LoginRequiredMixin, AdminUserMixin, ProfesorUserMixin, DeleteView):
     model = Foro

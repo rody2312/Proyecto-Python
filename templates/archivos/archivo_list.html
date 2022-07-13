@@ -30,7 +30,7 @@
                     <th>Nombre</th>
                     <th>Fecha de subida</th>
                     <th>Archivo</th>
-                    <th>Acciones</th>
+                    {% if not request.user.id_tipo_usuario.id == 3 %} <th>Acciones</th> {% endif %}
                   </tr>
                 </thead>
                 <tbody>
@@ -39,8 +39,8 @@
                     <td>{{archivo.nombre}}</td>
                     <td>{{archivo.fecha}}</td>
                     <td><a href="/media/{{archivo.directorio}}">{{archivo.directorio}}</a></td>
+                    {% if not request.user.id_tipo_usuario.id == 3 %}
                       <td class="text-center">
-  
                         <div class="row justify-content-center">
                           <form action="{% url 'app:archivo_delete' archivo.id %}" method="POST" id="deleteForm">
                             {% csrf_token %}
@@ -51,6 +51,7 @@
                           </form>
                           <div>
                       </td>
+                    {% endif %}
                   </tr>
                   {% endfor %} 
             </table>

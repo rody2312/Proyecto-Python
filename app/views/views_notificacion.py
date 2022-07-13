@@ -12,7 +12,7 @@ from app.models import Notificacion
 
 #LISTAR NOTIFICACION
 
-class NotificacionListView(LoginRequiredMixin, AdminUserMixin, ProfesorUserMixin ,View):
+class NotificacionListView(LoginRequiredMixin ,View):
      
     def get(self,request, *args, **kwargs):
 

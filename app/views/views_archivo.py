@@ -17,7 +17,7 @@ from app.mixins import AdminUserMixin, ProfesorUserMixin
 
 #LISTAR ARCHIVO
 
-class ArchivoListView(LoginRequiredMixin, AdminUserMixin, ProfesorUserMixin ,View):
+class ArchivoListView(LoginRequiredMixin ,View):
     
     def get(self,request, *args, **kwargs):
         archivos = Archivo.objects.all()
