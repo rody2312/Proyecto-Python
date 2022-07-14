@@ -13,7 +13,7 @@
 <div class="container-fluid">
 
     <div class="row">
-      <div class="col-6 mx-auto">
+      <div class="col-5 mx-auto">
 
         <div class="card">
           <div class="card-header">
@@ -29,15 +29,15 @@
               <thead>
               <tr>
                 <th>Nombre</th>
-                <th>Puntaje</th>
-                <th>Acciones</th>
+                <th><center>Puntaje<center/></th>
+                <th><center>Acciones<center/></th>
               </tr>
               </thead>
               <tbody>
                 {% for tipo in tipos_asistencia %}
                 <tr>
                   <td>{{tipo.nombre_tipo}}</td>
-                  <td>{{tipo.puntaje}}</td>
+                  <td><center>{{tipo.puntaje}}<center/></td>
                     <td class="text-center">
 
                       <div class="row justify-content-center">
