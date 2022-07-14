@@ -2,6 +2,7 @@ from django.db import models
 from app.models import Usuario
 
 from tareas.models import Actividad
+from django.utils import timezone
 
 # Create your models here.
 
@@ -31,7 +32,7 @@ class RespuestaForo(models.Model):
     id_usuario=models.ForeignKey(Usuario, db_column='id_usuario', on_delete=models.SET_NULL, null=True)
     id_foro=models.ForeignKey(Foro, related_name='comments', db_column='id_foro', on_delete=models.CASCADE, null=True)
     texto=models.TextField(blank=True, null=True)
-    fecha=models.DateTimeField(auto_now_add=True)
+    fecha=models.DateTimeField(default=timezone.now, editable=False, blank=True)
 
     class Meta:
         managed = True

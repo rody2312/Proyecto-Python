@@ -11,6 +11,7 @@ from evaluacion.models import Evaluacion, PuntajeEvaluacion, UsuarioEvaluacion
 from django.core.exceptions import ObjectDoesNotExist
 from django.views.decorators.csrf import csrf_exempt
 from app.mixins import AdminProfesorUserMixin, AdminUserMixin, ProfesorUserMixin
+from tareas.models import Actividad
 
 
 
@@ -45,10 +46,12 @@ class EvaluacionCreateView(LoginRequiredMixin, AdminProfesorUserMixin ,View):
                 fecha = form.cleaned_data.get('fecha')
                 usuarioActual= request.user
                 
-                u, created = Evaluacion.objects.get_or_create(id_usuario=usuarioActual, titulo=titulo, fecha=fecha)
-                u.save()
-
-                messages.success(request, "Evaluacion agregada correctamente")
+                if not Actividad.objects.filter(fecha=fecha).exists():
+                    u, created = Evaluacion.objects.get_or_create(id_usuario=usuarioActual, titulo=titulo, fecha=fecha)
+                    u.save()
+                    messages.success(request, "Evaluacion agregada correctamente")
+                else:
+                    messages.error(request, "Ya existe un registro de actividad en la fecha " + str(fecha))
                 return redirect('evaluacion:evaluaciones')
 
         context={

@@ -64,10 +64,14 @@ class TareasCreateView(LoginRequiredMixin, AdminProfesorUserMixin ,View):
                 tipoTarea = TipoActividad.objects.get(pk=tipo_id)
                 usuarioActual= request.user
 
-                u, created = Actividad.objects.get_or_create(id_usuario=usuarioActual, titulo=titulo, id_tipo_actividad=tipoTarea , fecha=fecha)
-                u.save()
 
-                messages.success(request, "Tarea agregada correctamente")
+                if not Evaluacion.objects.filter(fecha=fecha).exists():
+                    u, created = Actividad.objects.get_or_create(id_usuario=usuarioActual, titulo=titulo, id_tipo_actividad=tipoTarea , fecha=fecha)
+                    u.save()
+                    messages.success(request, "Tarea agregada correctamente")
+                else:
+                    messages.error(request, "Ya existe un registro de evaluación en la fecha " +  str(fecha))
+                
                 return redirect('tareas:tareas', tipo_id)
 
         

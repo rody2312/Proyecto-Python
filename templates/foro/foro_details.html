@@ -44,28 +44,90 @@
 
           {% else %}
 
-            {% for r in foro.comments.all %}
-            <div class="card-comment border rounded commentsts">
-              <div class="comment-text comment-body">
-                
-                <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-                  <div class="image">
-                    <i class="bx bxs-user-circle" style='font-size: 30px'></i>      
+            <!-- Si el usuario logeado es alumno, se mostrara los comentarios según el tipo de foro  -->
+            {% if request.user.id_tipo_usuario.id == 3 %}
+            
+              <!-- Si el foro es id 1 (Publico), se mostraran todos los comentarios  -->
+              {% if foro.id_tipo_foro.id == 1 %}
+                {% for r in foro.comments.all %}
+                  <div class="card-comment border rounded commentsts">
+                    <div class="comment-text comment-body">
+
+                      <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+                        <div class="image">
+                          <i class="bx bxs-user-circle" style='font-size: 30px'></i>      
+                        </div>
+                        <div class="info">
+                          <span class="username d-flex flex-wrap">
+                            {{r.id_usuario}}<span class="text-muted">&nbsp;- {{r.fecha | date:'l d-m-Y,' }}&nbsp;</span>
+                            <span class="text-muted"> {{r.fecha | time:'H:i' }}</span>
+                          </span>                  
+                        </div>
+                      </div>
+                      <div class="commentsts">
+                      {{r.texto | safe}}
+                      </div>
+                    </div>
                   </div>
-                  <div class="info">
-                    <span class="username d-flex flex-wrap">
-                      {{r.id_usuario}}<span class="text-muted">&nbsp;- {{r.fecha | date:'l d-m-Y,' }}&nbsp;</span>
-                      <span class="text-muted"> {{r.fecha | time:'H:i' }}</span>
-                    </span>                  
+                {% endfor %}
+
+              {% else %}
+
+                {% for r in foro.comments.all %}
+                  {% if r.id_usuario.id == request.user.id %}
+                    <div class="card-comment border rounded commentsts">
+                      <div class="comment-text comment-body">
+
+                        <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+                          <div class="image">
+                            <i class="bx bxs-user-circle" style='font-size: 30px'></i>      
+                          </div>
+                          <div class="info">
+                            <span class="username d-flex flex-wrap">
+                              {{r.id_usuario}}<span class="text-muted">&nbsp;- {{r.fecha | date:'l d-m-Y,' }}&nbsp;</span>
+                              <span class="text-muted"> {{r.fecha | time:'H:i' }}</span>
+                            </span>                  
+                          </div>
+                        </div>
+                        <div class="commentsts">
+                        {{r.texto | safe}}
+                        </div>
+                      </div>
+                    </div>
+                  {% endif %}
+                {% endfor %}
+
+              {% endif %}
+
+
+            {% else %}
+
+              {% for r in foro.comments.all %}
+                <div class="card-comment border rounded commentsts">
+                  <div class="comment-text comment-body">
+                  
+                    <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+                      <div class="image">
+                        <i class="bx bxs-user-circle" style='font-size: 30px'></i>      
+                      </div>
+                      <div class="info">
+                        <span class="username d-flex flex-wrap">
+                          {{r.id_usuario}}<span class="text-muted">&nbsp;- {{r.fecha | date:'l d-m-Y,' }}&nbsp;</span>
+                          <span class="text-muted"> {{r.fecha | time:'H:i' }}</span>
+                        </span>                  
+                      </div>
+                    </div>
+                    <div class="commentsts">
+                    {{r.texto | safe}}
+                    </div>
                   </div>
                 </div>
-                
-                <div class="commentsts">
-                {{r.texto | safe}}
-                </div>
-              </div>
-            </div>
-            {% endfor %}
+              {% endfor %}
+
+
+            {% endif %}
+
+            
 
           {% endif %}
 
