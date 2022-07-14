@@ -125,7 +125,7 @@
              </a>
            </li>
            <li class="nav-item">
-             <a href="{% url 'tareas:resumen' %}" class="nav-link {% if titulo == "Resumen" %} active {% endif %}">
+             <a href="{% url 'tareas:resumen' %}" class="nav-link {% if titulo == "Puntajes" %} active {% endif %}">
                <i class="nav-icon fas fa-folder-open"></i>
                <p>
                  Puntajes
@@ -183,7 +183,7 @@
             <a href="{% url 'tareas:foros' %}" class="nav-link {% if titulo == "Foros" %} active {% endif %}">
               <i class="nav-icon fas fa-comments"></i>
               <p>
-                Foro
+                Foros
               </p>
             </a>
            </li>
@@ -223,9 +223,9 @@
             </ul>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="{% url 'evaluacion:evaluacion_puntajes' %}" class="nav-link {% if titulo == "Puntajes de evaluacion" %} active {% endif %}">
+                <a href="{% url 'evaluacion:evaluacion_puntajes' %}" class="nav-link {% if titulo == "Puntajes de evaluaciones" %} active {% endif %}">
                   <i class="far fa-circle nav-icon"></i>
-                  <p>Puntajes de evaluación</p>
+                  <p>Puntajes de evaluaciones</p>
                 </a>
               </li>
             </ul>
