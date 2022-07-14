@@ -16,4 +16,7 @@ urlpatterns = [
     #Resumen de puntajes
     path('resumen/', ResumenListView.as_view(), name="resumen"),
     path('resumen/<str:fecha>/', ResumenDetailsView.as_view(), name="resumen_detalles"),
+
+    #Resumen individual de puntajes
+    path('resumen-individual/', ResumenIndividualView.as_view(), name="resumen_individual"),
 ]

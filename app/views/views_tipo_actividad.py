@@ -12,7 +12,7 @@ from django.contrib import messages
 
 # LISTAR TIPO ACTIVIDAD
 
-class TipoActividadListView(LoginRequiredMixin, AdminUserMixin, ProfesorUserMixin ,View):
+class TipoActividadListView(LoginRequiredMixin, AdminUserMixin, View):
      
     def get(self,request, *args, **kwargs):
 
@@ -25,7 +25,7 @@ class TipoActividadListView(LoginRequiredMixin, AdminUserMixin, ProfesorUserMixi
 
 #CREAR TIPO ACTIVIDAD
 
-class TipoActividadCreateView(LoginRequiredMixin, AdminUserMixin, ProfesorUserMixin ,View):
+class TipoActividadCreateView(LoginRequiredMixin, AdminUserMixin,View):
     
     def get(self,request, *args, **kwargs):
         form=forms.TipoActividadCreateForm()
@@ -54,7 +54,7 @@ class TipoActividadCreateView(LoginRequiredMixin, AdminUserMixin, ProfesorUserMi
 
 #ELIMINAR TIPO ACTIVIDAD
 # NO USAR ########################
-class TipoActividadDeleteView(LoginRequiredMixin, AdminUserMixin, ProfesorUserMixin, DeleteView):
+class TipoActividadDeleteView(LoginRequiredMixin, AdminUserMixin, DeleteView):
     model = TipoActividad
     success_url = reverse_lazy('app:list_tipo_actividad')
     #
@@ -84,7 +84,7 @@ def delete(request, pk, *args, **kwargs):
 
 #EDITAR TIPO ACTIVIDAD
 
-class TipoActividadEditView(LoginRequiredMixin, AdminUserMixin, ProfesorUserMixin, UpdateView):
+class TipoActividadEditView(LoginRequiredMixin, AdminUserMixin, UpdateView):
     model = TipoActividad
     form_class = forms.TipoActividadCreateForm
     template_name = "actividad/tipo_actividad_edit.html"
@@ -94,7 +94,7 @@ class TipoActividadEditView(LoginRequiredMixin, AdminUserMixin, ProfesorUserMixi
         return reverse_lazy('app:list_tipo_actividad')
 
 
-class TipoActividadDetailsView(LoginRequiredMixin, AdminUserMixin, ProfesorUserMixin , View):
+class TipoActividadDetailsView(LoginRequiredMixin, AdminUserMixin, View):
     def get(self, request, pk, *args, **kwargs):
         tipoActividad = get_object_or_404(TipoActividad, pk=pk)
         puntajes = Puntaje.objects.filter(id_tipo_actividad=pk)
@@ -121,7 +121,7 @@ def deletePuntaje(request, pk, *args, **kwargs):
 
 #Views para crear y editar un puntaje a un tipo de asistencia
 
-class PuntajeCreateView(LoginRequiredMixin, AdminUserMixin, ProfesorUserMixin ,View):
+class PuntajeCreateView(LoginRequiredMixin, AdminUserMixin ,View):
     
     def get(self,request, *args, **kwargs):
         form=forms.PuntajeCreateForm()
@@ -150,7 +150,7 @@ class PuntajeCreateView(LoginRequiredMixin, AdminUserMixin, ProfesorUserMixin ,V
 
 
 
-class PuntajeEditView(LoginRequiredMixin, AdminUserMixin, ProfesorUserMixin, UpdateView):
+class PuntajeEditView(LoginRequiredMixin, AdminUserMixin, UpdateView):
     model = Puntaje
     form_class = forms.PuntajeCreateForm
     template_name = "actividad/puntaje_create.html"

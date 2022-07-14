@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from app.mixins import AdminUserMixin, AlumnoUserMixin, ProfesorUserMixin
+from app.mixins import AdminProfesorUserMixin, AdminUserMixin, AlumnoUserMixin, ProfesorUserMixin
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import View, UpdateView, DeleteView
 from django.shortcuts import get_object_or_404, redirect, render
@@ -25,7 +25,7 @@ class ForosListView(LoginRequiredMixin, View):
         return render(request, 'foro/foros_list.html', context)
 
 
-class ForoCreateView(LoginRequiredMixin, AdminUserMixin, ProfesorUserMixin, View):
+class ForoCreateView(LoginRequiredMixin, AdminProfesorUserMixin, View):
     
     def get(self,request, *args, **kwargs):
         form = ForoCreateForm()
@@ -58,7 +58,7 @@ class ForoCreateView(LoginRequiredMixin, AdminUserMixin, ProfesorUserMixin, View
         return render(request, 'tareas/tarea_create.html', context)
 
 
-class ForoEditView(LoginRequiredMixin, AdminUserMixin, ProfesorUserMixin, UpdateView):
+class ForoEditView(LoginRequiredMixin, AdminProfesorUserMixin, UpdateView):
     model = Foro
     form_class = ForoCreateForm
     template_name = "foro/foro_edit.html"
@@ -116,7 +116,7 @@ class ForoResponderView(LoginRequiredMixin, View):
         return render(request, 'tareas/tarea_create.html', context)
 
 
-class ForoDeleteView(LoginRequiredMixin, AdminUserMixin, ProfesorUserMixin, DeleteView):
+class ForoDeleteView(LoginRequiredMixin, AdminProfesorUserMixin, DeleteView):
     model = Foro
     success_url = reverse_lazy('foro:foros')
 

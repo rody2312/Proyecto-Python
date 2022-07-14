@@ -13,7 +13,7 @@ from django.contrib import messages
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from django.core.files.storage import FileSystemStorage
-from app.mixins import AdminUserMixin, ProfesorUserMixin
+from app.mixins import AdminProfesorUserMixin, AdminUserMixin, ProfesorUserMixin
 
 #LISTAR ARCHIVO
 
@@ -47,7 +47,7 @@ def upload_file(request):
         form = ArchivoCreateForm()
     return render(request, 'archivos/archivo_create.html', {'form': form})
 
-class ArchivoCreateView2(LoginRequiredMixin, AdminUserMixin, ProfesorUserMixin ,CreateView):
+class ArchivoCreateView2(LoginRequiredMixin, AdminProfesorUserMixin ,CreateView):
     model = Archivo
     form_class = ArchivoCreateForm
     template_name = 'archivos/archivo_create.html'
@@ -105,7 +105,7 @@ class ArchivoCreateView2(LoginRequiredMixin, AdminUserMixin, ProfesorUserMixin ,
 
 #ELIMINAR ARCHIVO
 
-class ArchivoDeleteView(LoginRequiredMixin, AdminUserMixin, ProfesorUserMixin, DeleteView):
+class ArchivoDeleteView(LoginRequiredMixin, AdminProfesorUserMixin, DeleteView):
     model = Archivo
     success_url = reverse_lazy('app:archivo')
 

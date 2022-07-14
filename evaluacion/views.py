@@ -10,13 +10,13 @@ from django.contrib import messages
 from evaluacion.models import Evaluacion, PuntajeEvaluacion, UsuarioEvaluacion
 from django.core.exceptions import ObjectDoesNotExist
 from django.views.decorators.csrf import csrf_exempt
-from app.mixins import AdminUserMixin, ProfesorUserMixin
+from app.mixins import AdminProfesorUserMixin, AdminUserMixin, ProfesorUserMixin
 
 
 
 #LISTAR EVALUACION
 
-class EvaluacionListView(LoginRequiredMixin, AdminUserMixin, ProfesorUserMixin,View):
+class EvaluacionListView(LoginRequiredMixin, AdminProfesorUserMixin ,View):
     
     def get(self,request, *args, **kwargs):
         evaluaciones = Evaluacion.objects.all()
@@ -28,7 +28,7 @@ class EvaluacionListView(LoginRequiredMixin, AdminUserMixin, ProfesorUserMixin,V
 
 #CREAR EVALUACION
 
-class EvaluacionCreateView(LoginRequiredMixin, AdminUserMixin, ProfesorUserMixin ,View):
+class EvaluacionCreateView(LoginRequiredMixin, AdminProfesorUserMixin ,View):
     def get(self,request, *args, **kwargs):
         form=EvaluacionCreateForm()
         context={
@@ -59,7 +59,7 @@ class EvaluacionCreateView(LoginRequiredMixin, AdminUserMixin, ProfesorUserMixin
 
 # ELIMINAR EVALUACION                
 
-class EvaluacionDeleteView(LoginRequiredMixin, AdminUserMixin, ProfesorUserMixin, DeleteView):
+class EvaluacionDeleteView(LoginRequiredMixin, AdminProfesorUserMixin, DeleteView):
     model = Evaluacion
     success_url = reverse_lazy('evaluacion:evaluaciones')
 
@@ -75,7 +75,7 @@ class EvaluacionDeleteView(LoginRequiredMixin, AdminUserMixin, ProfesorUserMixin
 
 # DETALLES EVALUACION
 
-class EvaluacionDetailsView(LoginRequiredMixin, AdminUserMixin, ProfesorUserMixin, View):
+class EvaluacionDetailsView(LoginRequiredMixin, AdminProfesorUserMixin, View):
     def get(self, request, pk, *args, **kwargs):
         evaluacion = get_object_or_404(Evaluacion, pk=pk)
         context={
@@ -84,7 +84,7 @@ class EvaluacionDetailsView(LoginRequiredMixin, AdminUserMixin, ProfesorUserMixi
         }
         return render(request, 'evaluacion/evaluacion_details.html', context)
 
-class EvaluacionEditView(LoginRequiredMixin, AdminUserMixin, ProfesorUserMixin, UpdateView):
+class EvaluacionEditView(LoginRequiredMixin, AdminProfesorUserMixin, UpdateView):
     model = Evaluacion
     form_class = EvaluacionCreateForm
     template_name = "evaluacion/evaluacion_create.html"

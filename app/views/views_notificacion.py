@@ -6,7 +6,7 @@ from django.views.generic import View, DeleteView, UpdateView
 from ..forms import NotificacionCreateForm
 from app import forms
 from django.contrib import messages
-from app.mixins import AdminUserMixin, ProfesorUserMixin
+from app.mixins import AdminProfesorUserMixin, AdminUserMixin, ProfesorUserMixin
 
 from app.models import Notificacion
 
@@ -25,7 +25,7 @@ class NotificacionListView(LoginRequiredMixin ,View):
 
 #CREAR NOTIFICACION
 
-class NotificacionCreateView(LoginRequiredMixin ,View):
+class NotificacionCreateView(LoginRequiredMixin, AdminProfesorUserMixin,View):
     
     def get(self,request, *args, **kwargs):
         form=NotificacionCreateForm()
@@ -55,7 +55,7 @@ class NotificacionCreateView(LoginRequiredMixin ,View):
 
 #ELIMINAR NOTIFICACION
 
-class NotificacionDeleteView(LoginRequiredMixin, DeleteView):
+class NotificacionDeleteView(LoginRequiredMixin,AdminProfesorUserMixin, DeleteView):
     model = Notificacion
     success_url = reverse_lazy('app:notificacion')
 
@@ -71,7 +71,7 @@ class NotificacionDeleteView(LoginRequiredMixin, DeleteView):
 
 #EDITAR NOTIFICACION
 
-class NotificacionEditView(LoginRequiredMixin, UpdateView):
+class NotificacionEditView(LoginRequiredMixin, AdminProfesorUserMixin, UpdateView):
     model = Notificacion
     form_class = forms.NotificacionCreateForm
     template_name = "notificacion/notificacion_edit.html"

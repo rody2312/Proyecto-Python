@@ -119,6 +119,7 @@
          <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
           {% if request.user.id_tipo_usuario.id == 1 or request.user.id_tipo_usuario.id == 2 %}
 
+          {% if request.user.id_tipo_usuario.id == 1%}
             <li class="nav-item">
               <a href="{% url 'app:usuarios' %}" class="nav-link {% if titulo == "Usuarios" %} active {% endif %}">
                 <i class="nav-icon fas fa-users"></i>
@@ -127,6 +128,7 @@
                 </p>
               </a>
             </li>
+            {% endif %}
             <li class="nav-item">
               <a href="{% url 'tareas:resumen' %}" class="nav-link {% if titulo == "Resumen" %} active {% endif %}">
                 <i class="nav-icon fas fa-folder-open"></i>
@@ -173,15 +175,19 @@
            </li>
 
            {% endif %}
-           <li class="nav-item">
-            <a href="{% url 'app:notificacion' %}" class="nav-link {% if titulo == "Notificaciones" %} active {% endif %}">
-              <i class="nav-icon fas fa-bell"></i>
-              <p>
-                Notificaciones
-              </p>
-            </a>
-          </li>
-          <li class="nav-item">
+
+           {% if request.user.id_tipo_usuario.id == 3 %}
+           
+            <li class="nav-item">
+             <a href="{% url 'tareas:resumen_individual' %}" class="nav-link {% if titulo == "Resumen Individual" %} active {% endif %}">
+               <i class="nav-icon fas fa-folder-open"></i>
+               <p>
+                 Resumen individual
+               </p>
+             </a>
+            </li>
+           
+           {% endif %}
 
            <li class="nav-item">
             <a href="{% url 'foro:foros' %}" class="nav-link {% if titulo == "Foros" %} active {% endif %}">
@@ -200,6 +206,15 @@
               </p>
             </a>
            </li>
+
+           <li class="nav-item">
+            <a href="{% url 'app:notificacion' %}" class="nav-link {% if titulo == "Notificaciones" %} active {% endif %}">
+              <i class="nav-icon fas fa-bell"></i>
+              <p>
+                Notificaciones
+              </p>
+            </a>
+          </li>
 
           {% if request.user.id_tipo_usuario.id == 1 %}
             <li class="nav-item {% if titulo == "Tipos de Actividades" or titulo == "Tipos de Asistencia" or titulo == "Puntajes de evaluacion"%} menu-open {% endif %}">

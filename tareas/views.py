@@ -1,4 +1,6 @@
+from itertools import zip_longest
 import re
+from webbrowser import get
 from django.http import QueryDict
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
@@ -9,7 +11,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse, reverse_lazy
 from django.views.generic import View, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin
-from app.mixins import AdminUserMixin
+from app.mixins import AdminProfesorUserMixin, AdminUserMixin, AlumnoUserMixin
 from app.models import Usuario
 from asistencia.models import Asistencia, UsuarioAsistencia
 from evaluacion.models import Evaluacion, UsuarioEvaluacion
@@ -21,7 +23,7 @@ from tareas.models import Actividad, Puntaje, TipoActividad, UsuarioActividad
 
 # Create your views here.
 
-class TareasListView(LoginRequiredMixin, AdminUserMixin, ProfesorUserMixin, View):
+class TareasListView(LoginRequiredMixin, AdminProfesorUserMixin, View):
 
     def get(self,request, tipo_id, *args, **kwargs):
         actividades = Actividad.objects.filter(id_tipo_actividad=tipo_id)
@@ -42,7 +44,7 @@ class TareasListView(LoginRequiredMixin, AdminUserMixin, ProfesorUserMixin, View
 
 
 
-class TareasCreateView(LoginRequiredMixin, AdminUserMixin, ProfesorUserMixin ,View):
+class TareasCreateView(LoginRequiredMixin, AdminProfesorUserMixin ,View):
     
     def get(self,request, *args, **kwargs):
         form = TareaCreateForm(tipo_id=kwargs.get('tipo_id'))
@@ -77,7 +79,7 @@ class TareasCreateView(LoginRequiredMixin, AdminUserMixin, ProfesorUserMixin ,Vi
         return render(request, 'tareas/tarea_create.html', context)
 
 
-class TareaDetailsView(LoginRequiredMixin, AdminUserMixin, ProfesorUserMixin, View):
+class TareaDetailsView(LoginRequiredMixin, AdminProfesorUserMixin, View):
     def get(self, request, pk, *args, **kwargs):
         tarea = get_object_or_404(Actividad, pk=pk)
         usuariosActividad = UsuarioActividad.objects.select_related('usuario','actividad','puntaje').filter(actividad_id=pk)
@@ -147,7 +149,7 @@ def updatePuntaje(request):
     return JsonResponse('Puntaje actualizado', safe=False)
 
 
-class TareaDeleteView(LoginRequiredMixin, AdminUserMixin, ProfesorUserMixin, DeleteView):
+class TareaDeleteView(LoginRequiredMixin, AdminProfesorUserMixin, DeleteView):
     model = Actividad
     success_url = reverse_lazy('tareas:tareas')
 
@@ -164,7 +166,7 @@ class TareaDeleteView(LoginRequiredMixin, AdminUserMixin, ProfesorUserMixin, Del
         return HttpResponseRedirect(success_url)
 
 
-class TareaEditView(LoginRequiredMixin, AdminUserMixin, ProfesorUserMixin, UpdateView):
+class TareaEditView(LoginRequiredMixin, AdminProfesorUserMixin, UpdateView):
     model = Actividad
     form_class = TareaEditForm
     template_name = "tareas/tarea_create.html"
@@ -190,20 +192,12 @@ class TareaEditView(LoginRequiredMixin, AdminUserMixin, ProfesorUserMixin, Updat
 
 
 
-class ResumenListView(LoginRequiredMixin, AdminUserMixin, ProfesorUserMixin, View):
+class ResumenListView(LoginRequiredMixin, AdminProfesorUserMixin, View):
 
     def get(self,request, *args, **kwargs):
-        actividades = Actividad.objects.all()
-        evaluaciones = Evaluacion.objects.all()
-        asistencias = Asistencia.objects.all()
-        fechas = []
-        for (a,b,c) in zip(actividades,evaluaciones,asistencias):
-            if a.fecha not in fechas: fechas.append(a.fecha)
-            if b.fecha not in fechas: fechas.append(b.fecha)
-            if c.fecha not in fechas: fechas.append(c.fecha)
-        
-        #Ordenar lista de fechas de forma descendiente
-        fechas.sort(reverse=True)
+
+        fechas = obtenerFechas()
+
         context={
             'fechas': fechas,
             'titulo': 'Resumen'
@@ -211,7 +205,7 @@ class ResumenListView(LoginRequiredMixin, AdminUserMixin, ProfesorUserMixin, Vie
         return render(request, 'puntajes/puntajes_list.html', context)
 
 
-class ResumenDetailsView(LoginRequiredMixin, AdminUserMixin, ProfesorUserMixin, View):
+class ResumenDetailsView(LoginRequiredMixin, AdminProfesorUserMixin, View):
 
 
     def get(self, request, fecha, *args, **kwargs):
@@ -256,33 +250,22 @@ class ResumenDetailsView(LoginRequiredMixin, AdminUserMixin, ProfesorUserMixin, 
                 alumno.append(a.apellido_paterno)
                 alumno.append(a.apellido_materno)
                 #Obtiene el puntaje de asistencia del alumno actual, y lo agrega a la variable
-                alumno.append(UsuarioAsistencia.objects.filter(usuario_id=a.id,asistencia__fecha=fecha).values('tipo_asistencia__puntaje')[0]['tipo_asistencia__puntaje'])
-                
+                if UsuarioAsistencia.objects.filter(usuario_id=a.id,asistencia__fecha=fecha).exists():
+                    alumno.append(UsuarioAsistencia.objects.filter(usuario_id=a.id,asistencia__fecha=fecha).values('tipo_asistencia__puntaje')[0]['tipo_asistencia__puntaje'])
+                else:
+                    alumno.append('0')
+
                 #Crear lista de puntajes de todas las actividades
                 puntajeList= []
 
-                puntajes = TipoActividad.objects.filter(actividades_tipos__usuarioactividad__usuario_id=a.id,actividades_tipos__fecha=fecha).values(
-                    'tipo','actividades_tipos__usuarioactividad__puntaje_id__puntaje').order_by('id')
-                print(puntajes)
+                for t in tipoActividades:
+                    if TipoActividad.objects.filter(pk=t.id, actividades_tipos__usuarioactividad__usuario_id=a.id,actividades_tipos__fecha=fecha).exists():
+                        puntajes = TipoActividad.objects.filter(pk=t.id, actividades_tipos__usuarioactividad__usuario_id=a.id,actividades_tipos__fecha=fecha).values(
+                            'actividades_tipos__usuarioactividad__puntaje_id__puntaje')[0]['actividades_tipos__usuarioactividad__puntaje_id__puntaje']
+                    else:
+                        puntajes = '0'
+                    puntajeList.append(puntajes)
 
-                #Se verifica si la query de obtener los puntajes del usuario existe al menos un puntaje, y en caso de que no exista, se agregan 0
-                if puntajes:
-                    cont=0
-                    for t in range(tipoActividades.count()):
-                        try:
-                            #Si encuentra un dato en ese index (t), entonces se agrega a las tareas
-                            #print(t)
-                            #print(puntajes[cont].get('usuarioactividad__actividad_id__id_tipo_actividad__tipo'))
-                            if puntajes[t]:
-                                puntajeList.append(puntajes[t].get('actividades_tipos__usuarioactividad__puntaje_id__puntaje'))
-                            else:
-                                puntajeList.append('0')
-                        finally:
-                            cont=cont+1
-
-                else:
-                    for t in tipoActividades:
-                        puntajeList.append('0')
                 alumno.append(puntajeList)
                 alumnosList.append(alumno)
                     
@@ -296,3 +279,98 @@ class ResumenDetailsView(LoginRequiredMixin, AdminUserMixin, ProfesorUserMixin, 
             'titulo': 'Resumen Clase '+ fecha
         }
         return render(request, 'puntajes/puntajes_details.html', context)
+
+
+class ResumenIndividualView(LoginRequiredMixin, AlumnoUserMixin, View):
+
+    def get(self, request, *args, **kwargs):
+        #columnas para listar en el template
+        columnas = []
+        filas = []
+
+        fechas = obtenerFechas()
+
+        #Obtiene al alumno alumno
+        alumno = get_object_or_404(Usuario, pk=request.user.id)
+
+
+        #if Evaluacion.objects.filter(fecha=fecha).exists():
+#
+        #    
+        #    puntajeEv = UsuarioEvaluacion.objects.filter(usuario_id=a.id,evaluacion__fecha=fecha)
+        #    if puntajeEv:
+        #        alumno.append(puntajeEv.values('puntaje_id__puntaje')[0]['puntaje_id__puntaje'])
+        #    else:
+        #        alumno.append('0')
+        #    
+
+
+        tipoActividades = TipoActividad.objects.all()
+        columnas.append('Asistencia')
+        for x in tipoActividades:
+            columnas.append(x.tipo)
+        columnas.append('Evaluación')
+        #Se itera cada alumno para ir agregando 1 por 1 a la lista de alumnos que se mostrara en el template
+        fila = []
+        for f in fechas:
+            print(f)
+            fila=[]
+            fila.append(f)
+            #Obtiene el puntaje de asistencia del alumno actual, y lo agrega a la variable
+
+            if UsuarioAsistencia.objects.filter(usuario_id=alumno.id,asistencia__fecha=f).exists():
+                fila.append(UsuarioAsistencia.objects.filter(usuario_id=alumno.id,asistencia__fecha=f).values('tipo_asistencia__puntaje')[0]['tipo_asistencia__puntaje'])
+            else:
+                fila.append('0')
+            #Crear lista de puntajes de todas las actividades
+            puntajeList= []
+
+            for t in tipoActividades:
+                if TipoActividad.objects.filter(pk=t.id, actividades_tipos__usuarioactividad__usuario_id=alumno.id,actividades_tipos__fecha=f).exists():
+                    puntajes = TipoActividad.objects.filter(pk=t.id, actividades_tipos__usuarioactividad__usuario_id=alumno.id,actividades_tipos__fecha=f).values(
+                        'actividades_tipos__usuarioactividad__puntaje_id__puntaje')[0]['actividades_tipos__usuarioactividad__puntaje_id__puntaje']
+                else:
+                    puntajes = '0'
+                puntajeList.append(puntajes)
+
+            fila.append(puntajeList)
+
+            if Evaluacion.objects.filter(fecha=f).exists():
+                puntajeEv = UsuarioEvaluacion.objects.filter(usuario_id=alumno.id,evaluacion__fecha=f)
+                if puntajeEv:
+                    fila.append(puntajeEv.values('puntaje_id__puntaje')[0]['puntaje_id__puntaje'])
+                else:
+                    fila.append('0')
+            else:
+                fila.append('0')
+
+            filas.append(fila)
+                    
+            
+            
+        context={
+            'columnas': columnas,
+            'filas': filas,
+            'titulo': 'Resumen Individual'
+        }
+        return render(request, 'puntajes/resumen_individual.html', context)
+
+
+def obtenerFechas():
+    actividades = Actividad.objects.all()
+    evaluaciones = Evaluacion.objects.all()
+    asistencias = Asistencia.objects.all()
+    fechas = []
+    for (a,b,c) in zip_longest(actividades,evaluaciones,asistencias):
+        if a:
+            if a.fecha not in fechas: fechas.append(a.fecha)
+        if b:
+            if b.fecha not in fechas: fechas.append(b.fecha)
+        if c:
+            if c.fecha not in fechas: fechas.append(c.fecha)
+            
+    #Ordenar lista de fechas de forma descendiente
+    fechas.sort(reverse=True)
+
+    return fechas
+    
