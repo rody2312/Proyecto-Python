@@ -13,15 +13,17 @@
 <div class="container-fluid">
 
     <div class="row">
-      <div class="col-12">
+      <div class="col-10 mx-auto">
 
         <div class="card">
           <div class="card-header">
-            <h3 class="card-title">Lista de usuarios</h3>
+            <h3 class="card-title">Lista de usuarios</h3>      
+            <a class="btn btn-secondary float-right" onClick="window.history.go(-1); return false;">Volver</a>
           </div>
           <!-- /.card-header -->
           <div class="card-body">
             <a class="btn btn-primary mb-2" href="{% url 'app:create' %}">Crear nuevo usuario</a>
+            
             <br>
 
             <table id="example1" class="table table-bordered table-striped">
@@ -30,10 +32,10 @@
                 <th>Nombre</th>
                 <th>Apellido Paterno</th>
                 <th>Apellido Materno</th>
-                <th>Fono</th>
                 <th>Email</th>
-                <th>Tipo de usuario</th>
-                <th></th>
+                <th><center>Teléfono<center/></th>
+                <th><center>Tipo de usuario<center/></th>
+                <th><center>Acciones<center/></th>
               </tr>
               </thead>
               <tbody>
@@ -46,9 +48,9 @@
                     <td>{{usuario.nombre}}</td>
                     <td>{{usuario.apellido_paterno}}</td>
                     <td>{{usuario.apellido_materno}}</td>
-                    <td>{{usuario.fono}}</td>
                     <td>{{usuario.email}}</td>
-                    <td>{{usuario.id_tipo_usuario.tipo}}</td>
+                    <td><center>{{usuario.fono}}<center/></td>
+                    <td><center>{{usuario.id_tipo_usuario.tipo}}<center/></td>
                       <td class="text-center">
 
                         <div class="row justify-content-center">

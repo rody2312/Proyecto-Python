@@ -13,11 +13,12 @@
 <div class="container-fluid">
 
     <div class="row">
-      <div class="col-8 mx-auto">
+      <div class="col-7 mx-auto">
 
         <div class="card">
           <div class="card-header">
             <h3 class="card-title">Lista de archivos</h3>
+            <a class="btn btn-secondary float-right" onClick="window.history.go(-1); return false;">Volver</a>
           </div>
           <!-- /.card-header -->
           <div class="card-body">
@@ -31,8 +32,9 @@
               <thead>
                 <tr>
                     <th>Nombre</th>
-                    <th>Fecha de subida</th>
-                    <th>Archivo</th>
+                    <th><center>Archivo<center/></th>
+                    <th><center>Fecha de subida<center/></th>
+
                     {% if not request.user.id_tipo_usuario.id == 3 %} <th>Acciones</th> {% endif %}
                   </tr>
                 </thead>
@@ -40,8 +42,9 @@
                   {% for archivo in archivos %}
                   <tr>
                     <td>{{archivo.nombre}}</td>
-                    <td>{{archivo.fecha}}</td>
-                    <td><a href="/media/{{archivo.directorio}}">{{archivo.directorio}}</a></td>
+                    <td><center><a href="/media/{{archivo.directorio}}">{{archivo.directorio}}</a><center/></td>
+                    <td><center>{{archivo.fecha | date:"d/m/Y"}}<center/></td>
+
                     {% if not request.user.id_tipo_usuario.id == 3 %}
                       <td class="text-center">
                         <div class="row justify-content-center">

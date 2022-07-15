@@ -17,7 +17,7 @@
 
         <div class="card">
           <div class="card-header">
-            <h3 class="card-title">Puntajes de Evaluación </h3>
+            <h3 class="card-title">Lista de puntajes de evaluaciones </h3>
             <a class="btn btn-secondary float-right" onClick="window.history.go(-1); return false;">Volver</a>
           </div>
           <!-- /.card-header -->
@@ -28,14 +28,14 @@
             <table id="example1" class="table table-bordered">
               <thead>
               <tr>
-                <th>Puntaje</th>
-                <th>Acciones</th>
+                <th><center>Puntaje<center/></th>
+                <th><center>Acciones<center/></th>
               </tr>
               </thead>
               <tbody>
                 {% for p in puntajes %}
                 <tr>
-                  <td>{{p.puntaje}}</td>
+                  <td><center>{{p.puntaje}}<center/></td>
                     <td class="text-center">
                       <div class="row justify-content-center">
                         <a class="btn btn-info btn-sm" href="{% url 'evaluacion:editar_puntaje_evaluacion' pk=p.id %}">

@@ -13,28 +13,30 @@
 <div class="container-fluid">
 
     <div class="row">
-      <div class="col-6 mx-auto">
+      <div class="col-4 mx-auto">
 
         <div class="card">
           <div class="card-header">
-            <h3 class="card-title">Registros de asistencia</h3>
+            <h3 class="card-title">Lista de asistencias</h3>
+            <a class="btn btn-secondary float-right" onClick="window.history.go(-1); return false;">Volver</a>
           </div>
           <!-- /.card-header -->
           <div class="card-body">
-            <a class="btn btn-primary mb-2" href="{% url 'asistencia:crear_asistencia' %}">Crear nuevo registro</a>
+            <a class="btn btn-primary mb-2" href="{% url 'asistencia:crear_asistencia' %}">Crear nueva asistencia</a>
+
             <br>
 
             <table id="example1" class="table table-bordered table-striped">
               <thead>
               <tr>
-                <th>Fecha</th>
-                <th>Opciones</th>
+                <th><center>Fecha<center/></th>
+                <th><center>Acciones<center/></th>
               </tr>
               </thead>
               <tbody>
                 {% for asistencia in asistencias %}
                 <tr>
-                  <td>{{asistencia.fecha}}</td>
+                  <td><center>{{asistencia.fecha | date:"d/m/Y"}}<center/></td>
                     <td class="text-center">
 
                       <div class="row justify-content-center">

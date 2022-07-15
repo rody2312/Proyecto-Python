@@ -13,14 +13,16 @@
 <div class="container-fluid">
 
     <div class="row">
-      <div class="col-6 mx-auto">
+      <div class="col-4 mx-auto">
 
         <div class="card">
           <div class="card-header">
-            <h3 class="card-title">Lista de foro</h3>
+            <h3 class="card-title">Lista de foros</h3>
+            <a class="btn btn-secondary float-right" onClick="window.history.go(-1); return false;">Volver</a>
           </div>
           <!-- /.card-header -->
           <div class="card-body">
+
             {% if not request.user.id_tipo_usuario.id == 3 %}
             <a class="btn btn-primary mb-2" href="{% url 'foro:crear_foro' %}">Crear nueva publicación</a>
             <br>
@@ -29,8 +31,8 @@
             <table id="example1" class="table table-bordered">
               <thead>
               <tr>
-                <th>Titulo</th>
-                <th></th>
+                <th>Título</th>
+                <th><center>Acciones<center></th>
               </tr>
               </thead>
               <tbody>
