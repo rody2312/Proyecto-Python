@@ -32,6 +32,7 @@
               <thead>
               <tr>
                 <th>Título</th>
+                <th>Fecha</th>
                 <th><center>Acciones<center></th>
               </tr>
               </thead>
@@ -40,6 +41,7 @@
                 
                 <tr>
                     <td>{{foro.titulo}}</td>
+                    <td>{{foro.fecha | date:"d/m/Y"}}</td>
                     <!--<td>{% if foro.id_tarea %} {{foro.id_tarea}} {% else %} No hay tarea relacionada {% endif %}</td>-->
                     <td class="text-center">
                       <div class="row justify-content-center">

@@ -37,7 +37,7 @@
                   {% for f,usuarioasistencia__tipo_asistencia__puntaje, puntajeList, puntajeEv in filas %}
 
                     <tr>
-                        <td>{{f}}</td>
+                        <td>{{f | date:"d/m/Y"}}</td>
                         <td class="text-center"> 
                           {% if usuarioasistencia__tipo_asistencia__puntaje %} 
                             {{usuarioasistencia__tipo_asistencia__puntaje}}
