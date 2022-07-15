@@ -15,11 +15,12 @@
 <div class="container-fluid">
 
     <div class="row">
-      <div class="col-12 mx-auto">
+      <div class="col-6 mx-auto">
 
         <div class="card">
           <div class="card-header">
             <h3 class="card-title">Resumen de puntajes</h3>
+            <a class="btn btn-secondary float-right" onClick="window.history.go(-1); return false;">Volver</a>
           </div>
           <!-- /.card-header -->
           <div class="card-body">
@@ -28,7 +29,7 @@
               <tr>
                 <th>Alumno</th>
                 {% for c in columnas %}
-                <th>{{c}}</th>
+                <th><center>{{c}}<center/></th>
                 {% endfor %}
               </tr>
               </thead>
