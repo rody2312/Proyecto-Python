@@ -1,10 +1,10 @@
 from unicodedata import name
 from django.urls import path, re_path, include
-from app.views.views_archivo import ArchivoCreateView2, ArchivoDeleteView, ArchivoListView, upload_file
+from app.views.views_archivo import ArchivoCreateView, ArchivoCreateView2, ArchivoDeleteView, ArchivoListView
 from app.views.views_notificacion import NotificacionDeleteView, NotificacionEditView, NotificacionListView, NotificacionCreateView
 
 from app.views.views_tipo_actividad import TipoActividadCreateView, TipoActividadDeleteView, TipoActividadEditView, TipoActividadListView
-from app.views.views_usuarios import UserChangePasswordView
+from app.views.views_usuarios import UserChangePasswordView, deleteUser
 from app.views.views_tipo_actividad import PuntajeCreateView, PuntajeEditView, TipoActividadCreateView, TipoActividadDetailsView, TipoActividadEditView, TipoActividadListView, delete, deletePuntaje
 
 
@@ -25,7 +25,7 @@ urlpatterns= [
     path('usuarios/create/', UsuarioCreateView.as_view(), name="create"),
     path('usuarios/details/<int:pk>/', UsuarioDetailsView.as_view(), name="details"),
     path('usuarios/edit/<int:pk>/', UsuarioEditView.as_view(), name="edit"),
-    path('usuarios/delete/<int:pk>/', UsuarioDeleteView.as_view(), name="delete"),
+    path('usuarios/delete/<int:pk>/', deleteUser, name="delete"),
     path('usuarios/change_password/', UserChangePasswordView.as_view(), name="user_change_password"),
 
     #NOTIFICACION
@@ -36,7 +36,7 @@ urlpatterns= [
     
     #ARCHIVOS
     path('archivos/', ArchivoListView.as_view(), name="archivo"),
-    path('archivo/subir/', upload_file, name="subir_archivo"),
+    path('archivo/subir/', ArchivoCreateView.as_view(), name="subir_archivo"),
     path('archivo/delete/<int:pk>/', ArchivoDeleteView.as_view(), name="archivo_delete"),
 
     #TIPO ACTIVIDAD

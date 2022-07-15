@@ -1,4 +1,6 @@
+
 {% extends 'home.html' %}
+
 {% load static %}
 
 {% block libs %}
@@ -13,52 +15,63 @@
 <div class="container-fluid">
 
     <div class="row">
-      <div class="col-4 mx-auto">
+      <div class="col-12 mx-auto">
 
         <div class="card">
           <div class="card-header">
-            <h3 class="card-title">Lista de asistencias</h3>
-            <a class="btn btn-secondary float-right" onClick="window.history.go(-1); return false;">Volver</a>
+            <h3 class="card-title">Resumen de puntajes</h3>
           </div>
           <!-- /.card-header -->
           <div class="card-body">
-            <a class="btn btn-primary mb-2" href="{% url 'asistencia:crear_asistencia' %}">Crear nueva asistencia</a>
-
-            <br>
-
             <table id="example1" class="table table-bordered table-striped">
               <thead>
               <tr>
-                <th><center>Fecha<center/></th>
-                <th><center>Acciones<center/></th>
+                <th>Fecha Clase</th>
+                {% for c in columnas %}
+                <th>{{c}}</th>
+                {% endfor %}
               </tr>
               </thead>
               <tbody>
-                {% for asistencia in asistencias %}
-                <tr>
-                  <td><center>{{asistencia.fecha | date:"d/m/Y"}}<center/></td>
-                    <td class="text-center">
+                {% if filas %}
+                  {% for f,usuarioasistencia__tipo_asistencia__puntaje, puntajeList, puntajeEv in filas %}
 
-                      <div class="row justify-content-center">
-                        <a class="btn btn-primary btn-sm" href="{% url 'asistencia:asistencia_details' asistencia.id %}">
-                          <i class="fas fa-folder">
-                          </i>
-                        </a>
-                        <a class="btn btn-info btn-sm" href="{% url 'asistencia:asistencia_edit' asistencia.id %}">
-                          <i class="fas fa-pencil-alt">
-                          </i>
-                        </a>
-                        <form action="{% url 'asistencia:asistencia_delete' asistencia.id %}" method="POST" id="deleteForm">
-                          {% csrf_token %}
-                          <a class="btn btn-danger btn-sm" href="#" onclick="eliminarAsistencia({{asistencia.id}})">
-                              <i class="fas fa-trash">
-                              </i>
-                            </a>
-                        </form>
-                        <div>
-                    </td>
-              </tr>
-                {% endfor %}
+                    <tr>
+                        <td>{{f}}</td>
+                        <td class="text-center"> 
+                          {% if usuarioasistencia__tipo_asistencia__puntaje %} 
+                            {{usuarioasistencia__tipo_asistencia__puntaje}}
+                          {% else %}
+                            0
+                          {% endif %} 
+                        </td>
+
+                      {% for p in puntajeList %}
+
+                        <td class="text-center">{% if p %} {{p}} {% else %} 0 {% endif %}</td>
+                      {% endfor %}
+
+                        <td class="text-center">{{puntajeEv}}</td>
+
+                    </tr>
+                  {% endfor %}
+
+                {% else %}
+
+                    {% for nombre,apellido_paterno,apellido_materno,puntaje_id__puntaje in alumnosEv %}
+                    <tr>
+                      <td>{{nombre}} {{apellido_paterno}} {{apellido_materno}}</td>
+                          <td class="text-center"> 
+                            {% if puntajeEv %} 
+                              {{puntajeEv}}
+                            {% else %}
+                              0
+                            {% endif %} 
+                      </td>
+                    </tr>
+                    {% endfor %}
+
+                {% endif %}
               </tbody>
             </table>
           </div>
@@ -96,6 +109,7 @@
   $(function () {
     $("#example1").DataTable({
       "responsive": true, "lengthChange": false, "autoWidth": false,
+      "ordering": false,
       "language": {
         "processing":     "Procesando...",
         "infoEmpty":      "Mostrando 0 a 0 de 0 registro",
@@ -112,54 +126,8 @@
         "info":           "Mostrando _START_ a _END_ de _TOTAL_ registros",
         "infoEmpty":      "Mostrando 0 a 0 de 0 registros",
       },
-    }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+    }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)').sort();
   });
-
-  
 </script>
 
-<script>
-  function eliminarAsistencia(id){
-    event.preventDefault();
-    var url = "{% url 'asistencia:asistencia_delete' 123 %}";
-    console.log(id)
-    Swal.fire({
-      title: '¿Estas seguro de eliminar el registro de asistencia?',
-      text: "No se podra deshacer!",
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Si, eliminar!',
-      cancelButtonText: 'Cancelar'
-    }).then((result) => {
-      if (result.isConfirmed) {
-        document.getElementById('deleteForm').setAttribute('action',url.replace('123',id));
-        document.querySelector('#deleteForm').submit();
-        //window.location.href = url.replace('123', id);
-      }
-    })
-}
-
-</script>
-
-<script>
-  {% for message in messages %}
-    {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
-    Swal.fire(
-      'Actualizado!',
-      '{{message}}',
-      'success'
-    )
-    {% else %}
-    Swal.fire(
-      'Error',
-      '{{message}}',
-      'error'
-    )
-    {% endif %}
-    
-  {% endfor %}
-</script>
-
-{% endblock  %}
+{% endblock js %}

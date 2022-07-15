@@ -22,16 +22,19 @@
           </div>
           <!-- /.card-header -->
           <div class="card-body">
-            <a class="btn btn-primary mb-2" href="{% url 'app:crear_notificacion' %}">Crear nueva notificación</a>
-            <br>
+            {% if not request.user.id_tipo_usuario.id == 3 %}
+              <a class="btn btn-primary mb-2" href="{% url 'app:crear_notificacion' %}">Crear nueva notificacion</a>
+              <br>
+            {% endif %}
 
             <table id="example1" class="table table-bordered table-striped">
               <thead>
               <tr>
                 <th>Descripción</th>
-                <th>Alumno</th>
+                <th>Enviado por</th>
                 <th><center>Fecha<center/></th>
-                <th><center>Acciones<center/></th>
+
+                {% if not request.user.id_tipo_usuario.id == 3 %} <th>Acciones</th> {% endif %}
               </tr>
               </thead>
               <tbody>
@@ -40,22 +43,24 @@
                   <td>{{notificacion.texto}}</td>
                   <td>{{notificacion.id_usuario}}</td>
                   <td><center>{{notificacion.fecha | date:"d/m/Y"}}<center/></td>
-                    <td class="text-center">
 
-                      <div class="row justify-content-center">
-                        <a class="btn btn-info btn-sm" href="{% url 'app:notificacion_edit' notificacion.id %}">
-                          <i class="fas fa-pencil-alt">
-                          </i>
-                        </a>
-                        <form action="{% url 'app:notificacion_delete' notificacion.id %}" method="POST" id="deleteForm">
-                          {% csrf_token %}
-                          <a class="btn btn-danger btn-sm" href="#" onclick="eliminarNotificacion({{notificacion.id}})">
-                              <i class="fas fa-trash">
-                              </i>
-                            </a>
-                        </form>
+                  {% if not request.user.id_tipo_usuario.id == 3 %}
+                    <td class="text-center">
+                        <div class="row justify-content-center">
+                          <a class="btn btn-info btn-sm" href="{% url 'app:notificacion_edit' notificacion.id %}">
+                            <i class="fas fa-pencil-alt">
+                            </i>
+                          </a>
+                          <form action="{% url 'app:notificacion_delete' notificacion.id %}" method="POST" id="deleteForm">
+                            {% csrf_token %}
+                            <a class="btn btn-danger btn-sm" href="#" onclick="eliminarNotificacion({{notificacion.id}})">
+                                <i class="fas fa-trash">
+                                </i>
+                              </a>
+                          </form>
                         <div>
                     </td>
+                  {% endif %}
                 </tr> 
                 {% endfor %}
               </tbody>

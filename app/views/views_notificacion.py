@@ -1,13 +1,18 @@
+from django.core.mail import EmailMessage
+from django.core import mail
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, render
 from django.urls import reverse, reverse_lazy
 from django.views.generic import View, DeleteView, UpdateView
+
+from core import settings
 from ..forms import NotificacionCreateForm
 from app import forms
 from django.contrib import messages
+from app.mixins import AdminProfesorUserMixin, AdminUserMixin, ProfesorUserMixin
 
-from app.models import Notificacion
+from app.models import Notificacion, Usuario
 
 #LISTAR NOTIFICACION
 
@@ -24,7 +29,7 @@ class NotificacionListView(LoginRequiredMixin ,View):
 
 #CREAR NOTIFICACION
 
-class NotificacionCreateView(LoginRequiredMixin ,View):
+class NotificacionCreateView(LoginRequiredMixin, AdminProfesorUserMixin,View):
     
     def get(self,request, *args, **kwargs):
         form=NotificacionCreateForm()
@@ -41,10 +46,32 @@ class NotificacionCreateView(LoginRequiredMixin ,View):
                 descripcion = form.cleaned_data.get('texto')
                 usuarioActual= request.user
 
+                email_body = descripcion
+
+                usuarios = Usuario.objects.all()
+
                 u, created = Notificacion.objects.get_or_create(texto=descripcion, id_usuario=usuarioActual)
                 u.save()
 
-                messages.success(request, "Notificacion agregada correctamente")
+                #Si la notificación fue creada, enviar notificación a todos los correos de la plataforma
+                if created:
+                    emails = []
+                    connection = mail.get_connection()
+                    connection.open()
+
+                    #Se listan todos los usuarios registrados
+                    for usuario in usuarios:
+                        #Crear mensajes para cada usuario
+                        email = EmailMessage('Notificación - Plataforma SCC', email_body , settings.EMAIL_HOST_USER, to=[usuario.email])
+                        emails.append(email)
+
+                    connection.send_messages(emails)
+                    connection.close()
+                    #mail.send(fail_silently=False)
+                    messages.success(request, "Notificación agregada correctamente")
+                else:
+                    messages.error(request, "Hubo un error al intentar agregar la notificación")
+                
                 return redirect('app:notificacion')
         context={
             'titulo': 'Crear Notificacion',
@@ -54,7 +81,7 @@ class NotificacionCreateView(LoginRequiredMixin ,View):
 
 #ELIMINAR NOTIFICACION
 
-class NotificacionDeleteView(LoginRequiredMixin, DeleteView):
+class NotificacionDeleteView(LoginRequiredMixin,AdminProfesorUserMixin, DeleteView):
     model = Notificacion
     success_url = reverse_lazy('app:notificacion')
 
@@ -70,7 +97,7 @@ class NotificacionDeleteView(LoginRequiredMixin, DeleteView):
 
 #EDITAR NOTIFICACION
 
-class NotificacionEditView(LoginRequiredMixin, UpdateView):
+class NotificacionEditView(LoginRequiredMixin, AdminProfesorUserMixin, UpdateView):
     model = Notificacion
     form_class = forms.NotificacionCreateForm
     template_name = "notificacion/notificacion_edit.html"

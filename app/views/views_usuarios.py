@@ -2,8 +2,12 @@ from multiprocessing import context
 from re import template
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.generic import View, UpdateView, DeleteView, FormView
+
+from asistencia.models import UsuarioAsistencia
+from evaluacion.models import UsuarioEvaluacion
+from tareas.models import Actividad, UsuarioActividad
 from ..forms import CustomUserCreationForm, UsuarioCreateForm, UsuarioEditForm 
-from ..models import TipoUsuario, Usuario
+from ..models import Notificacion, TipoUsuario, Usuario
 from django.urls import reverse_lazy
 from django.contrib import messages
 from django.http import HttpResponseRedirect, JsonResponse
@@ -24,9 +28,10 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.contrib.sites.shortcuts import get_current_site
 from ..utils import token_generator
 from django.contrib.auth.mixins import LoginRequiredMixin
+from app.mixins import AdminUserMixin, ProfesorUserMixin
 import logging
 
-class UsuariosListView(LoginRequiredMixin ,View):
+class UsuariosListView(LoginRequiredMixin, AdminUserMixin ,View):
     
     def get(self,request, *args, **kwargs):
         usuarios = Usuario.objects.all()
@@ -37,7 +42,7 @@ class UsuariosListView(LoginRequiredMixin ,View):
         return render(request, 'usuario/usuarios_list.html', context)
 
 
-class UsuarioCreateView(LoginRequiredMixin, View):
+class UsuarioCreateView(LoginRequiredMixin, AdminUserMixin, View):
     def get(self, request,*args, **kwargs):
         form=UsuarioCreateForm()
         context={
@@ -109,7 +114,7 @@ class VerificationView(View):
         return redirect('app:usuarios')
 
 
-class UsuarioDetailsView(LoginRequiredMixin, View):
+class UsuarioDetailsView(LoginRequiredMixin, AdminUserMixin, View):
     def get(self, request, pk, *args, **kwargs):
         usuario = get_object_or_404(Usuario, pk=pk)
         context={
@@ -118,7 +123,7 @@ class UsuarioDetailsView(LoginRequiredMixin, View):
         return render(request, 'usuario/usuario_details.html', context)
 
 #Clase no usada
-class UsuarioUpdateView(LoginRequiredMixin, UpdateView):
+class UsuarioUpdateView(LoginRequiredMixin, AdminUserMixin, UpdateView):
     model= Usuario
     fields= ['nombre', 'apellido_paterno', 'apellido_materno']
     template_name= 'usuario/usuario_edit.html'
@@ -128,7 +133,7 @@ class UsuarioUpdateView(LoginRequiredMixin, UpdateView):
         return reverse_lazy('app:details', kwargs={'pk':pk})
 
 
-class UsuarioDeleteView(LoginRequiredMixin, DeleteView):
+class UsuarioDeleteView(LoginRequiredMixin, AdminUserMixin, DeleteView):
     model = Usuario
     success_url = reverse_lazy('app:usuarios')
 
@@ -142,12 +147,18 @@ class UsuarioDeleteView(LoginRequiredMixin, DeleteView):
         self.object.delete()
         return HttpResponseRedirect(success_url)
 
-#def eliminar_usuario(request,id):
-#    usuario = get_object_or_404(Usuario, id=id)
-#    usuario.delete()
-#    return redirect(to="app:usuarios")
+#Eliminar usuario##
+def deleteUser(request, pk, *args, **kwargs):
+    usuario = Usuario.objects.get(id=pk)
+    if UsuarioAsistencia.objects.filter(usuario_id=pk).exists() or UsuarioActividad.objects.filter(usuario_id=pk).exists() or UsuarioEvaluacion.objects.filter(usuario_id=pk).exists() or Actividad.objects.filter(id_usuario=pk).exists() or Notificacion.objects.filter(id_usuario=pk).exists():
+        messages.error(request, "No se puede eliminar, debido a que existen registros relacionados a '" + str(usuario) + "'")
+        return HttpResponseRedirect(reverse_lazy('app:usuarios'))
+    else:
+        if usuario.delete():
+            messages.success(request, "Se elimino correctamente")
+        return HttpResponseRedirect(reverse_lazy('app:usuarios'))
 
-class UsuarioEditView(LoginRequiredMixin, UpdateView):
+class UsuarioEditView(LoginRequiredMixin, AdminUserMixin, UpdateView):
     model = Usuario
     form_class = UsuarioEditForm
     template_name = "usuario/usuario_edit.html"

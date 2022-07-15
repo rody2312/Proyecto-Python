@@ -12,15 +12,11 @@ urlpatterns = [
     path('tareas/delete/<int:pk>/', TareaDeleteView.as_view(), name="delete"),
     path('actividadPuntajesAPI/<int:pk>/', usuariosActividadAPI),
     path('updatePuntaje/', updatePuntaje),
-    
-    #Foro
-    path('foro/', ForosListView.as_view(), name="foros"),
-    path('foro/borrar/<int:pk>/', ForoDeleteView.as_view(), name="foro_delete"),
-    path('foro/crear/', ForoCreateView.as_view(), name="crear_foro"),
-    path('foro/edit/<int:pk>/', ForoEditView.as_view(), name="foro_edit"),
-    path('foro/<int:pk>/', ForoDetailsView.as_view(), name="foro_details"),
 
     #Resumen de puntajes
     path('resumen/', ResumenListView.as_view(), name="resumen"),
     path('resumen/<str:fecha>/', ResumenDetailsView.as_view(), name="resumen_detalles"),
+
+    #Resumen individual de puntajes
+    path('resumen-individual/', ResumenIndividualView.as_view(), name="resumen_individual"),
 ]

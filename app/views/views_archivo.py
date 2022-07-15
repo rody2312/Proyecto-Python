@@ -13,6 +13,7 @@ from django.contrib import messages
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from django.core.files.storage import FileSystemStorage
+from app.mixins import AdminProfesorUserMixin, AdminUserMixin, ProfesorUserMixin
 
 #LISTAR ARCHIVO
 
@@ -26,27 +27,56 @@ class ArchivoListView(LoginRequiredMixin ,View):
         }
         return render(request, 'archivos/archivo_list.html', context)
 
+class ArchivoCreateView(LoginRequiredMixin, AdminProfesorUserMixin,View):
+    
+    def get(self,request, *args, **kwargs):
+        form=ArchivoCreateForm()
+        context={
+            'form': form,
+            'titulo': 'Subir archivo'
+        }
+        return render(request, 'archivos/archivo_create.html', context)
+
+    def post(self, request,*args, **kwargs):
+        if request.method == 'POST':
+            form = ArchivoCreateForm(request.POST, request.FILES)
+            nombre = request.POST['nombre']
+            file = request.FILES['directorio']
+            fs = FileSystemStorage()
+    
+            filename = fs.save(file.name, file)
+            #uploaded_file_url = fs.url(filename)
+    
+            usuarioActual= request.user
+            archivo = Archivo.objects.create(nombre = nombre, directorio = file, id_usuario = usuarioActual)
+            archivo.save()
+            messages.success(request, "Archivo subido correctamente")
+            return redirect('app:archivo')
+        else:
+            form = ArchivoCreateForm()
+        return render(request, 'archivos/archivo_create.html', {'form': form})
+
 #CREAR ARCHIVO
-def upload_file(request):
-    if request.method == 'POST':
-        form = ArchivoCreateForm(request.POST, request.FILES)
-        nombre = request.POST['nombre']
-        file = request.FILES['directorio']
-        fs = FileSystemStorage()
+#def upload_file(request):
+#    if request.method == 'POST':
+#        form = ArchivoCreateForm(request.POST, request.FILES)
+#        nombre = request.POST['nombre']
+#        file = request.FILES['directorio']
+#        fs = FileSystemStorage()
+#
+#        filename = fs.save(file.name, file)
+#        #uploaded_file_url = fs.url(filename)
+#
+#        usuarioActual= request.user
+#        archivo = Archivo.objects.create(nombre = nombre, directorio = file, id_usuario = usuarioActual)
+#        archivo.save()
+#        messages.success(request, "Archivo subido correctamente")
+#        return redirect('app:archivo')
+#    else:
+#        form = ArchivoCreateForm()
+#    return render(request, 'archivos/archivo_create.html', {'form': form})
 
-        filename = fs.save(file.name, file)
-        #uploaded_file_url = fs.url(filename)
-
-        usuarioActual= request.user
-        archivo = Archivo.objects.create(nombre = nombre, directorio = file, id_usuario = usuarioActual)
-        archivo.save()
-        messages.success(request, "Archivo subido correctamente")
-        return redirect('app:archivo')
-    else:
-        form = ArchivoCreateForm()
-    return render(request, 'archivos/archivo_create.html', {'form': form})
-
-class ArchivoCreateView2(LoginRequiredMixin ,CreateView):
+class ArchivoCreateView2(LoginRequiredMixin, AdminProfesorUserMixin ,CreateView):
     model = Archivo
     form_class = ArchivoCreateForm
     template_name = 'archivos/archivo_create.html'
@@ -104,7 +134,7 @@ class ArchivoCreateView2(LoginRequiredMixin ,CreateView):
 
 #ELIMINAR ARCHIVO
 
-class ArchivoDeleteView(LoginRequiredMixin, DeleteView):
+class ArchivoDeleteView(LoginRequiredMixin, AdminProfesorUserMixin, DeleteView):
     model = Archivo
     success_url = reverse_lazy('app:archivo')
 

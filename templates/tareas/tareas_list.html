@@ -66,7 +66,7 @@
                     
                       <!--{% if tarea in list_foros %}
                         <td class="text-center">
-                          <a name="" id="" class="btn btn-success" href="{% url 'tareas:foro_details' a.id %}" role="button">Ver foro</a>
+                          <a name="" id="" class="btn btn-success" href="{% url 'foro:foro_details' a.id %}" role="button">Ver foro</a>
                         </td>
 
                       {% else %}
@@ -162,11 +162,20 @@
 
 <script>
   {% for message in messages %}
+    {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
     Swal.fire(
       'Actualizado!',
       '{{message}}',
       'success'
     )
+    {% else %}
+    Swal.fire(
+      'Error',
+      '{{message}}',
+      'error'
+    )
+    {% endif %}
+    
   {% endfor %}
 </script>
 

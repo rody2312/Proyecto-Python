@@ -10,11 +10,14 @@ from django.contrib import messages
 from evaluacion.models import Evaluacion, PuntajeEvaluacion, UsuarioEvaluacion
 from django.core.exceptions import ObjectDoesNotExist
 from django.views.decorators.csrf import csrf_exempt
+from app.mixins import AdminProfesorUserMixin, AdminUserMixin, ProfesorUserMixin
+from tareas.models import Actividad
+
 
 
 #LISTAR EVALUACION
 
-class EvaluacionListView(LoginRequiredMixin ,View):
+class EvaluacionListView(LoginRequiredMixin, AdminProfesorUserMixin ,View):
     
     def get(self,request, *args, **kwargs):
         evaluaciones = Evaluacion.objects.all()
@@ -26,7 +29,7 @@ class EvaluacionListView(LoginRequiredMixin ,View):
 
 #CREAR EVALUACION
 
-class EvaluacionCreateView(LoginRequiredMixin ,View):
+class EvaluacionCreateView(LoginRequiredMixin, AdminProfesorUserMixin ,View):
     def get(self,request, *args, **kwargs):
         form=EvaluacionCreateForm()
         context={
@@ -43,10 +46,12 @@ class EvaluacionCreateView(LoginRequiredMixin ,View):
                 fecha = form.cleaned_data.get('fecha')
                 usuarioActual= request.user
                 
-                u, created = Evaluacion.objects.get_or_create(id_usuario=usuarioActual, titulo=titulo, fecha=fecha)
-                u.save()
-
-                messages.success(request, "Evaluacion agregada correctamente")
+                if not Actividad.objects.filter(fecha=fecha).exists():
+                    u, created = Evaluacion.objects.get_or_create(id_usuario=usuarioActual, titulo=titulo, fecha=fecha)
+                    u.save()
+                    messages.success(request, "Evaluacion agregada correctamente")
+                else:
+                    messages.error(request, "Ya existe un registro de actividad en la fecha " + str(fecha))
                 return redirect('evaluacion:evaluaciones')
 
         context={
@@ -57,7 +62,7 @@ class EvaluacionCreateView(LoginRequiredMixin ,View):
 
 # ELIMINAR EVALUACION                
 
-class EvaluacionDeleteView(LoginRequiredMixin, DeleteView):
+class EvaluacionDeleteView(LoginRequiredMixin, AdminProfesorUserMixin, DeleteView):
     model = Evaluacion
     success_url = reverse_lazy('evaluacion:evaluaciones')
 
@@ -73,7 +78,7 @@ class EvaluacionDeleteView(LoginRequiredMixin, DeleteView):
 
 # DETALLES EVALUACION
 
-class EvaluacionDetailsView(LoginRequiredMixin, View):
+class EvaluacionDetailsView(LoginRequiredMixin, AdminProfesorUserMixin, View):
     def get(self, request, pk, *args, **kwargs):
         evaluacion = get_object_or_404(Evaluacion, pk=pk)
         context={
@@ -82,7 +87,7 @@ class EvaluacionDetailsView(LoginRequiredMixin, View):
         }
         return render(request, 'evaluacion/evaluacion_details.html', context)
 
-class EvaluacionEditView(LoginRequiredMixin, UpdateView):
+class EvaluacionEditView(LoginRequiredMixin, AdminProfesorUserMixin, UpdateView):
     model = Evaluacion
     form_class = EvaluacionCreateForm
     template_name = "evaluacion/evaluacion_create.html"
@@ -153,7 +158,7 @@ def updatePuntaje(request):
 #### Views CRUD Puntaje Evaluacion #####
 
 #Mostrar todos los puntajes de evaluación
-class PuntajesEvListView(LoginRequiredMixin , View):
+class PuntajesEvListView(LoginRequiredMixin, AdminUserMixin, View):
     def get(self, request, *args, **kwargs):
         puntajes = PuntajeEvaluacion.objects.all()
         context={
@@ -177,7 +182,7 @@ def deletePuntajeEv(request, pk, *args, **kwargs):
 
 #Views para crear y editar un puntaje a un tipo de asistencia
 
-class PuntajeEvCreateView(LoginRequiredMixin ,View):
+class PuntajeEvCreateView(LoginRequiredMixin, AdminUserMixin ,View):
     
     def get(self,request, *args, **kwargs):
         form=forms.PuntajeCreateForm()
@@ -206,7 +211,7 @@ class PuntajeEvCreateView(LoginRequiredMixin ,View):
 
 
 
-class PuntajeEvEditView(LoginRequiredMixin, UpdateView):
+class PuntajeEvEditView(LoginRequiredMixin, AdminUserMixin, UpdateView):
     model = PuntajeEvaluacion
     form_class = PuntajeEvCreateForm
     template_name = "evaluacion/puntajes_ev_create.html"

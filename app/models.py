@@ -9,6 +9,8 @@ from distutils.command.upload import upload
 from email.mime import image
 from django.db import models
 from django.contrib.auth.models import AbstractUser,BaseUserManager
+from django.utils import timezone
+
 
 # Clase para definir funciones de crear usuarios en el sistema por comando
 class CustomUserManager(BaseUserManager):
@@ -98,8 +100,8 @@ class Usuario(AbstractUser):
 
 class Notificacion(models.Model):
     id_usuario = models.ForeignKey(Usuario, models.DO_NOTHING, db_column='id_usuario')
-    texto = models.TextField(null=False)
-    fecha = models.DateField(auto_now=True, null=False)
+    texto = models.TextField()
+    fecha = models.DateField(default=timezone.now, editable=False, blank=True)
 
     class Meta():
         managed = True

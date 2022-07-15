@@ -22,8 +22,11 @@
           </div>
           <!-- /.card-header -->
           <div class="card-body">
+            {% if not request.user.id_tipo_usuario.id == 3 %}
             <a class="btn btn-primary mb-2" href="{% url 'app:subir_archivo' %}">Crear nuevo archivo</a>
             <br>
+            {% endif %}
+
 
             <table id="example1" class="table table-bordered">
               <thead>
@@ -31,7 +34,8 @@
                     <th>Nombre</th>
                     <th><center>Archivo<center/></th>
                     <th><center>Fecha de subida<center/></th>
-                    <th><center>Acciones<center/></th>
+
+                    {% if not request.user.id_tipo_usuario.id == 3 %} <th>Acciones</th> {% endif %}
                   </tr>
                 </thead>
                 <tbody>
@@ -40,8 +44,9 @@
                     <td>{{archivo.nombre}}</td>
                     <td><center><a href="/media/{{archivo.directorio}}">{{archivo.directorio}}</a><center/></td>
                     <td><center>{{archivo.fecha | date:"d/m/Y"}}<center/></td>
+
+                    {% if not request.user.id_tipo_usuario.id == 3 %}
                       <td class="text-center">
-  
                         <div class="row justify-content-center">
                           <form action="{% url 'app:archivo_delete' archivo.id %}" method="POST" id="deleteForm">
                             {% csrf_token %}
@@ -52,6 +57,7 @@
                           </form>
                           <div>
                       </td>
+                    {% endif %}
                   </tr>
                   {% endfor %} 
             </table>

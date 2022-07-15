@@ -12,6 +12,19 @@
   <link rel="stylesheet" href="{% static 'lib/adminlte-3.2.0/plugins/codemirror/codemirror.css'%}">
   <link rel="stylesheet" href="{% static 'lib/adminlte-3.2.0/plugins/codemirror/theme/monokai.css'%}">
 
+  <link rel="stylesheet" href="{% static 'css/styles.css'%}" type='text/css'>
+
+  <style type="text/css">
+    .commentsts{
+      margin: 15px;
+    }
+
+    .comment-body{
+      margin: 10px;
+    }
+  </style>
+  
+
 {% endblock libs %}
 
 {% block content %}
@@ -21,45 +34,136 @@
         <div class="card-header">
           <h3 class="card-title">{{foro.titulo}}</h3>
         </div>
-        <div class="card-body" id="summernote">
+        <div class="card-body border rounded commentsts">
             {{foro.descripcion | safe}}
+            <a class="btn btn-info btn-flat float-right" href="{% url 'foro:responder_foro' foro.id %}">Responder</a>
         </div>
-        <div class="card-footer card-comments">
-            <div class="card-comment">
-              <div class="comment-text">
-                <span class="username">
-                  Maria Gonzales
-                  <span class="text-muted float-right">8:03 PM Today</span>
-                </span><!-- /.username -->
-                It is a long established fact that a reader will be distracted
-                by the readable content of a page when looking at its layout.
-              </div>
-              <!-- /.comment-text -->
-            </div>
-            <!-- /.card-comment -->
-            <div class="card-comment">
+        <div class="card-body">
+          {% if not foro.comments.all %}
+            No hay respuestas en esta publicación
 
-              <div class="comment-text">
-                <span class="username">
-                  Nora Havisham
-                  <span class="text-muted float-right">8:03 PM Today</span>
-                </span><!-- /.username -->
-                The point of using Lorem Ipsum is that it hrs a morer-less
-                normal distribution of letters, as opposed to using
-                'Content here, content here', making it look like readable English.
-              </div>
-              <!-- /.comment-text -->
-            </div>
-            <!-- /.card-comment -->
-          </div>
+          {% else %}
+
+            <!-- Si el usuario logeado es alumno, se mostrara los comentarios según el tipo de foro  -->
+            {% if request.user.id_tipo_usuario.id == 3 %}
+            
+              <!-- Si el foro es id 1 (Publico), se mostraran todos los comentarios  -->
+              {% if foro.id_tipo_foro.id == 1 %}
+                {% for r in foro.comments.all %}
+                  <div class="card-comment border rounded commentsts">
+                    <div class="comment-text comment-body">
+
+                      <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+                        <div class="image">
+                          <i class="bx bxs-user-circle" style='font-size: 30px'></i>      
+                        </div>
+                        <div class="info">
+                          <span class="username d-flex flex-wrap">
+                            {{r.id_usuario}}<span class="text-muted">&nbsp;- {{r.fecha | date:'l d-m-Y,' }}&nbsp;</span>
+                            <span class="text-muted"> {{r.fecha | time:'H:i' }}</span>
+                          </span>                  
+                        </div>
+                      </div>
+                      <div class="commentsts">
+                      {{r.texto | safe}}
+                      </div>
+                    </div>
+                  </div>
+                {% endfor %}
+
+              {% else %}
+
+                {% for r in foro.comments.all %}
+                  {% if r.id_usuario.id == request.user.id %}
+                    <div class="card-comment border rounded commentsts">
+                      <div class="comment-text comment-body">
+
+                        <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+                          <div class="image">
+                            <i class="bx bxs-user-circle" style='font-size: 30px'></i>      
+                          </div>
+                          <div class="info">
+                            <span class="username d-flex flex-wrap">
+                              {{r.id_usuario}}<span class="text-muted">&nbsp;- {{r.fecha | date:'l d-m-Y,' }}&nbsp;</span>
+                              <span class="text-muted"> {{r.fecha | time:'H:i' }}</span>
+                            </span>                  
+                          </div>
+                        </div>
+                        <div class="commentsts">
+                        {{r.texto | safe}}
+                        </div>
+                      </div>
+                    </div>
+                  {% endif %}
+                {% endfor %}
+
+              {% endif %}
+
+
+            {% else %}
+
+              {% for r in foro.comments.all %}
+                <div class="card-comment border rounded commentsts">
+                  <div class="comment-text comment-body">
+                  
+                    <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+                      <div class="image">
+                        <i class="bx bxs-user-circle" style='font-size: 30px'></i>      
+                      </div>
+                      <div class="info">
+                        <span class="username d-flex flex-wrap">
+                          {{r.id_usuario}}<span class="text-muted">&nbsp;- {{r.fecha | date:'l d-m-Y,' }}&nbsp;</span>
+                          <span class="text-muted"> {{r.fecha | time:'H:i' }}</span>
+                        </span>                  
+                      </div>
+                    </div>
+                    <div class="commentsts">
+                    {{r.texto | safe}}
+                    </div>
+                  </div>
+                </div>
+              {% endfor %}
+
+
+            {% endif %}
+
+            
+
+          {% endif %}
+
+        </div>
     </div>
 </div>
+
+{% endblock content %}
 
 {% block js %}
 
 <!-- Summernote -->
 <script src="{% static 'lib/adminlte-3.2.0/plugins/summernote/summernote-bs4.min.js' %}"></script>
 
-{% endblock js %}
+<script>
+  let card = document.getElementByClassName('card-comment')
 
-{% endblock content %}
+
+  card.addEventListener('mouseover', function( event ) {
+    event.background.color = 'red';
+  });
+
+</script>
+
+<script>
+
+  {% for message in messages %}
+    Swal.fire({
+      position: 'top-end',
+      icon: 'success',
+      title: '{{message}}',
+      showConfirmButton: false,
+      timer: 1500
+    })
+  {% endfor %}
+
+</script>
+
+{% endblock js %}

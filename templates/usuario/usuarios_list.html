@@ -198,11 +198,20 @@
 
 <script>
   {% for message in messages %}
+    {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
     Swal.fire(
       'Actualizado!',
       '{{message}}',
       'success'
     )
+    {% else %}
+    Swal.fire(
+      'Error',
+      '{{message}}',
+      'error'
+    )
+    {% endif %}
+    
   {% endfor %}
 </script>
 
