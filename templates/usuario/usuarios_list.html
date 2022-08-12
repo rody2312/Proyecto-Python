@@ -6,88 +6,107 @@
 <link rel="stylesheet" href="{% static 'lib/adminlte-3.2.0/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css' %}">
 <link rel="stylesheet" href="{% static 'lib/adminlte-3.2.0/plugins/datatables-responsive/css/responsive.bootstrap4.min.css' %}">
 <link rel="stylesheet" href="{% static 'lib/adminlte-3.2.0/plugins/datatables-buttons/css/buttons.bootstrap4.min.css' %}">
+
+<link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}"/>
 {% endblock %}
 
 {% block content %}
 
-<div class="container-fluid">
+<div class="container-xl">
 
     <div class="row">
-      <div class="col-10 mx-auto">
+      <div class="col-md-12 mx-auto">
+        <div class="card text-center">
+          <h1 class="p-2 titulo-seccion">Registro de {{titulo}}</h1>
+        </div>
 
         <div class="card">
-          <div class="card-header">
-            <h3 class="card-title">Lista de usuarios</h3>      
-            <a class="btn btn-secondary float-right" onClick="window.history.go(-1); return false;">Volver</a>
+
+          <div class="card-header d-flex align-items-center">
+            <div class="col-8 sinpadding">
+              <h2 class="card-title">Lista de usuarios</h2>
+            </div>
+
+            <div class="col-4 sinpadding text-center">
+              {% if request.user.id_tipo_usuario.id == 1 %}
+                <a class="btn btn-primary botones-header" href="{% url 'app:create' %}">Crear nuevo usuario</a>
+              {% endif %}
+              <a class="btn btn-secondary botones-header" onClick="window.history.go(-1); return false;">Volver</a>
+            </div>
           </div>
+
           <!-- /.card-header -->
           <div class="card-body">
-            <a class="btn btn-primary mb-2" href="{% url 'app:create' %}">Crear nuevo usuario</a>
-            
-            <br>
 
-            <table id="example1" class="table table-bordered table-striped">
-              <thead>
-              <tr>
-                <th>Nombre</th>
-                <th>Apellido Paterno</th>
-                <th>Apellido Materno</th>
-                <th>Email</th>
-                <th><center>Teléfono<center/></th>
-                <th><center>Tipo de usuario<center/></th>
-                <th><center>Acciones<center/></th>
-              </tr>
-              </thead>
-              <tbody>
-                {% for usuario in usuarios %}
-                {% comment %} <a href="{% url 'app:details' usuario.id %}">{{usuario.nombre}}</a> {% endcomment %}
-                {% comment %} <a href="{% url 'app:update' usuario.id %}">Editar</a> {% endcomment %}
-                {% comment %} <a href="{% url 'app:delete' usuario.id %}">Eliminar</a> {% endcomment %}
-                
+            <div class="table-responsive">
+              <table id="example1" class="table table-bordered table-striped">
+                <thead>
                 <tr>
-                    <td>{{usuario.nombre}}</td>
-                    <td>{{usuario.apellido_paterno}}</td>
-                    <td>{{usuario.apellido_materno}}</td>
-                    <td>{{usuario.email}}</td>
-                    <td><center>{{usuario.fono}}<center/></td>
-                    <td><center>{{usuario.id_tipo_usuario.tipo}}<center/></td>
-                      <td class="text-center">
-
-                        <div class="row justify-content-center">
-                          <a class="btn btn-primary btn-sm" href="{% url 'app:details' usuario.id %}">
-                              <i class="fas fa-folder">
-                              </i>
-                          </a>
-                          <a class="btn btn-info btn-sm" href="{% url 'app:edit' usuario.id %}">
-                              <i class="fas fa-pencil-alt">
-                              </i>
-                          </a>
-                          {% if request.user != usuario %}
-                          <form action="{% url 'app:delete' usuario.id %}" method="POST" id="deleteForm">
-                            {% csrf_token %}
-                            <a class="btn btn-danger btn-sm" href="#" onclick="eliminarUsuario({{usuario.id}})">
-                                <i class="fas fa-trash">
-                                </i>
-                              </a>
-                          </form>
-                          {% endif %}
-                        <div>
-                      </td>
+                  <th>Nombre</th>
+                  <th>Apellido Paterno</th>
+                  <th>Apellido Materno</th>
+                  <th>Email</th>
+                  <th><div class="text-center">Teléfono</div></th>
+                  <th><div class="text-center">Tipo de usuario</div></th>
+                  <th class="col-2"><div class="text-center">Acciones</div></th>
                 </tr>
-                {% endfor %}
-              </tbody>{% comment %} 
-              <tfoot>
-              <tr>
-                <th>Nombre</th>
-                <th>Apellido Paterno</th>
-                <th>Apellido Materno</th>
-                <th>Fono</th>
-                <th>Email</th>
-                <th>Tipo de usuario</th>
-                <th></th>
-              </tr>
-              </tfoot> {% endcomment %}
-            </table>
+                </thead>
+                <tbody>
+                  {% for usuario in usuarios %}
+                  {% comment %} <a href="{% url 'app:details' usuario.id %}">{{usuario.nombre}}</a> {% endcomment %}
+                  {% comment %} <a href="{% url 'app:update' usuario.id %}">Editar</a> {% endcomment %}
+                  {% comment %} <a href="{% url 'app:delete' usuario.id %}">Eliminar</a> {% endcomment %}
+
+                  <tr>
+                      <td>{{usuario.nombre}}</td>
+                      <td>{{usuario.apellido_paterno}}</td>
+                      <td>{{usuario.apellido_materno}}</td>
+                      <td>{{usuario.email}}</td>
+                      <td><div class="text-center">{{usuario.fono}}</div></td>
+                      <td><div class="text-center">{{usuario.id_tipo_usuario.tipo}}</div></td>
+                      <td class="">
+                        <div class="text-center">
+                          <div class="linea-acciones">
+                            <a class="btn btn-primary btn-sm" href="{% url 'app:details' usuario.id %}">
+                                <i class="fas fa-folder">
+                                </i>
+                            </a>
+                          </div>
+                          <div class="linea-acciones">
+                            <a class="btn btn-info btn-sm" href="{% url 'app:edit' usuario.id %}">
+                                <i class="fas fa-pencil-alt">
+                                </i>
+                            </a>
+                          </div>
+                          {% if request.user != usuario %}
+                          <div class="linea-acciones">
+                            <form action="{% url 'app:delete' usuario.id %}" method="POST" id="deleteForm">
+                              {% csrf_token %}
+                              <a class="btn btn-danger btn-sm" href="#" onclick="eliminarUsuario({{usuario.id}})">
+                                  <i class="fas fa-trash">
+                                  </i>
+                                </a>
+                            </form>
+                          </div>
+                        </div>
+                        {% endif %}
+                      </td>
+                  </tr>
+                  {% endfor %}
+                </tbody>{% comment %} 
+                <tfoot>
+                <tr>
+                  <th>Nombre</th>
+                  <th>Apellido Paterno</th>
+                  <th>Apellido Materno</th>
+                  <th>Fono</th>
+                  <th>Email</th>
+                  <th>Tipo de usuario</th>
+                  <th></th>
+                </tr>
+                </tfoot> {% endcomment %}
+              </table>
+            </div>
           </div>
           <!-- /.card-body -->
         </div>

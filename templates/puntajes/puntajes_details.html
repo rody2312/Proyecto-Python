@@ -8,6 +8,8 @@
 <link rel="stylesheet" href="{% static 'lib/adminlte-3.2.0/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css' %}">
 <link rel="stylesheet" href="{% static 'lib/adminlte-3.2.0/plugins/datatables-responsive/css/responsive.bootstrap4.min.css' %}">
 <link rel="stylesheet" href="{% static 'lib/adminlte-3.2.0/plugins/datatables-buttons/css/buttons.bootstrap4.min.css' %}">
+
+<link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}"/>
 {% endblock %}
 
 {% block content %}
@@ -17,11 +19,22 @@
     <div class="row">
       <div class="col-12 mx-auto">
 
+        <div class="card d-flex align-items-center">
+          <h1 class="p-2 text-center titulo-seccion">{{titulo}}</h1>
+        </div>
+
         <div class="card">
-          <div class="card-header">
-            <h3 class="card-title">Resumen de puntajes</h3>
+
+          <div class="card-header d-flex align-items-center">
+            <div class="col-8 sinpadding">
+              <h2 class="card-title">Resumen de puntajes</h2>
+            </div>
+
+            <div class="col-4 sinpadding">
+              <a class="btn btn-secondary botones-header float-right" onClick="window.history.go(-1); return false;">Volver</a>
+            </div>
           </div>
-          <!-- /.card-header -->
+
           <div class="card-body">
             <table id="example1" class="table table-bordered table-striped">
               <thead>
@@ -38,7 +51,7 @@
 
                   <tr>
                       <td>{{nombre}} {{apellido_paterno}} {{apellido_materno}}</td>
-                      <td class="text-center"> 
+                      <td class="text-center font-puntajes"> 
                         {% if usuarioasistencia__tipo_asistencia__puntaje %} 
                           {{usuarioasistencia__tipo_asistencia__puntaje}}
                         {% else %}
@@ -48,7 +61,7 @@
 
                       {% for p in puntajeList %}
 
-                        <td class="text-center">{% if p %} {{p}} {% else %} 0 {% endif %}</td>
+                        <td class="text-center font-puntajes">{% if p %} {{p}} {% else %} 0 {% endif %}</td>
                       {% endfor %}
 
                   </tr>
@@ -59,7 +72,7 @@
                     {% for nombre,apellido_paterno,apellido_materno,puntajeEv in alumnosEv %}
                     <tr>
                       <td>{{nombre}} {{apellido_paterno}} {{apellido_materno}}</td>
-                          <td class="text-center"> 
+                          <td class="text-center font-puntajes"> 
                             {% if puntajeEv %} 
                               {{puntajeEv}}
                             {% else %}
@@ -107,7 +120,7 @@
   $(function () {
     $("#example1").DataTable({
       "responsive": true, "lengthChange": false, "autoWidth": false,
-      "ordering": false,
+      "ordering": true,
       "language": {
         "processing":     "Procesando...",
         "infoEmpty":      "Mostrando 0 a 0 de 0 registro",
@@ -124,7 +137,23 @@
         "info":           "Mostrando _START_ a _END_ de _TOTAL_ registros",
         "infoEmpty":      "Mostrando 0 a 0 de 0 registros",
       },
-    }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)').sort();
+      "buttons": [
+      {
+        extend: "copy", text: "Copiar"
+      },
+      {
+        extend: "csv", text: "Excel"
+      },
+      {
+        extend: "pdf"
+      },
+      {
+        extend: "print", text: "Imprimir"
+      },
+      {
+        extend: "colvis", text: "Columnas visibles"
+      }]
+    }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
   });
 </script>
 

@@ -7,7 +7,6 @@
       <div class="card card-primary">
         <div class="card-header">
           <h3 class="card-title">Subir nuevo archivo</h3>
-          <a class="btn btn-secondary float-right" onClick="window.history.go(-1); return false;">Volver</a>
         </div>
         <div class="card-body">
             <form action="{% url 'app:subir_archivo' %}" method="POST" enctype="multipart/form-data">
@@ -23,8 +22,8 @@
                 </div>-->
                 <div class="col">
                     <a href="{% url 'app:archivo' %}" class="btn btn-secondary">Cancelar</a>
-                    <input type="submit" value="Crear nuevo archivo" class="btn btn-success float-right">
-                  </div>
+                    <input type="submit" value="Subir" class="btn btn-success float-right">
+                </div>
             </form>
         </div>
         <!-- /.card-body -->

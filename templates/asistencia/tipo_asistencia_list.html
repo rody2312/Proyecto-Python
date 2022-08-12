@@ -6,45 +6,62 @@
 <link rel="stylesheet" href="{% static 'lib/adminlte-3.2.0/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css' %}">
 <link rel="stylesheet" href="{% static 'lib/adminlte-3.2.0/plugins/datatables-responsive/css/responsive.bootstrap4.min.css' %}">
 <link rel="stylesheet" href="{% static 'lib/adminlte-3.2.0/plugins/datatables-buttons/css/buttons.bootstrap4.min.css' %}">
+
+<link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}"/>
+
 {% endblock %}
 
 {% block content %} 
 
-<div class="container-fluid">
+<div class="container-xl">
 
     <div class="row">
-      <div class="col-5 mx-auto">
+      <div class="col-md-10 col-lg-10 col-xl-7 mx-auto">
+
+        <div class="card text-center">
+          <h1 class="p-2 titulo-seccion">{{titulo}}</h1>
+        </div>
 
         <div class="card">
-          <div class="card-header">
-            <h3 class="card-title">Lista de tipos de asistencia</h3>
-            <a class="btn btn-secondary float-right" onClick="window.history.go(-1); return false;">Volver</a>
+
+          <div class="card-header d-flex align-items-center">
+            <div class="col-7 sinpadding">
+              <h2 class="card-title">Lista de tipos de asistencia</h2>
+            </div>
+
+            <div class="col-5 sinpadding text-center">
+              {% if not request.user.id_tipo_usuario.id == 3 %}
+                <a class="btn btn-primary botones-header" href="{% url 'asistencia:crear_tipo_asistencia' %}">Crear nuevo tipo</a>
+              {% endif %}
+              <a class="btn btn-secondary botones-header" onClick="window.history.go(-1); return false;">Volver</a>
+            </div>
           </div>
-          <!-- /.card-header -->
+
           <div class="card-body">
-            <a class="btn btn-primary mb-2" href="{% url 'asistencia:crear_tipo_asistencia' %}">Crear nuevo tipo de asistencia</a>
-            <br>
 
-            <table id="example1" class="table table-bordered table-striped">
-              <thead>
-              <tr>
-                <th>Nombre</th>
-                <th><center>Puntaje<center/></th>
-                <th><center>Acciones<center/></th>
-              </tr>
-              </thead>
-              <tbody>
-                {% for tipo in tipos_asistencia %}
+            <div class="table-responsive">
+              <table id="example1" class="table table-bordered table-striped">
+                <thead>
                 <tr>
-                  <td>{{tipo.nombre_tipo}}</td>
-                  <td><center>{{tipo.puntaje}}<center/></td>
-                    <td class="text-center">
-
-                      <div class="row justify-content-center">
+                  <th>Nombre</th>
+                  <th><div class="text-center">Puntaje</div></th>
+                  <th><div class="text-center">Acciones</div></th>
+                </tr>
+                </thead>
+                <tbody>
+                  {% for tipo in tipos_asistencia %}
+                  <tr>
+                    <td>{{tipo.nombre_tipo}}</td>
+                    <td><div class="text-center">{{tipo.puntaje}}</div></td>
+                    <td>
+                      <div class="text-center">
+                        <div class="linea-acciones">
                           <a class="btn btn-info btn-sm" href="{% url 'asistencia:edit_tipo_asistencia' tipo.id %}">
                             <i class="fas fa-pencil-alt">
                             </i>
                           </a>
+                        </div>
+                        <div class="linea-acciones">
                           <form action="{% url 'asistencia:delete_tipo_asistencia' tipo.id %}" method="POST" id="deleteForm">
                             {% csrf_token %}
                             <a class="btn btn-danger btn-sm" href="#" onclick="eliminarTipoAsistencia({{tipo.id}})">
@@ -52,13 +69,14 @@
                                 </i>
                             </a>
                           </form>
+                        </div>
                       </div>
                     </td>
-                      
-                </tr>
-                {% endfor %}
-              </tbody>
-            </table>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
           </div>
           <!-- /.card-body -->
         </div>

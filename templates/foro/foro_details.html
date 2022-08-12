@@ -5,14 +5,14 @@
 {% block libs %}
 
   <!-- summernote -->
-  <link rel="stylesheet" href="{% static 'lib/adminlte-3.2.0/plugins/summernote/summernote-bs4.min.css' %}">
+  <link rel="stylesheet" href="{% static 'lib/adminlte-3.2.0/plugins/summernote/summernote-bs4.min.css' %}"/>
   <!-- SimpleMDE -->
-  <link rel="stylesheet" href="../../plugins/simplemde/simplemde.min.css">
+  <link rel="stylesheet" href="../../plugins/simplemde/simplemde.min.css"/>
   <!-- CodeMirror -->
-  <link rel="stylesheet" href="{% static 'lib/adminlte-3.2.0/plugins/codemirror/codemirror.css'%}">
-  <link rel="stylesheet" href="{% static 'lib/adminlte-3.2.0/plugins/codemirror/theme/monokai.css'%}">
+  <link rel="stylesheet" href="{% static 'lib/adminlte-3.2.0/plugins/codemirror/codemirror.css'%}"/>
+  <link rel="stylesheet" href="{% static 'lib/adminlte-3.2.0/plugins/codemirror/theme/monokai.css'%}"/>
 
-  <link rel="stylesheet" href="{% static 'css/styles.css'%}" type='text/css'>
+ 
 
   <style type="text/css">
     .commentsts{
@@ -23,7 +23,7 @@
       margin: 10px;
     }
   </style>
-  
+  <link rel="stylesheet" href="{% static 'css/style.css'%}" type='text/css'/>
 
 {% endblock libs %}
 
@@ -31,12 +31,17 @@
 
 <div class="container">
     <div class="card">
-        <div class="card-header">
-          <h3 class="card-title">{{foro.titulo}}</h3>
+        <div class="card-header d-flex align-items-center">
+          <div class="col-7 sinpadding">
+            <h3 class="card-title">{{foro.titulo}}</h3>
+          </div>
+          <div class="col-5 sinpadding">
+            <a class="btn btn-secondary botones-header" href="{% url 'foro:foros' %}">Volver</a>
+          </div>
         </div>
         <div class="card-body border rounded commentsts">
             {{foro.descripcion | safe}}
-            <a class="btn btn-info btn-flat float-right" href="{% url 'foro:responder_foro' foro.id %}">Responder</a>
+            <a class="btn btn-info btn-flat botones-header" href="{% url 'foro:responder_foro' foro.id %}">Responder</a>
         </div>
         <div class="card-body">
           {% if not foro.comments.all %}
@@ -57,9 +62,9 @@
                         <div class="image">
                           <i class="bx bxs-user-circle" style='font-size: 30px'></i>      
                         </div>
-                        <div class="info">
-                          <span class="username d-flex flex-wrap">
-                            {{r.id_usuario}}<span class="text-muted">&nbsp;- {{r.fecha | date:'l d-m-Y,' }}&nbsp;</span>
+                        <div class="info scroll-info">
+                          <span class="username">
+                            <span class="">{{r.id_usuario}}</span><span class="text-muted">&nbsp;- {{r.fecha | date:'l d-m-Y,' }}&nbsp;</span>
                             <span class="text-muted"> {{r.fecha | time:'H:i' }}</span>
                           </span>                  
                         </div>
@@ -82,7 +87,7 @@
                           <div class="image">
                             <i class="bx bxs-user-circle" style='font-size: 30px'></i>      
                           </div>
-                          <div class="info">
+                          <div class="info scroll-info">
                             <span class="username d-flex flex-wrap">
                               {{r.id_usuario}}<span class="text-muted">&nbsp;- {{r.fecha | date:'l d-m-Y,' }}&nbsp;</span>
                               <span class="text-muted"> {{r.fecha | time:'H:i' }}</span>
@@ -111,7 +116,7 @@
                         <i class="bx bxs-user-circle" style='font-size: 30px'></i>      
                       </div>
                       <div class="info">
-                        <span class="username d-flex flex-wrap">
+                        <span class="username d-flex flex-wrap scroll-info">
                           {{r.id_usuario}}<span class="text-muted">&nbsp;- {{r.fecha | date:'l d-m-Y,' }}&nbsp;</span>
                           <span class="text-muted"> {{r.fecha | time:'H:i' }}</span>
                         </span>                  

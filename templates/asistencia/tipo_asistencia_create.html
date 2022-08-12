@@ -7,7 +7,6 @@
       <div class="card card-primary">
         <div class="card-header">
           <h3 class="card-title">Crear nuevo tipo de tarea</h3>
-          <a class="btn btn-secondary float-right" onClick="window.history.go(-1); return false;">Volver</a>
         </div>
         <div class="card-body">
             <form method="POST">
@@ -15,7 +14,7 @@
             {{ form.as_p}}
                 <div class="col">
                     <a href="{% url 'asistencia:list_tipo_asistencia' %}" class="btn btn-secondary">Cancelar</a>
-                    <input type="submit" value="Crear nuevo tipo de tarea" class="btn btn-success float-right">
+                    <input type="submit" value="Crear" class="btn btn-success float-right">
                   </div>
             </form>
         </div>

@@ -14,33 +14,49 @@
 <link rel="stylesheet" href="{% static 'lib/adminlte-3.2.0/plugins/datatables-responsive/css/responsive.bootstrap4.min.css' %}">
 <link rel="stylesheet" href="{% static 'lib/adminlte-3.2.0/plugins/datatables-buttons/css/buttons.bootstrap4.min.css' %}">
 
+<link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}"/>
+
 {% endblock libs %}
 
 {% block content %}
 
-<div class="container-fluid">
+<div class="container-xl">
 
   <div class="row">
-    <div class="col-6 mx-auto">
+    <div class="col-10 mx-auto">
+
+      <div class="card text-center">
+        <h2 class="p-2 titulo-seccion">Registro de {{titulo}}</h2>
+      </div>
 
       <div class="card">
-        <div class="card-header">
-          <h3 class="card-title">Puntajes de actividad</h3>
-          <a class="btn btn-primary float-right" onclick="window.history.go(-1); return false;">Volver</a>
-        </div>
-        <div class="card-body">
-          <table id="example1" class="table table-bordered table-striped">
-            <thead>
-              <tr>
-                <th>Alumno</th>
-                <th>Puntaje</th>
-                <th>Editar</th>
-              </tr>
-            </thead>
-            <tbody id="tests-table">
 
-            </tbody>
-          </table>
+        <div class="card-header d-flex align-items-center">
+          <div class="col-7 sinpadding">
+            <h2 class="card-title">Puntajes de actividad</h2>
+          </div>
+
+          <div class="col-5 sinpadding text-center">
+            <a class="btn btn-secondary botones-header" onClick="window.history.go(-1); return false;">Volver</a>
+            <!--<a class="btn btn-primary botones-header" href="{% url 'asistencia:asistencias' %}">Volver</a>-->
+          </div>
+        </div>
+
+        <div class="card-body" id="card-body-table">
+          <div class="table-responsive">
+            <table id="example1" class="table table-bordered table-striped">
+              <thead>
+                <tr>
+                  <th>Alumno</th>
+                  <th>Puntaje</th>
+                  <th>Editar</th>
+                </tr>
+              </thead>
+              <tbody id="tests-table">
+
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>
@@ -208,7 +224,7 @@
     //Creación de data table con jquery
     $(function () {
       $("#example1").DataTable({
-        "responsive": true, "lengthChange": true, "autoWidth": false,
+        "responsive": false, "lengthChange": true, "autoWidth": false,
         "language": {
           "lengthMenu": "Mostrar _MENU_ registros",
           "processing":     "Procesando...",

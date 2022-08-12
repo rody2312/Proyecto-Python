@@ -6,33 +6,45 @@
 <link rel="stylesheet" href="{% static 'lib/adminlte-3.2.0/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css' %}">
 <link rel="stylesheet" href="{% static 'lib/adminlte-3.2.0/plugins/datatables-responsive/css/responsive.bootstrap4.min.css' %}">
 <link rel="stylesheet" href="{% static 'lib/adminlte-3.2.0/plugins/datatables-buttons/css/buttons.bootstrap4.min.css' %}">
+
+<link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}"/>
+
 {% endblock %}
 
 {% block content %}
 
-<div class="container-fluid">
+<div class="container-xl">
 
     <div class="row">
-      <div class="col-7 mx-auto">
+      <div class="col-10 mx-auto">
+
+        <div class="card text-center">
+          <h1 class="p-2 titulo-seccion">Registro de {{titulo}}</h1>
+        </div>
 
         <div class="card">
-          <div class="card-header">
-            <h3 class="card-title">Lista de notificaciones</h3>
-            <a class="btn btn-secondary float-right" onClick="window.history.go(-1); return false;">Volver</a>
+
+          <div class="card-header d-flex align-items-center">
+            <div class="col-7 sinpadding">
+              <h2 class="card-title">Lista de notificaciones</h2>
+            </div>
+
+            <div class="col-5 sinpadding text-center">
+              {% if not request.user.id_tipo_usuario.id == 3 %}
+                <a class="btn btn-primary botones-header" href="{% url 'app:crear_notificacion' %}">Crear nueva notificación</a>
+              {% endif %}
+              <a class="btn btn-secondary botones-header" onClick="window.history.go(-1); return false;">Volver</a>
+            </div>
           </div>
-          <!-- /.card-header -->
+
           <div class="card-body">
-            {% if not request.user.id_tipo_usuario.id == 3 %}
-              <a class="btn btn-primary mb-2" href="{% url 'app:crear_notificacion' %}">Crear nueva notificacion</a>
-              <br>
-            {% endif %}
 
             <table id="example1" class="table table-bordered table-striped">
               <thead>
               <tr>
                 <th>Descripción</th>
                 <th>Enviado por</th>
-                <th><center>Fecha<center/></th>
+                <th><div class="text-center">Fecha</div></th>
 
                 {% if not request.user.id_tipo_usuario.id == 3 %} <th>Acciones</th> {% endif %}
               </tr>
@@ -42,7 +54,7 @@
                 <tr>
                   <td>{{notificacion.texto}}</td>
                   <td>{{notificacion.id_usuario}}</td>
-                  <td><center>{{notificacion.fecha | date:"d/m/Y"}}<center/></td>
+                  <td><div class="text-center">{{notificacion.fecha | date:"d/m/Y"}}</div></td>
 
                   {% if not request.user.id_tipo_usuario.id == 3 %}
                     <td class="text-center">

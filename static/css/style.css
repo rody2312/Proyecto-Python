@@ -1,0 +1,94 @@
+
+.linea-acciones{
+    display: inline-block !important;
+}
+
+div.wrappingtext{
+    word-wrap: break-word !important;
+    max-width: 250px;
+}
+
+.sinpadding{
+    padding:0;
+}
+
+.width-volver{
+    max-width: 100%;
+}
+
+.botones-header {
+    float: right;
+    margin: 2px;
+}
+
+@media (max-width: 1278px) {
+    .width-volver {
+        width: 187.25px;
+        margin-top: 2px;
+    }
+  }
+
+@media (max-width: 350px) {
+  span.scroll-info {
+    overflow-x: scroll;
+  }
+
+  div.user-panel .image {
+    padding: 0;
+    margin: 0;
+  }
+
+  div.dataTables_wrapper div.dataTables_filter input {
+    width: 140px
+}
+
+}
+
+
+
+/* h2.card-title{
+    font-weight: bold;
+} */
+
+.titulo-seccion{
+    font-weight: normal;
+}
+
+.font-fecha {
+    font-size: 18px;
+    font-weight: 500;
+}
+
+.font-puntajes {
+    font-size: 18px;
+}
+
+
+
+@media (max-width: 380px) {
+
+    #card-body-table {
+        padding: 1.25rem 0 !important;
+    }
+
+  }
+
+.col-10{
+    max-width: 100%;
+}
+
+.col-6{
+    max-width: 100%
+}
+
+@media (max-width: 550px) {
+  .col-10{
+      flex: 0 0 100%;
+  }
+  .custom-select{
+    padding: .375rem 1.25rem .375rem .25rem;
+  }
+}
+
+
+
