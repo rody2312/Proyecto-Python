@@ -101,7 +101,7 @@ class Usuario(AbstractUser):
 class Notificacion(models.Model):
     id_usuario = models.ForeignKey(Usuario, models.DO_NOTHING, db_column='id_usuario')
     texto = models.TextField()
-    fecha = models.DateField(default=timezone.now, editable=False, blank=True)
+    fecha = models.DateTimeField(default=timezone.now, editable=False, blank=True)
 
     class Meta():
         managed = True

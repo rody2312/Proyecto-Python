@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 
 from app.models import Usuario
 
@@ -53,9 +54,9 @@ class UsuarioActividad(models.Model):
 
 class Archivo(models.Model):
     id_usuario=models.ForeignKey(Usuario, db_column='id_usuario', on_delete=models.SET_NULL, null=True)
-    nombre=models.CharField(max_length=20)
+    nombre=models.CharField(max_length=50)
     directorio=models.FileField(max_length=200)
-    fecha=models.DateField(auto_now_add=True)
+    fecha = models.DateTimeField(default=timezone.now, editable=False, blank=True)
 
     class Meta:
         managed = True

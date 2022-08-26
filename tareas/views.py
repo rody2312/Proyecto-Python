@@ -375,6 +375,5 @@ def obtenerFechas():
             
     #Ordenar lista de fechas de forma descendiente
     fechas.sort(reverse=True)
-
     return fechas
     

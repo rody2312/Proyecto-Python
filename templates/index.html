@@ -1,37 +1,217 @@
 {% extends 'home.html' %}
 
+{% load static %}
+
+{% block libs %}
+<!-- DataTables -->
+<link rel="stylesheet" href="{% static 'lib/adminlte-3.2.0/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css' %}">
+<link rel="stylesheet" href="{% static 'lib/adminlte-3.2.0/plugins/datatables-responsive/css/responsive.bootstrap4.min.css' %}">
+<link rel="stylesheet" href="{% static 'lib/adminlte-3.2.0/plugins/datatables-buttons/css/buttons.bootstrap4.min.css' %}">
+
+<link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}"/>
+{% endblock %}
+
 {% block content %}
 
-    <center>
-<div> <class="nosotros">
-    <h2><span style="color: #021561">Sobre nosotros</h2>
-        <h4><p aligh="center"></p>Te damos la más cordial bienvenida a nuestro sitio web.</br>
-            Somos los Soldados de la Cruz de Cristo, una Iglesia que guarda los mandamientos de Dios y la Fe de Jesús.</br>
-            Desde 1922, estamos comprometidos en predicar el evangelio a todos, llenando la tierra del conocimiento de Dios.</br>
-            Conéctate y descubre más de Cristo <a href="http://127.0.0.1:8000/login/">aquí<a/></h4></br>
-</div>
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1 class="m-0">Resumen de la ultima clase</h1>
+          </div>
+        </div><!-- /.row -->
+      </div><!-- /.container-fluid -->
+    </div>
+    <!-- /.content-header -->
 
-<div> <h2 class="mision"><span style="color: #021561">Nuestra Misión</h2>
-        <h4><p aligh="center"></p><strong>San Mateo 28:19,20</strong></h4>
-            <h4>Predicar el evangelio para que las personas conozcan a Dios 
-                y tengan un encuentro personal 
-                con el, a través del Espíritu Santo,</br>vivan de acuerdo a 
-                sus mandamientos, 
-                amen a sus prójimos y sirvan al 
-                mundo como representantes de Cristo.</h4></br>
-</div>
+    <!-- Main content -->
+    <div class="content">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-lg-9">
+            <div class="card">
+              <div class="card-header border-0">
+                <div class="d-flex justify-content-between">
+                  <h3 class="card-title">Puntajes de la ultima clase {{fecha}}</h3>
+                  <a href="{% url 'tareas:resumen' %}">Ver todos los resumenes</a>
+                </div>
+              </div>
+              <div class="card-body table-responsive">
+                <table id="example1" class="table table-bordered table-striped">
+                    <thead>
+                    <tr>
+                      <th>Alumno</th>
+                      {% for c in columnas %}
+                      <th>{{c}}</th>
+                      {% endfor %}
+                    </tr>
+                    </thead>
+                    <tbody>
+                      {% if alumnos %}
+                        {% for nombre,apellido_paterno,apellido_materno,usuarioasistencia__tipo_asistencia__puntaje, puntajeList in alumnos %}
+        
+                        <tr>
+                            <td>{{nombre}} {{apellido_paterno}} {{apellido_materno}}</td>
+                            <td class="text-center font-puntajes"> 
+                              {% if usuarioasistencia__tipo_asistencia__puntaje %} 
+                                {{usuarioasistencia__tipo_asistencia__puntaje}}
+                              {% else %}
+                                0
+                              {% endif %} 
+                            </td>
+        
+                            {% for p in puntajeList %}
+        
+                              <td class="text-center font-puntajes">{% if p %} {{p}} {% else %} 0 {% endif %}</td>
+                            {% endfor %}
+        
+                        </tr>
+                        {% endfor %}
+        
+                      {% else %}
+        
+                          {% for nombre,apellido_paterno,apellido_materno,puntajeEv in alumnosEv %}
+                          <tr>
+                            <td>{{nombre}} {{apellido_paterno}} {{apellido_materno}}</td>
+                                <td class="text-center font-puntajes"> 
+                                  {% if puntajeEv %} 
+                                    {{puntajeEv}}
+                                  {% else %}
+                                    0
+                                  {% endif %} 
+                            </td>
+                          </tr>
+                          {% endfor %}
+        
+                      {% endif %}
+                    </tbody>
+                </table>
+              </div>
+            </div>
+            <!-- /.card -->
 
-<div> <h2 class="vision"><span style="color: #021561">Nuestra Visión</h2>
-        <h4><p aligh="center"></p><strong>Habacuc 2:14</strong></h4>
-            <h4>Llenar la tierra con el conocimiento de Dios, 
-                comenzando por nuestro hogar hasta llegar a otros continentes.</br>
-                Conduciendo las almas bajo los conceptos de santidad por 
-                medio de la obra del Espíritu Santo,</br>preparándonos para 
-                recibir al Señor en su segunda venida e ir a 
-                vivir con el por la eternidad.</h4></br>
-</div>
+            <div class="card">
+              <div class="card-header border-0">
+                <div class="d-flex justify-content-between">
+                  <h3 class="card-title">Ultimo foro creado</h3>
+                  <a href="{% url 'foro:foros' %}">Ver todos los foros</a>
+                </div>
+              </div>
+              <div class="card-body table-responsive">
+                <div class="card">
+                  <div class="card-header d-flex align-items-center">
+                    <h3 class="card-title">{{foro.titulo}}</h3>
+                  </div>
+                  <div class="card-body border rounded commentsts">
+                      {{foro.descripcion | safe}}
+                      <a class="btn btn-info btn-flat botones-header" href="{% url 'foro:foro_details' foro.id %}">Ver respuestas</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- /.card -->
+          </div>
+          <!-- /.col-md-6 -->
+          <div class="col-lg-3">
+            <div class="card">
+              <div class="card-header border-0">
+                <div class="d-flex justify-content-between">
+                  <h3 class="card-title">Ultimo archivo subido</h3>
+                  <a class="text-center" href="{% url 'app:archivo' %}">Ver todos los archivos</a>
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="d-flex flex-row">
+                  <div class="d-flex flex-column">
+                    <div class="p-2 m-1 text-break">
+                      <div class="font-weight-bold">Archivo:</div>
+                      <div class="">{{archivo.nombre}}</div>
+                    </div>
+                    <div class="p-2 m-1">
+                      <div class="font-weight-bold">Fecha:</div>
+                      <div class="">{{archivo.fecha | date:"d/m/Y"}}</div>
+                    </div>
+                  </div>
+                  <div class="ml-auto d-flex flex-row align-items-center">
+                    <div class="d-flex flex-column btn">
+                      <a type="button" class="btn btn-outline-info" href="/media/{{archivo.directorio}}">
+                        <i class="fas fa-file-download text-center" style="font-size: 50px"></i>
+                        <div>Descargar</div>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+                
+              </div>
+            </div>
 
-</center>
-<center><p id="footercopy">Todos los derechos reservador por Rody, 2022 </p></center>
+            <div class="card">
+              <div class="card-header border-0">
+                <div class="d-flex justify-content-between">
+                  <h3 class="card-title">Ultima notificación enviada</h3>
+                  <a class="text-center" href="{% url 'app:notificacion' %}">Ver todo</a>
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="card p-2">
+                  <div class="">{{notificacion.fecha | date:"d/m/Y - H:i"}}</div>
+                  <div>{{notificacion.texto}}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- /.col-md-6 -->
+        </div>
+        <!-- /.row -->
+      </div>
+      <!-- /.container-fluid -->
+    </div>
+    <!-- /.content -->
+
 
 {% endblock  %}
+
+{% block js %}
+<!-- DataTables  & Plugins -->
+<script src="{%static 'lib/adminlte-3.2.0/plugins/datatables/jquery.dataTables.min.js'%}"></script>
+<script src="{%static 'lib/adminlte-3.2.0/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js'%}"></script>
+<script src="{%static 'lib/adminlte-3.2.0/plugins/datatables-responsive/js/dataTables.responsive.min.js'%}"></script>
+<script src="{%static 'lib/adminlte-3.2.0/plugins/datatables-responsive/js/responsive.bootstrap4.min.js'%}"></script>
+<script src="{%static 'lib/adminlte-3.2.0/plugins/datatables-buttons/js/dataTables.buttons.min.js'%}"></script>
+<script src="{%static 'lib/adminlte-3.2.0/plugins/datatables-buttons/js/buttons.bootstrap4.min.js'%}"></script>
+<script src="{%static 'lib/adminlte-3.2.0/plugins/jszip/jszip.min.js'%}"></script>
+<script src="{%static 'lib/adminlte-3.2.0/plugins/pdfmake/pdfmake.min.js'%}"></script>
+<script src="{%static 'lib/adminlte-3.2.0/plugins/pdfmake/vfs_fonts.js'%}"></script>
+<script src="{%static 'lib/adminlte-3.2.0/plugins/datatables-buttons/js/buttons.html5.min.js'%}"></script>
+<script src="{%static 'lib/adminlte-3.2.0/plugins/datatables-buttons/js/buttons.print.min.js'%}"></script>
+<script src="{%static 'lib/adminlte-3.2.0/plugins/datatables-buttons/js/buttons.colVis.min.js'%}"></script>
+<!-- Page specific script -->
+
+<script>
+
+  $(function () {
+    $("#example1").DataTable({
+      "responsive": true, "lengthChange": false, "autoWidth": false, "ordering": false,
+      "pageLength": 4,
+      "language": {
+        "processing":     "Procesando...",
+        "infoEmpty":      "Mostrando 0 a 0 de 0 registro",
+        "infoFiltered":   "(filtrado de un total de _MAX_ registros)",
+        "search": "Buscar:",
+        "zeroRecords":    "No se encuentran registros",
+        "paginate": {
+            "first":      "Primero",
+            "last":       "Ultimo",
+            "next":       "Siguiente",
+            "previous":   "Anterior"
+        },
+        "emptyTable":     "No hay registros para mostrar",
+        "info":           "Mostrando _START_ a _END_ de _TOTAL_ registros",
+        "infoEmpty":      "Mostrando 0 a 0 de 0 registros",
+      },
+    })
+  });
+</script>
+
+{% endblock js %}

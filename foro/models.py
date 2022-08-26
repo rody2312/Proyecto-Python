@@ -21,7 +21,7 @@ class Foro(models.Model):
     id_actividad=models.ForeignKey(Actividad, db_column='id_actividad', on_delete=models.SET_NULL, null=True, unique=True)
     titulo=models.CharField(max_length=50)
     descripcion=models.TextField(blank=True, null=True)
-    fecha=models.DateField(auto_now_add=True)
+    fecha=models.DateTimeField(default=timezone.now, editable=False, blank=True)
 
     class Meta:
         managed = True
