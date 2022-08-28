@@ -155,13 +155,14 @@
               </div>
               <div class="card-body">
                 <div class="card p-2">
-                  <div class="">{{notificacion.fecha | date:"d/m/Y - H:i"}}</div>
-                  <div>{{notificacion.texto}}</div>
+                  <div class="p-2">Enviado por {{notificacion.enviado_por}}</div>
+                  <div class="p-2">Fecha: {{notificacion.fecha | date:"d/m/Y - H:i"}}</div>
+                  <div class="p-2">Asunto: {{notificacion.asunto}}</div>
+                  <a class="p-2" href="{% url 'app:notificacion_details' notificacion.id %}">Ver notificación completa</a>
                 </div>
               </div>
             </div>
           </div>
-          <!-- /.col-md-6 -->
         </div>
         <!-- /.row -->
       </div>

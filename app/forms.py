@@ -152,14 +152,16 @@ class UsuarioEditForm(forms.ModelForm):
 class NotificacionCreateForm(forms.ModelForm):
     class Meta:
         model=Notificacion
-        fields=('texto',)
+        fields=('asunto','texto',)
 
         widgets = {
-            'texto': forms.TextInput(attrs={'class': 'form-control'}),
+            'asunto': forms.TextInput(attrs={'class': 'form-control'}),
+            'texto': forms.Textarea(attrs={'class': 'form-control'}),
         }
 
     def __init__(self, *args, **kwargs):
         super(NotificacionCreateForm, self).__init__(*args, **kwargs)
+        self.fields['asunto'].required = True
         self.fields['texto'].required = True
 
 

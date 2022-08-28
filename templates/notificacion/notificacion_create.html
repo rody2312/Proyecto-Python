@@ -12,8 +12,7 @@
             <form method="POST">
                 {% csrf_token %}
                 <div class="form-group">
-                  <label for="inputTexto">Descripción</label>
-                  {{form.texto}}
+                  {{form.as_p}}
                 </div>
                 <div class="col">
                   <a href="{% url 'app:notificacion' %}" class="btn btn-secondary">Cancelar</a>

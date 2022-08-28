@@ -2,7 +2,7 @@ from django.urls import reverse_lazy
 from django.views.generic import View
 from django.shortcuts import render
 from django.contrib.auth.mixins import LoginRequiredMixin
-from app.models import Notificacion, Usuario
+from app.models import Notificacion, NotificacionEnviada, Usuario
 from asistencia.models import UsuarioAsistencia
 
 from evaluacion.models import Evaluacion, UsuarioEvaluacion
@@ -88,8 +88,6 @@ class HomeView(LoginRequiredMixin, View):
         #Obtener la ultima notificación creada
         notificacion = Notificacion.objects.order_by('-fecha').first()
 
-                    
-            
             
         context={
             'columnas': columnas,
@@ -101,3 +99,6 @@ class HomeView(LoginRequiredMixin, View):
             'notificacion': notificacion,
         }
         return render(request, 'index.html', context)
+
+
+

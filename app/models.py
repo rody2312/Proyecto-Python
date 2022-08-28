@@ -98,14 +98,39 @@ class Usuario(AbstractUser):
     def __str__(self):
         return self.nombre + " " + self.apellido_paterno + " " + self.apellido_materno
 
+
+#### Tablas de Notificaciones #####
 class Notificacion(models.Model):
-    id_usuario = models.ForeignKey(Usuario, models.DO_NOTHING, db_column='id_usuario')
+    enviado_por = models.ForeignKey(Usuario, models.DO_NOTHING, db_column='enviado_por', default=1)
+    asunto = models.CharField(max_length=40, default='asunto')
     texto = models.TextField()
     fecha = models.DateTimeField(default=timezone.now, editable=False, blank=True)
 
     class Meta():
         managed = True
         db_table = 'notificacion'
+
+
+class EstadoNotificacion(models.Model):
+    estado = models.CharField(max_length=20, blank=True, null=True)
+
+    class Meta():
+        managed = True
+        db_table = 'estado_notificacion'
+
+
+class NotificacionEnviada(models.Model):
+    notificacion = models.ForeignKey(Notificacion, models.SET_NULL, null=True, db_column='notificacion')
+    enviado_a = models.ForeignKey(Usuario, models.SET_NULL, null=True, db_column='enviado_a')
+    estado = models.ForeignKey(EstadoNotificacion, models.SET_NULL, null=True, db_column='estado', default=1)
+
+    class Meta():
+        managed = True
+        db_table = 'notificacion_enviada'
+
+
+
+
 
 
 

@@ -90,5 +90,29 @@ div.wrappingtext{
   }
 }
 
+/* Modificar el tamaño del cuadro de las notificaciones */
+@media (max-width: 380px) {
+    div .dropdown-menu-xl {
+        min-width: 300px
+    }
+}
+@media (max-width: 300px) {
+    div .dropdown-menu-xl {
+        min-width: 260px
+    }
+}
 
 
+.notificacion-pendiente {
+    background-color: rgb(230, 230, 230);
+}
+
+.ver-mas{
+    position: absolute;
+    right:10px;
+}
+
+.ver-mas:hover{
+    border-bottom-style: solid;
+    border-bottom-width: 1px;
+}

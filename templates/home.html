@@ -52,6 +52,46 @@
 
     <!-- Right navbar links -->
     <ul class="navbar-nav ml-auto">
+
+      <li class="nav-item dropdown">
+        <a class="nav-link" data-toggle="dropdown" href="#">
+          <i class="far fa-bell"></i>
+          <span class="badge badge-warning navbar-badge">{{cant_pendientes}}</span>
+        </a>
+        <div class="dropdown-menu dropdown-menu-xl dropdown-menu-right">
+          <span class="dropdown-item dropdown-header">Notificaciones</span>
+          <div class="dropdown-divider"></div>
+
+          {% for n in notificaciones_nav %}
+
+            {% if n.estado.estado == 'Pendiente' %}
+            <a href="{% url 'app:notificacion_details' n.notificacion.id %}" class="dropdown-item notificacion-pendiente">
+            {% else %}
+            <a href="{% url 'app:notificacion_details' n.notificacion.id %}" class="dropdown-item">
+            {% endif %}
+              <div class="media">
+                <i class="fas fa-envelope img-size-50 img-circle" style="width: 30px"></i>
+                <div class="media-body">
+                  <h3 class="dropdown-item-title">
+                    {{n.notificacion.asunto}}
+                  </h3>
+                  <div class="d-flex justify-content-between">
+                    <p class="text-sm text-muted"><i class="far fa-clock mr-1"></i> {{n.notificacion.fecha | date:"d/m/Y - H:i"}}</p>
+                    <span class="float-right text-sm ver-mas">Ver notificación</span>
+                  </div>
+                </div>
+              </div>
+            </a>
+            <div class="dropdown-divider"></div>
+
+          {% endfor %}
+
+
+
+          <a href="{% url 'app:notificacion' %}" class="dropdown-item dropdown-footer">Ver todas las notificaciones</a>
+        </div>
+      </li>
+
       <a class="nav-link" href="{% url 'app:logout' %}">Cerrar sesión</a>
       <!-- Notifications Dropdown Menu -->
       <!--<li class="nav-item dropdown">

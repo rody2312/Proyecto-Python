@@ -1,8 +1,9 @@
 from django.core.mail import EmailMessage
 from django.core import mail
+
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect, render, get_object_or_404
 from django.urls import reverse, reverse_lazy
 from django.views.generic import View, DeleteView, UpdateView
 
@@ -12,7 +13,7 @@ from app import forms
 from django.contrib import messages
 from app.mixins import AdminProfesorUserMixin, AdminUserMixin, ProfesorUserMixin
 
-from app.models import Notificacion, Usuario
+from app.models import Notificacion, NotificacionEnviada, Usuario
 
 #LISTAR NOTIFICACION
 
@@ -20,7 +21,7 @@ class NotificacionListView(LoginRequiredMixin ,View):
      
     def get(self,request, *args, **kwargs):
 
-        notificaciones = Notificacion.objects.all()
+        notificaciones = Notificacion.objects.all().order_by('-fecha')
         context={
             'notificaciones': notificaciones,
             'titulo': 'Notificaciones'
@@ -43,6 +44,7 @@ class NotificacionCreateView(LoginRequiredMixin, AdminProfesorUserMixin,View):
         if request.method=="POST":
             form = NotificacionCreateForm(request.POST)
             if form.is_valid():
+                asunto = form.cleaned_data.get('asunto')
                 descripcion = form.cleaned_data.get('texto')
                 usuarioActual= request.user
 
@@ -50,7 +52,7 @@ class NotificacionCreateView(LoginRequiredMixin, AdminProfesorUserMixin,View):
 
                 usuarios = Usuario.objects.all()
 
-                u, created = Notificacion.objects.get_or_create(texto=descripcion, id_usuario=usuarioActual)
+                u, created = Notificacion.objects.get_or_create(asunto=asunto, texto=descripcion, enviado_por=usuarioActual)
                 u.save()
 
                 #Si la notificación fue creada, enviar notificación a todos los correos de la plataforma
@@ -63,6 +65,10 @@ class NotificacionCreateView(LoginRequiredMixin, AdminProfesorUserMixin,View):
                     for usuario in usuarios:
                         #Crear mensajes para cada usuario
                         email = EmailMessage('Notificación - Plataforma SCC', email_body , settings.EMAIL_HOST_USER, to=[usuario.email])
+
+                        #Guardar cada notificacion a la bd por cada usuario, individualmente
+                        n, n_created = NotificacionEnviada.objects.get_or_create(notificacion=u, enviado_a=usuario)
+                        n.save()
                         emails.append(email)
 
                     connection.send_messages(emails)
@@ -105,3 +111,17 @@ class NotificacionEditView(LoginRequiredMixin, AdminProfesorUserMixin, UpdateVie
     def get_success_url(self):
         messages.success(self.request, "La notificacion ha sido actualizado correctamente")
         return reverse_lazy('app:notificacion')
+
+
+#Detalles de la notificación
+class NotificacionDetails(LoginRequiredMixin, View):
+    def get(self, request, pk, *args, **kwargs):
+        notificacion = get_object_or_404(Notificacion, pk=pk)
+
+        #Se actualiza la notificacion del usuario de Pendiente a Visto
+        NotificacionEnviada.objects.filter(enviado_a=request.user, notificacion=pk).update(estado=2)
+
+        context={
+            'notificacion':notificacion
+        }
+        return render(request, 'notificacion/notificacion_details.html', context)

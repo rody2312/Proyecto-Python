@@ -1,0 +1,44 @@
+{% extends 'home.html' %}
+
+
+
+{% block content %}
+
+<div class="col-md-6 mx-auto">
+    <div class="card card-primary">
+      <div class="card-header">
+        <h3 class="card-title">Detalles de la notificación {{notificacion.nombre}}</h3>
+      </div>
+      <div class="card-body">
+        <div class="card bg-light border-secondary">
+            <div class="card-header">
+                <div class="d-flex justify-content-between">
+                    <div>{{notificacion.asunto}}</div>
+                    <div>{{notificacion.fecha | date:"d/m/Y - H:i"}}</div>
+                </div>
+                
+            </div>
+            <div class="card-body">
+                <h4 class="card-title text-muted">
+                    Enviado por {{notificacion.enviado_por.nombre}} {{notificacion.enviado_por.apellido_paterno}} {{notificacion.enviado_por.apellido_materno}}
+                </h4>
+                <p class="card-text">
+
+                    <div>
+                        {{notificacion.texto}}
+                    </div>
+                </p>
+
+            </div>
+
+        </div>
+              
+        <div class="col">
+            <a href="#" onClick="location.href = document.referrer; return false;" class="btn btn-secondary">Volver</a>
+        </div>
+      </div>
+    </div>
+      
+  </div>
+
+{% endblock content %}
