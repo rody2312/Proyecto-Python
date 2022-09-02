@@ -33,7 +33,7 @@
               {% if not request.user.id_tipo_usuario.id == 3 %}
                 <a class="btn btn-primary botones-header" href="{% url 'app:crear_notificacion' %}">Crear nueva notificación</a>
               {% endif %}
-              <a class="btn btn-secondary botones-header" onClick="window.history.go(-1); return false;">Volver</a>
+              <a class="btn btn-secondary botones-header" onClick="location.href = document.referrer; return false;">Volver</a>
             </div>
           </div>
 
@@ -112,12 +112,17 @@
 <script src="{%static 'lib/adminlte-3.2.0/plugins/datatables-buttons/js/buttons.html5.min.js'%}"></script>
 <script src="{%static 'lib/adminlte-3.2.0/plugins/datatables-buttons/js/buttons.print.min.js'%}"></script>
 <script src="{%static 'lib/adminlte-3.2.0/plugins/datatables-buttons/js/buttons.colVis.min.js'%}"></script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.8.4/moment.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/plug-ins/1.12.1/sorting/datetime-moment.js"></script>
 <!-- Page specific script -->
 
 <script>
 
   $(function () {
+    $.fn.dataTable.moment('DD/MM/YYYY');
     $("#example1").DataTable({
+      "order": [],
       "language": {
         "processing":     "Procesando...",
         "infoEmpty":      "Mostrando 0 a 0 de 0 registro",

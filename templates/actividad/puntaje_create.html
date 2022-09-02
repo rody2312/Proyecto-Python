@@ -13,7 +13,7 @@
                 {% csrf_token %}
                 {{ form.as_p}}
                 <div class="col">
-                    <a onclick="window.history.go(-1); return false;" class="btn btn-secondary">Cancelar</a>
+                    <a onclick="location.href = document.referrer; return false;" class="btn btn-secondary">Cancelar</a>
                     <input type="submit" value="Guardar" class="btn btn-success float-right">
                   </div>
             </form>

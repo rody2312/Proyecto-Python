@@ -16,7 +16,7 @@ from django.http import HttpResponseRedirect
 class ForosListView(LoginRequiredMixin, View):
 
     def get(self,request, *args, **kwargs):
-        foros = Foro.objects.all()
+        foros = Foro.objects.all().order_by('-fecha')
 
         context={
             'foros': foros,

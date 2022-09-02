@@ -20,7 +20,7 @@ from tareas.models import Actividad
 class EvaluacionListView(LoginRequiredMixin, AdminProfesorUserMixin ,View):
     
     def get(self,request, *args, **kwargs):
-        evaluaciones = Evaluacion.objects.all()
+        evaluaciones = Evaluacion.objects.all().order_by('-fecha')
         context={
             'evaluaciones': evaluaciones,
             'titulo': 'Evaluaciones'

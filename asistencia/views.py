@@ -18,7 +18,7 @@ from app.mixins import AdminProfesorUserMixin, AdminUserMixin, ProfesorUserMixin
 class AsistenciaListView(LoginRequiredMixin, AdminProfesorUserMixin ,View):
     
     def get(self,request, *args, **kwargs):
-        asistencias = Asistencia.objects.all()
+        asistencias = Asistencia.objects.all().order_by('-fecha')
         context={
             'asistencias':asistencias,
             'titulo': 'Asistencia'

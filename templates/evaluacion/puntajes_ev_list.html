@@ -32,7 +32,7 @@
               {% if not request.user.id_tipo_usuario.id == 3 %}
                 <a class="btn btn-primary botones-header" href="{% url 'evaluacion:crear_puntaje_evaluacion' %}">Crear nuevo puntaje</a>
               {% endif %}
-              <a class="btn btn-secondary botones-header" onClick="window.history.go(-1); return false;">Volver</a>
+              <a class="btn btn-secondary botones-header" onClick="location.href = document.referrer; return false;">Volver</a>
             </div>
           </div>
 

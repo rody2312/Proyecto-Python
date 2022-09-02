@@ -20,7 +20,7 @@ from app.mixins import AdminProfesorUserMixin, AdminUserMixin, ProfesorUserMixin
 class ArchivoListView(LoginRequiredMixin ,View):
     
     def get(self,request, *args, **kwargs):
-        archivos = Archivo.objects.all()
+        archivos = Archivo.objects.all().order_by('-fecha')
         context={
             'archivos': archivos,
             'titulo': 'Archivos'

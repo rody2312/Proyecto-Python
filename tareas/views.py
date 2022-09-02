@@ -26,7 +26,7 @@ from tareas.models import Actividad, Puntaje, TipoActividad, UsuarioActividad
 class TareasListView(LoginRequiredMixin, AdminProfesorUserMixin, View):
 
     def get(self,request, tipo_id, *args, **kwargs):
-        actividades = Actividad.objects.filter(id_tipo_actividad=tipo_id)
+        actividades = Actividad.objects.filter(id_tipo_actividad=tipo_id).order_by('-fecha')
         foros = Foro.objects.all()
         tipo = TipoActividad.objects.get(pk=tipo_id)
 
