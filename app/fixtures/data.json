@@ -1,0 +1,113 @@
+[
+    {
+      "model": "app.TipoUsuario",
+      "pk": 1,
+      "fields": {
+        "tipo": "Administrador"
+      }
+    },
+    {
+      "model": "app.TipoUsuario",
+      "pk": 2,
+      "fields": {
+        "tipo": "Profesor"
+      }
+    },
+    {
+      "model": "app.TipoUsuario",
+      "pk": 3,
+      "fields": {
+        "tipo": "Alumno"
+      }
+    },
+
+
+
+    
+    {
+      "model": "app.EstadoNotificacion",
+      "pk": 1,
+      "fields": {
+        "estado": "Pendiente"
+      }
+    },
+    {
+      "model": "app.EstadoNotificacion",
+      "pk": 2,
+      "fields": {
+        "estado": "Visto"
+      }
+    },
+
+
+
+
+    {
+      "model": "asistencia.TipoAsistencia",
+      "pk": 1,
+      "fields": {
+        "nombre_tipo": "Asistente",
+        "puntaje": "30"
+      }
+    },
+    {
+      "model": "asistencia.TipoAsistencia",
+      "pk": 2,
+      "fields": {
+        "nombre_tipo": "Atrasado",
+        "puntaje": "20"
+      }
+    },
+    {
+      "model": "asistencia.TipoAsistencia",
+      "pk": 3,
+      "fields": {
+        "nombre_tipo": "Inasistente",
+        "puntaje": "10"
+      }
+    },
+
+
+
+
+    {
+      "model": "foro.TipoForo",
+      "pk": 1,
+      "fields": {
+        "tipo": "Publico"
+      }
+    },
+    {
+      "model": "foro.TipoForo",
+      "pk": 2,
+      "fields": {
+        "tipo": "Privado"
+      }
+    },
+
+
+
+
+    {
+      "model": "tareas.TipoActividad",
+      "pk": 1,
+      "fields": {
+        "tipo": "Tarea semanal"
+      }
+    },
+    {
+      "model": "tareas.TipoActividad",
+      "pk": 2,
+      "fields": {
+        "tipo": "Caja de preguntas"
+      }
+    },
+    {
+      "model": "tareas.TipoActividad",
+      "pk": 3,
+      "fields": {
+        "tipo": "Puntaje extra"
+      }
+    }
+
+  ]
