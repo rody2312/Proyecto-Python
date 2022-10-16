@@ -48,7 +48,7 @@ class CustomUserManager(BaseUserManager):
             email=self.normalize_email(email)
         )
         #user.full_name = full_name
-        user.id_tipo_usuario = 1
+        user.id_tipo_usuario = TipoUsuario.objects.get(pk=1)
         user.set_password(password)
         #user.profile_picture = profile_picture
         user.admin = True
