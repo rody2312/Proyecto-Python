@@ -150,7 +150,7 @@ class UsuarioDeleteView(LoginRequiredMixin, AdminUserMixin, DeleteView):
 #Eliminar usuario##
 def deleteUser(request, pk, *args, **kwargs):
     usuario = Usuario.objects.get(id=pk)
-    if UsuarioAsistencia.objects.filter(usuario_id=pk).exists() or UsuarioActividad.objects.filter(usuario_id=pk).exists() or UsuarioEvaluacion.objects.filter(usuario_id=pk).exists() or Actividad.objects.filter(id_usuario=pk).exists() or Notificacion.objects.filter(id_usuario=pk).exists():
+    if UsuarioAsistencia.objects.filter(usuario_id=pk).exists() or UsuarioActividad.objects.filter(usuario_id=pk).exists() or UsuarioEvaluacion.objects.filter(usuario_id=pk).exists() or Actividad.objects.filter(pk=pk).exists() or Notificacion.objects.filter(pk=pk).exists():
         messages.error(request, "No se puede eliminar, debido a que existen registros relacionados a '" + str(usuario) + "'")
         return HttpResponseRedirect(reverse_lazy('app:usuarios'))
     else:

@@ -16,7 +16,10 @@ class HomeView(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
 
         #Obtener la ultima fecha de la lista de fechas
-        fecha = obtenerFechas()[0]
+        if len(obtenerFechas()) > 0:
+            fecha = obtenerFechas()[0]
+        else:
+            fecha = None
 
         #columnas para listar en el template
         columnas = []

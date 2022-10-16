@@ -10,6 +10,8 @@ from email.mime import image
 from django.db import models
 from django.contrib.auth.models import AbstractUser,BaseUserManager
 from django.utils import timezone
+from django.core.validators import MinLengthValidator, MaxLengthValidator
+
 
 
 # Clase para definir funciones de crear usuarios en el sistema por comando
@@ -35,7 +37,6 @@ class CustomUserManager(BaseUserManager):
         return user
         
 
-    # ValueError: Cannot assign "'1'": "Usuario.id_tipo_usuario" must be a "TipoUsuario" instance. (?????)
     def create_superuser(self, email, password=None, **extra_fields):
         if not email:
             raise ValueError("User must have an email")
@@ -47,7 +48,10 @@ class CustomUserManager(BaseUserManager):
         user = self.model(
             email=self.normalize_email(email)
         )
-        #user.full_name = full_name
+        user.nombre = "Cecilia"
+        user.apellido_paterno = "Vergara"
+        user.apellido_materno = "Cortes"
+        user.fono = "999999999"
         user.id_tipo_usuario = TipoUsuario.objects.get(pk=1)
         user.set_password(password)
         #user.profile_picture = profile_picture

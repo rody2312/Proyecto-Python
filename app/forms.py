@@ -24,8 +24,7 @@ class UsuarioCreateForm(forms.ModelForm):
             'nombre': forms.TextInput(attrs={'class': 'form-control'}),
             'apellido_paterno': forms.TextInput(attrs={'class': 'form-control'}),
             'apellido_materno': forms.TextInput(attrs={'class': 'form-control'}),
-            'fono': forms.NumberInput(attrs={'class': 'form-control',
-                                            'min': 1}),
+            'fono': forms.NumberInput(attrs={'class': 'form-control'}),
             'email': forms.EmailInput(attrs={'class': 'form-control'}),
             'id_tipo_usuario': forms.Select(attrs={'class': 'form-control'})
         }
@@ -120,7 +119,7 @@ class CustomUserCreationForm(UserCreationForm):
         self.fields['fono'].required = True
         self.fields['email'].required = True
         self.fields['tipo'].required = True  
-        
+
 
 class UsuarioEditForm(forms.ModelForm):
     class Meta:
@@ -146,6 +145,7 @@ class UsuarioEditForm(forms.ModelForm):
         self.fields['fono'].required = True
         self.fields['email'].required = True
         self.fields['id_tipo_usuario'].required = True
+
 
 
 

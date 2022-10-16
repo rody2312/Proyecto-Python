@@ -33,7 +33,7 @@
             <div class="card">
               <div class="card-header border-0">
                 <div class="d-flex justify-content-between">
-                  <h3 class="card-title">Puntajes de la ultima clase {{fecha}}</h3>
+                  <h3 class="card-title">Puntajes de la ultima clase {% if fecha != "None" %}{{fecha}}{% endif %}</h3>
                   <a href="{% url 'tareas:resumen' %}">Ver todos los resumenes</a>
                 </div>
               </div>
@@ -101,11 +101,20 @@
               <div class="card-body table-responsive">
                 <div class="card">
                   <div class="card-header d-flex align-items-center">
+                    {% if foro %}
                     <h3 class="card-title">{{foro.titulo}}</h3>
+                    {% else %}
+                    Aún no se han creado foros
+                    {% endif %}
                   </div>
                   <div class="card-body border rounded commentsts">
                       {{foro.descripcion | safe}}
+                      {% if foro %}
                       <a class="btn btn-info btn-flat botones-header" href="{% url 'foro:foro_details' foro.id %}">Ver respuestas</a>
+
+                      {% else %}
+                      ...
+                      {% endif %}
                   </div>
                 </div>
               </div>
@@ -126,7 +135,7 @@
                   <div class="d-flex flex-column">
                     <div class="p-2 m-1 text-break">
                       <div class="font-weight-bold">Archivo:</div>
-                      <div class="">{{archivo.nombre}}</div>
+                      <div class="">{% if archivo %}{{archivo.nombre}} {% else %}Aún no se han subido archivos {% endif %}</div>
                     </div>
                     <div class="p-2 m-1">
                       <div class="font-weight-bold">Fecha:</div>
@@ -135,7 +144,7 @@
                   </div>
                   <div class="ml-auto d-flex flex-row align-items-center">
                     <div class="d-flex flex-column btn">
-                      <a type="button" class="btn btn-outline-info" href="/media/{{archivo.directorio}}">
+                      <a type="button" class="btn btn-outline-info" {% if archivo %} href="/media/{{archivo.directorio}} {% endif %} ">
                         <i class="fas fa-file-download text-center" style="font-size: 50px"></i>
                         <div>Descargar</div>
                       </a>
@@ -155,10 +164,15 @@
               </div>
               <div class="card-body">
                 <div class="card p-2">
+                  {% if notificacion %}
                   <div class="p-2">Enviado por {{notificacion.enviado_por}}</div>
                   <div class="p-2">Fecha: {{notificacion.fecha | date:"d/m/Y - H:i"}}</div>
                   <div class="p-2">Asunto: {{notificacion.asunto}}</div>
                   <a class="p-2" href="{% url 'app:notificacion_details' notificacion.id %}">Ver notificación completa</a>
+
+                  {% else %}
+                  Aún no se ha creado una notificación
+                  {% endif %}
                 </div>
               </div>
             </div>
